@@ -1,0 +1,131 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (javaClasses.cpp:136), pid=3884, tid=3192
+#  fatal error: Invalid layout of preloaded class
+#
+# JRE version:  (7.0_79-b15) (build )
+# Java VM: Java HotSpot(TM) Client VM (24.79-b02 mixed mode windows-x86 )
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00a7c800):  JavaThread "Unknown thread" [_thread_in_vm, id=3192, stack(0x00b10000,0x00b60000)]
+
+Stack: [0x00b10000,0x00b60000],  sp=0x00b5f52c,  free space=317k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x191db4]
+V  [jvm.dll+0x18b436]
+V  [jvm.dll+0x35d20]
+V  [jvm.dll+0x35da6]
+V  [jvm.dll+0x4468d]
+V  [jvm.dll+0x4494e]
+V  [jvm.dll+0x9397a]
+V  [jvm.dll+0x93d2b]
+V  [jvm.dll+0x140c91]
+V  [jvm.dll+0x1638bc]
+V  [jvm.dll+0xca8bf]
+C  [javaw.exe+0x13ce]
+C  [javaw.exe+0x1e40]
+C  [javaw.exe+0xa601]
+C  [javaw.exe+0xa68b]
+C  [kernel32.dll+0x1336a]
+C  [ntdll.dll+0x392b2]
+C  [ntdll.dll+0x39285]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x00a7c800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=3192, stack(0x00b10000,0x00b60000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.003 loading class 0x0043bc38
+Event: 0.003 loading class 0x0043bc38 done
+Event: 0.003 loading class 0x0043bc78
+Event: 0.003 loading class 0x0043c208
+Event: 0.003 loading class 0x0043c208 done
+Event: 0.003 loading class 0x00441e18
+Event: 0.003 loading class 0x00441e18 done
+Event: 0.003 loading class 0x0043bc78 done
+Event: 0.003 loading class 0x0043bc58
+Event: 0.003 loading class 0x0043bc58 done
+
+
+Dynamic libraries:
+0x00cd0000 - 0x00cff000 	C:\Program Files (x86)\Java\jre7\bin\javaw.exe
+0x773e0000 - 0x77560000 	C:\Windows\SysWOW64\ntdll.dll
+0x75b40000 - 0x75c50000 	C:\Windows\syswow64\kernel32.dll
+0x75d80000 - 0x75dc7000 	C:\Windows\syswow64\KERNELBASE.dll
+0x760e0000 - 0x76180000 	C:\Windows\syswow64\ADVAPI32.dll
+0x75010000 - 0x750bc000 	C:\Windows\syswow64\msvcrt.dll
+0x76de0000 - 0x76df9000 	C:\Windows\SysWOW64\sechost.dll
+0x76e70000 - 0x76f60000 	C:\Windows\syswow64\RPCRT4.dll
+0x74d70000 - 0x74dd0000 	C:\Windows\syswow64\SspiCli.dll
+0x74d60000 - 0x74d6c000 	C:\Windows\syswow64\CRYPTBASE.dll
+0x759f0000 - 0x75af0000 	C:\Windows\syswow64\USER32.dll
+0x755e0000 - 0x75670000 	C:\Windows\syswow64\GDI32.dll
+0x76dd0000 - 0x76dda000 	C:\Windows\syswow64\LPK.dll
+0x74f70000 - 0x7500d000 	C:\Windows\syswow64\USP10.dll
+0x71650000 - 0x717ee000 	C:\Windows\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.18807_none_41e554362bd82458\COMCTL32.dll
+0x75570000 - 0x755c7000 	C:\Windows\syswow64\SHLWAPI.dll
+0x75730000 - 0x75790000 	C:\Windows\system32\IMM32.DLL
+0x752c0000 - 0x7538c000 	C:\Windows\syswow64\MSCTF.dll
+0x64e10000 - 0x64ecf000 	C:\Program Files (x86)\Java\jre7\bin\msvcr100.dll
+0x5bcc0000 - 0x5c049000 	C:\Program Files (x86)\Java\jre7\bin\client\jvm.dll
+0x71010000 - 0x71017000 	C:\Windows\system32\WSOCK32.dll
+0x74dd0000 - 0x74e05000 	C:\Windows\syswow64\WS2_32.dll
+0x759d0000 - 0x759d6000 	C:\Windows\syswow64\NSI.dll
+0x737b0000 - 0x737e2000 	C:\Windows\system32\WINMM.dll
+0x755d0000 - 0x755d5000 	C:\Windows\syswow64\PSAPI.DLL
+0x73190000 - 0x7319c000 	C:\Program Files (x86)\Java\jre7\bin\verify.dll
+0x73170000 - 0x73190000 	C:\Program Files (x86)\Java\jre7\bin\java.dll
+0x707a0000 - 0x707b3000 	C:\Program Files (x86)\Java\jre7\bin\zip.dll
+0x71220000 - 0x7130b000 	C:\Windows\system32\dbghelp.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 -Xbootclasspath/p:C:\Program Files (x86)\leJOS NXJ\lib\nxt\classes.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\bcel.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\bluecove-gpl.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\bluecove.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\commons-cli.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\jcommon.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\jfreechart.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\3rdparty\stax-api-1.0.1.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\charting.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\jtools.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\pccomm.jar;C:\Program Files (x86)\leJOS NXJ\lib\pc\pctools.jar 
+java_command: org.lejos.pcexample.send
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:/Program Files (x86)/Java/jre7/bin/client;C:/Program Files (x86)/Java/jre7/bin;C:/Program Files (x86)/Java/jre7/lib/i386;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Pololu\Jrk\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files (x86)\Java\jdk1.7.0_79\bin;C:\Program Files (x86)\Java\jre7\bin;C:\VXIPNP\WinNT\Bin;C:\Program Files (x86)\leJOS NXJ\bin;C:\Program Files (x86)\Pololu\Jrk\bin;;D:\Development\eclipse;
+USERNAME=nick
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 60 Stepping 3, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, erms, tsc, tscinvbit
+
+Memory: 4k page, physical 8338384k(5368820k free), swap 16674916k(11459820k free)
+
+vm_info: Java HotSpot(TM) Client VM (24.79-b02) for windows-x86 JRE (1.7.0_79-b15), built on Apr 10 2015 16:49:13 by "java_re" with unknown MS VC++:1600
+
+time: Sat May 16 16:33:35 2015
+elapsed time: 0 seconds
+

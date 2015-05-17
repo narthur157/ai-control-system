@@ -117,7 +117,7 @@ public class rec {
 			{
 				if (stopping) stop();
 				//dos.writeInt(1);
-				dos.flush();
+				//dos.flush();
 				try {
 					// make this non-blocking
 					// available only checks for bytes available, so it's possible that

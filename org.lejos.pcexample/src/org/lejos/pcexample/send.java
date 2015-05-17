@@ -58,39 +58,39 @@ public class send {
 		 
 
 		
-		for (int i = 0; i < 10; i++) {
-			Thread thread = new Thread(){
-			    public void run(){
-			      System.out.println("Thread Running");
-					while (!disconnected) {
-						try {
-//							try {
-//								Thread.sleep(1000);
-//							} catch (InterruptedException e) {
-//								// TODO Auto-generated catch block
-//								//e.printStackTrace();
-//							}
-							Thread.yield();
-							System.out.println(""+dis.readInt());
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							//e.printStackTrace();
-						}
-					}
-			    }
-			  };
-			thread.start();	
-			System.out.println("???");
-			
-			thread.interrupt();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				//e.printStackTrace();
-				System.out.println("meh");
-			}
-			
-		}
+//		for (int i = 0; i < 10; i++) {
+//			Thread thread = new Thread(){
+//			    public void run(){
+//			      System.out.println("Thread Running");
+//					while (!disconnected) {
+//						try {
+////							try {
+////								Thread.sleep(1000);
+////							} catch (InterruptedException e) {
+////								// TODO Auto-generated catch block
+////								//e.printStackTrace();
+////							}
+//							Thread.yield();
+//							System.out.println(""+dis.readInt());
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							//e.printStackTrace();
+//						}
+//					}
+//			    }
+//			  };
+//			thread.start();	
+//			System.out.println("???");
+//			
+//			thread.interrupt();
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				//e.printStackTrace();
+//				System.out.println("meh");
+//			}
+//			
+//		}
 
 //		while (!disconnected) {
 //			try {
