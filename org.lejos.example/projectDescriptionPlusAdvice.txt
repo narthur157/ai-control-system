@@ -1,0 +1,45 @@
+org.lejos.pcexample is the PC side code
+org.lejos.example is the code that gets loaded onto the NXT
+
+rec.java is the "receive" file for the NXT
+send.java is the sending file from the PC
+
+In general, you should run rec and then send. Once the send code is running,
+you won't be able to load programs onto the NXT. It's quite a pain.
+
+Also, in general, you can't easily shut off/disconnect the NXT once they're
+connected. This is a giant pain, but remedied well enough by taking the
+batteries out and then putting them back in as a force restart.
+
+There's a GUI that gets loaded from rec.java. When it loads, it doesn't
+get updated right away for whatever reason. I was too lazy to fix this,
+and the workaround is to change the size of the window a bit, which causes
+the window to get repainted with all the stuff.
+
+The way you actually use the GUI is by clicking into the right text area
+and issuing commands with the arrow keys. Up/down increase/decrease power
+to the selected motor (A by default), and right/left change which motor 
+is selected. The selected motor name (A, B, C), command code issued, and 
+motor power are all displayed on the LCD of the NXT itself.
+
+
+Here are some things that are not worth your time to try to do, unless
+you were to have much better luck with them:
+
+1. Using the LCP protocol. If you don't know what that is, you're better
+off not knowing. It's actually pretty nice, except when you try to use
+unregulated motors with it, things go downhill rather quickly.
+
+2. Using Java threads/GUI's. Unless you know a lot about Java or want to,
+this isn't really worth doing. My advice is to scrap the included GUI
+as soon as possible, and make the entire program function similarly
+to the USBSend and USBReceive examples given in the LeJOS downloads
+section.
+
+
+This website looks like it will be indispensable when it comes to
+calling the C code: http://stuf.ro/calling-c-code-from-java-using-jni
+
+Seems like once you know how to call a basic C function, the next step
+is to figure out exactly which functions will be called from the library
+and getting all that packaged up correctly.

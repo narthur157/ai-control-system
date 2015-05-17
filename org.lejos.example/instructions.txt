@@ -1,0 +1,87 @@
+SETTING UP LAPTOP
+------------------
+Run the following command to get java and eclipse working
+
+sudo apt-get -y install default-jre default-jdk eclipse libusb-dev
+
+Now you can run eclipse (java IDE) by typing eclipse in the terminal
+
+FLASH LeJOS FIRMWARE
+---------------------
+Follow these instructions: http://www.lejos.org/nxt/nxj/tutorial/Preliminaries/GettingStartedLinux.htm
+
+The rest of these instructions are just about kinks that I had along the way
+
+go to http://sourceforge.net/projects/nxt.lejos.p/files/
+download one of the more recent .tar.gz files
+extract (this would probably work tar -xzvf ~/Downloads/leJOS*)
+
+do:
+
+cd leJOS*/build
+ant
+
+These commands install a dependency you need and compiles the LeJOS stuff.
+
+While flashing the NXT make sure:
+1.) You don't unplug the USB cable
+2.) You don't let NXT run out of battery
+3.) You don't let the flashing program on your computer get terminated
+
+Otherwise you'll brick the NXT.
+
+While flashing, you'll hear a clicking sound that sounds bad/scary/evil.
+That's okay. It's what it does while it doesn't have firmware or something.
+
+Note all the programs in the bin/ folder. They can be used to upload to the brick and such without Eclipse.
+
+To flash the NXT you can go to Eclipse and select leJOS NXT at the top bar
+and run "Upload Firmware". But you can't do that until you set the plug-in
+for Eclipse.
+
+SETTING UP LeJOS Plug-in
+------------------------
+
+Open eclipse, then in the top bar go to:
+
+help -> install new software
+
+where it says work with: type or select a site, put this in
+http://www.lejos.org/tools/eclipse/plugin/nxj/
+(to install EGit, you do the same process with this link: http://download.eclipse.org/egit/updates/)
+
+Then click the checkbox, hit yes/install/finish and such until it's installed.
+It'll say something about not being able to confirm the identity of the site.
+Don't worry about that.
+
+Now if you try to use the plugin it'll tell you NXJ_HOME is not set.
+
+So...Find your LeJOS download. For me it was: ~/Downloads/leJOS_NXJ_0.9.1beta-3
+
+Now you can flash the NXT, wohoo. (top bar, lejosNXT -> upload firmware)
+
+If you get the "Is your USB cable plugged in?" message, you probably
+didn't add your user to the lego group on your system correctly.
+You can verify this is the issue by running nxjbrowse with sudo.
+If it works with sudo, then you know you have a user group problem.
+
+If you've done what the website told you to do regarding adding yourself to the lego group and such, you might need to restart your computer. Restarting the service the mentioned doesn't seem to work as proclaimed.
+
+DEVELOPING
+-----------------
+
+If you're on a 32 bit machine, uninstall/delete any 64 bit JDK's or JRE's or otherwise make sure they are not being used. This caused me a few hours of headache.
+
+
+
+In eclipse, when you make a project you should select lejos pc project.
+
+Even after you do this, for whatever reason, you must still "convert to nxj project" by right clicking on the project "folder" in the pane on the left.
+
+If you don't do this, you'll find that all the leJOS references don't work.
+
+This should already work with the project I set up, though. It's actually the LeJOS sample project with some modified code from the internet. Here's the GitHub repo url: https://github.com/narthur157/robotics-research.git
+
+Since it's a private repo, you'll need to have access privileges to use it.
+
+
