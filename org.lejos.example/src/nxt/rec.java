@@ -20,11 +20,14 @@ import java.io.DataOutputStream;
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
+import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor; //imports
 import lejos.nxt.Sound;
 import lejos.nxt.comm.USB;
 import lejos.nxt.comm.USBConnection;
+import lejos.util.Delay;
+import lejos.util.Stopwatch;
 
 public class rec {
 
@@ -36,6 +39,7 @@ public class rec {
 	NXTMotor motA = new NXTMotor(MotorPort.A);
 	NXTMotor motB = new NXTMotor(MotorPort.B);
 	NXTMotor motC = new NXTMotor(MotorPort.C);
+	Stopwatch timer = new Stopwatch();
 
 	public static void main(String[] args) throws Exception {
 		rec rec = new rec();
@@ -106,10 +110,11 @@ public class rec {
 			
 			dis = usbCon.openDataInputStream(); // create the data input and
 												// output streams
-			
+			//int iasdf = nSysTime; need to call C function here
 
 			final int RIGHT=39, LEFT=37, UP=38, DOWN=40;
 	//		int curA = 0, curB = 0, curC = 0, prevA = 0, prevB = 0, prevC = 0;
+			Motor.A.suspendRegulation();
 			NXTMotor curMot = motA;
 			int curPower=0;
 			char motChar = 'A';
@@ -123,6 +128,12 @@ public class rec {
 					// available only checks for bytes available, so it's possible that
 					// we could block if we wrote something smaller than an int
 					// but who cares
+					//LCD.drawString("Max speed: "+Motor.A.getMaxSpeed(), 0, 4);
+					LCD.drawString("A "+motA.getPower(), 0, 5);
+					LCD.drawString(""+getSpeed(motA), 5, 5);
+					LCD.drawString("B "+motB.getPower(), 0, 6);
+					LCD.drawString("C "+motC.getPower(), 0, 7);
+					LCD.refresh();
 					if (dis.available() > 0) {
 						
 						command = dis.readInt();// read in command from PC
@@ -220,6 +231,13 @@ public class rec {
 
 		catch (Exception e) {
 		}
+	}
+	
+	double getSpeed(NXTMotor motX){
+		motX.resetTachoCount();
+		timer.reset();
+		Delay.msDelay(50);
+		return ((double)motX.getTachoCount() * 100.0 /timer.elapsed());
 	}
 
 }
