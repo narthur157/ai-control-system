@@ -6,27 +6,24 @@ public class PIDController {
 	
 	private BrickComm comm;
 	private PIDLogger logger;
-	final int CHANGE_DISTURBANCE = 101;
-	//values for PID controller
-	final double P = 0.83;		// proportional multiplier
-	final double I = 0.28;		// integral multiplier
-	final double D = 0.00; 		// derivative multiplier
+	private final int CHANGE_DISTURBANCE = 101;
 	
-	double maxOutput = 8.0;   	// limits to changes made in one cycle
-	double minOutput = -8.0;   	
-	double prevError = 0.0;   	// used to compute derivative component
-	double totalError = 0.0; 	// used to compute integral component
-	double tolerance = 4.0;  	// acceptable range of speed = desiredSpeed +/- tolerance
-	double desiredSpeed = 32.0;	// set point
-	double error = 0.0;			// used to compute proportional component
-	double result = 0.0;		// amount to change driving wheel's power
-	boolean stable = false;		// when stable, change disturbance and start again
-	int cyclesStable = 0;		// keep track of how long speed stays in acceptable range
-	int testStable = 10;			// number of loops speed must remain in range to move on
-
-	//additional values to print each cycle (see line 127 for print statement)
-	int disturbPower = 0;		//power of the disturbance wheel
+	// constants
+	final private double P = 0.83, 	// proportional 
+						 I = 0.28, 	// integral
+						 D = 0.00,	// derivative	
+						 MAX_OUTPUT = 8.0,
+						 // limits to changes made in one cycle
+						 MIN_OUTPUT = MAX_OUTPUT * -1,  
+						 // acceptable range of speed = desiredSpeed +/- tolerance
+						 ERR_TOLERANCE = 4.0,
+						 DESIRED_SPEED = 32.0;  			
 	
+	private double 	prevError = 0.0,   		// used to compute derivative component
+					totalError = 0.0; 		// used to compute integral component
+	
+	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
+				testStable = 10;			// number of loops speed must remain in range to move on
 
 	private BrickState bs = new BrickState(0, 0.0, 0, 0);
 	
@@ -35,30 +32,47 @@ public class PIDController {
 		logger = loggerInit;
 	}
 	
+	// return val between min and max
 	private double clamp(double val, double min, double max) {
+		// ternary operator is (condition) ? (if true, return this) : (else, return this)
 		return val >= max ? max :
 					val <= min ? min :
 						val;			
 	}
 	
-	private void pidLoop() {
+	private boolean inRange(double val, double min, double max) {
+		return val >= min && val <= max;
+	}
+	
+	private boolean isStable(double currentSpeed, double desiredSpeed) {
+		double desiredMin = desiredSpeed - ERR_TOLERANCE;
+		double desiredMax = desiredSpeed + ERR_TOLERANCE;
+		
+		return inRange(currentSpeed, desiredMin, desiredMax);
+	}
+	
+	// modifies totalError and prevError
+	private double pidCalc(double currentSpeed, double desiredSpeed) {
+		double error = desiredSpeed - bs.currentSpeed;
+		
+		totalError += error;
+		double result = P * error + I * totalError + D * (error - prevError);
+		prevError = error;
+		
+		return result;
+	}
+	
+	// loop pid controller until stable
+	private void pidLoop(double desiredSpeed) {
 		//PID control loop
-		stable = false;
+		boolean stable = false;
 		while(!stable){
-			//calculate control value
-			error = desiredSpeed - bs.currentSpeed;
-			totalError += error;
-			//if(totalError * I > maxOutput) totalError = maxOutput/I;
-			//else if(totalError * I < minOutput) totalError = minOutput/I;
-			result = P * error + I * totalError + D * (error - prevError);
-			prevError = error;
+			double result = clamp(pidCalc(bs.currentSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
 
-			result = clamp(result, minOutput, maxOutput);
-
-			if (bs.currentSpeed >= desiredSpeed - tolerance && 
-					bs.currentSpeed <= desiredSpeed + tolerance) { cyclesStable++; }
+			if (isStable(bs.currentSpeed, desiredSpeed)) { cyclesStable++; }
 			else { cyclesStable = 0; }
 
+			// must stay stable for testStable cycles
 			if (cyclesStable >= testStable){
 				stable = true;
 				cyclesStable = 0;
@@ -66,14 +80,13 @@ public class PIDController {
 			
 			comm.sendInt((int) result);
 
-			//print values to file
 			logger.logln(bs.toString());
-			System.out.println(result);
+			System.out.println("clamped PID output: " + result);
 		}
 	}
 
-	public void runTest() {
-		out.println("" + desiredSpeed + '\t' + P + '\t' + I + '\t' + D);
+	public void runTest() throws IOException {
+		logger.logln("" + DESIRED_SPEED + '\t' + P + '\t' + I + '\t' + D);
 
 		int numLoops = 1000;
 		for (int i=0;i<numLoops;++i) 
@@ -85,10 +98,10 @@ public class PIDController {
 			comm.sendInt(CHANGE_DISTURBANCE);
 
 			//reads the new disturbance power level generated in the brick
-			disturbPower = comm.receiveInt();
+			int disturbPower = comm.receiveInt();
 			logger.logln("d\t" + disturbPower);    
 			
-			pidLoop();
+			pidLoop(DESIRED_SPEED);
 		}	
 	}
 }

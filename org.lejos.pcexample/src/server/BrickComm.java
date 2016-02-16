@@ -35,6 +35,7 @@ public class BrickComm {
 		
 		inDat = new DataInputStream(conn.getInputStream());
 		outDat = new DataOutputStream(conn.getOutputStream());
+		System.out.println("Successfully connected");
 	}
 	
 	public BrickState readBrick() throws IOException {
@@ -48,7 +49,7 @@ public class BrickComm {
 		} catch (IOException ioe) {
 			System.err.println("IO Exception reading reply");
 			throw ioe;
-		}   
+		}
 	}
 	
 	public void sendInt(int i) {
