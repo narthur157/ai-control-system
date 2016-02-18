@@ -12,7 +12,7 @@ public class Send {
 		BrickComm comm 		  	= new BrickComm();
 		Test tester 			= new DisturbanceTester(comm);
 		
-		tester.collectDisturbanceData(1000);
+		tester.runTest(1000);
 		
 		comm.close();
 	}
