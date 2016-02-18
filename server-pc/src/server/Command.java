@@ -1,9 +1,9 @@
 package server;
 
 public class Command {
-	private final byte 	DISTURB_WHEEL = (byte) 0,
-						TORQUE_ARM = (byte) 1,
-						CONTROL_WHEEL = (byte) 2;
+	public static final byte DISTURB_WHEEL = (byte) 0,
+							 TORQUE_ARM = (byte) 1,
+							 CONTROL_WHEEL = (byte) 2;
 	// bytes[0] = which wheel to change
 	// bytes[1] = power setting for this wheel
 	

@@ -61,6 +61,10 @@ public class BrickComm {
 		}
 	}
 	
+	public void sendCommand(byte wheel, int power) {
+		sendCommand(new Command(wheel, (byte) power));
+	}
+	
 	public void sendInt(int i) {
 		try {
 			outDat.writeInt(i);

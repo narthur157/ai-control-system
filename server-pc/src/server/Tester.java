@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Tester {
 	private final int CHANGE_DISTURBANCE = 101;
@@ -41,15 +42,15 @@ public class Tester {
 	}
 	
 	public void collectDisturbanceData(int numLoops) throws IOException {
+		Random rand = new Random();
 		for (int i=0;i<numLoops;++i) {
-
-			//sends a power level for the disturbance wheel within +/-50% of desired speed
-			// change disturbance wheel power randomly
-			comm.sendInt(CHANGE_DISTURBANCE);
-
-			//reads the new disturbance power level generated in the brick
-			int disturbPower = comm.receiveInt();
-			logger.logln("d\t" + disturbPower);    
+			int disturbPower = (rand.nextInt(41) + 35) * -1; //negate this since wheels face opposite directions
+			comm.sendCommand(Command.DISTURB_WHEEL, disturbPower);
+			collectData();
 		}	
+	}
+	public void collectData() throws IOException {
+		BrickState bs = comm.readBrick();
+		logger.logln(bs.toString());
 	}
 }
