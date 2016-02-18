@@ -2,11 +2,9 @@ package server;
 
 import java.io.IOException;
 
-public class PIDController {
-	
+public class PIDController implements MotorController {
 	private BrickComm comm;
 	private PIDLogger logger;
-	private final int CHANGE_DISTURBANCE = 101;
 	
 	// constants
 	final private double P = 0.83, 	// proportional 
@@ -16,11 +14,11 @@ public class PIDController {
 						 // limits to changes made in one cycle
 						 MIN_OUTPUT = MAX_OUTPUT * -1,  
 						 // acceptable range of speed = desiredSpeed +/- tolerance
-						 ERR_TOLERANCE = 4.0,
-						 DESIRED_SPEED = 32.0;  			
+						 ERR_TOLERANCE = 4.0;			
 	
 	private double 	prevError = 0.0,   		// used to compute derivative component
-					totalError = 0.0; 		// used to compute integral component
+					totalError = 0.0, 		// used to compute integral component
+					desiredSpeed = 0.0;
 	
 	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
 				testStable = 10;			// number of loops speed must remain in range to move on
@@ -32,16 +30,28 @@ public class PIDController {
 		logger = loggerInit;
 	}
 	
-	// return val between min and max
-	private double clamp(double val, double min, double max) {
-		// ternary operator is (condition) ? (if true, return this) : (else, return this)
-		return val >= max ? max :
-					val <= min ? min :
-						val;			
-	}
-	
-	private boolean inRange(double val, double min, double max) {
-		return val >= min && val <= max;
+	// get to a target speed - the main point of a motor controller
+	public void setSpeed(double desiredSpeedVal) {
+		desiredSpeed = desiredSpeedVal;
+		//PID control loop
+		boolean stable = false;
+		while(!stable){
+			double result = clamp(pidCalc(bs.currentSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
+
+			if (isStable(bs.currentSpeed, desiredSpeed)) { cyclesStable++; }
+			else { cyclesStable = 0; }
+
+			// must stay stable for testStable cycles
+			if (cyclesStable >= testStable) {
+				stable = true;
+				cyclesStable = 0;
+			}
+			
+			comm.sendInt((int) result);
+
+			logger.logln(bs.toString());
+			System.out.println("clamped PID output: " + result);
+		}
 	}
 	
 	private boolean isStable(double currentSpeed, double desiredSpeed) {
@@ -62,46 +72,19 @@ public class PIDController {
 		return result;
 	}
 	
-	// loop pid controller until stable
-	private void pidLoop(double desiredSpeed) {
-		//PID control loop
-		boolean stable = false;
-		while(!stable){
-			double result = clamp(pidCalc(bs.currentSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
-
-			if (isStable(bs.currentSpeed, desiredSpeed)) { cyclesStable++; }
-			else { cyclesStable = 0; }
-
-			// must stay stable for testStable cycles
-			if (cyclesStable >= testStable){
-				stable = true;
-				cyclesStable = 0;
-			}
-			
-			comm.sendInt((int) result);
-
-			logger.logln(bs.toString());
-			System.out.println("clamped PID output: " + result);
-		}
+	// return val between min and max
+	private double clamp(double val, double min, double max) {
+		// ternary operator is (condition) ? (if true, return this) : (else, return this)
+		return val >= max ? max :
+					val <= min ? min :
+						val;			
 	}
-
-	public void runTest() throws IOException {
-		logger.logln("" + DESIRED_SPEED + '\t' + P + '\t' + I + '\t' + D);
-
-		int numLoops = 1000;
-		for (int i=0;i<numLoops;++i) 
-		{
-
-			//sends a power level for the disturbance wheel within +/-50% of desired speed
-			//note: try just sending a set nonsense int (ie 101) and gen rand # in brick
-			//update: sends 101 to signal brick to change the disturbance wheel power
-			comm.sendInt(CHANGE_DISTURBANCE);
-
-			//reads the new disturbance power level generated in the brick
-			int disturbPower = comm.receiveInt();
-			logger.logln("d\t" + disturbPower);    
-			
-			pidLoop(DESIRED_SPEED);
-		}	
+	
+	private boolean inRange(double val, double min, double max) {
+		return val >= min && val <= max;
+	}
+	
+	public String toString() {
+		return "" + desiredSpeed + '\t' + P + '\t' + I + '\t' + D;
 	}
 }

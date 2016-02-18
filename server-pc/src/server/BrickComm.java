@@ -52,6 +52,15 @@ public class BrickComm {
 		}
 	}
 	
+	public void sendCommand(Command c) {
+		try {
+			outDat.write(c.bytes, 0, c.bytes.length);
+			System.out.println("Sending " + c);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void sendInt(int i) {
 		try {
 			outDat.writeInt(i);

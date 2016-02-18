@@ -8,8 +8,9 @@ public class Send {
 		PIDLogger logger 		= new PIDLogger();
 		BrickComm comm 		  	= new BrickComm();
 		PIDController pidCont 	= new PIDController(comm, logger);
+		Tester tester 			= new Tester(comm, logger, pidCont);
 		
-		pidCont.runTest();
+		tester.collectDisturbanceData(1000);
 		
 		comm.close();
 	}

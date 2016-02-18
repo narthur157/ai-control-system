@@ -48,6 +48,12 @@ public class PCComm {
 		return dIn.readInt();
 	}
 	
+	public Command receiveCommand() throws IOException {
+		byte[] bytes = new byte[2];
+		dIn.read(bytes, 0, bytes.length);
+		return new Command(bytes);
+	}
+	
 	public void sendBrick(BrickState bs) throws IOException {
 		dOut.writeInt(bs.time);
 		dOut.writeDouble(bs.currentSpeed);

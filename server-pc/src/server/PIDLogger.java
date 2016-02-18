@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class PIDLogger {
+public class PIDLogger implements Logger {
 	private PrintWriter out;
 	
 	public PIDLogger() throws IOException {

@@ -11,6 +11,11 @@ public class WheelTimer {
 	public WheelTimer(NXTMotor motInit) {
 		mot = motInit;
 	}
+	
+	// might be better to have a thread which wakes up every 100ms or so
+	// and calculates and sets the speed value, which would be accessible
+	// via a getter. The speed could also be logged to a file this way 
+	
 	//returns speed of given motor as a double
 	//this formula gives a value that is slightly lower than the
 	//motor power if undamped (thus upper bounded by 100)
