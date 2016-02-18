@@ -16,4 +16,8 @@ public class PIDLogger implements Logger {
 	public void logln(String s) {
 		out.println(s);
 	}
+	
+	public void close() {
+		out.close();
+	}
 }

@@ -1,2 +1,4 @@
 .metadata
-server-pc/*.csv
+server-pc/testRuns
+*.nxj
+*.nxd

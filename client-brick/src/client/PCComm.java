@@ -50,6 +50,8 @@ public class PCComm {
 	
 	public Command receiveCommand() throws IOException {
 		byte[] bytes = new byte[2];
+		LCD.clear();
+		LCD.drawString("Receiving command..", 1, 1);
 		dIn.read(bytes, 0, bytes.length);
 		return new Command(bytes);
 	}

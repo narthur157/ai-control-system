@@ -35,10 +35,14 @@ public class FileLogger implements Logger {
 	
 	public FileLogger() throws IOException {
 		// might want to write this file to a directory of test runs
-		out = new PrintWriter(new FileWriter(timestampFile()));
+		// set auto flush to true
+		out = new PrintWriter(new FileWriter("testRuns/" + timestampFile()), true);
 	}
 	
 	public void logln(String s) {
 		out.println(s);
+	}
+	public void close() {
+		out.close();
 	}
 }

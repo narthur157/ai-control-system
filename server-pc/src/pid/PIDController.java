@@ -1,7 +1,5 @@
 package pid;
 
-import java.io.IOException;
-
 import server.BrickComm;
 import server.BrickState;
 import server.MotorController;

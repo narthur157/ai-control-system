@@ -56,6 +56,7 @@ public class BrickComm {
 		try {
 			outDat.write(c.bytes, 0, c.bytes.length);
 			System.out.println("Sending " + c);
+			outDat.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
