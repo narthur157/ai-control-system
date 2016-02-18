@@ -39,6 +39,7 @@ public class BrickController {
 			try {
 				Command c = comm.receiveCommand();
 				NXTMotor motor;
+				
 				if (c.motor == Command.CONTROL_WHEEL) {
 					motor = controlWheel;
 				}
@@ -53,6 +54,7 @@ public class BrickController {
 					LCD.drawString("Invalid command, bad motor", 1, 1);
 					break;
 				}
+				
 				motor.setPower(c.power);
 			}
 			catch (EOFException e) {
@@ -79,17 +81,5 @@ public class BrickController {
 	
 	public BrickState getState() {
 		return new BrickState(procTimer.elapsed(), controlTimer.getSpeed(), controlWheel.getPower(), torqueArm.getTachoCount());
-	}
-	
-	// set disturb power randomly and send the new value back to pc
-	private void nextCycle() throws IOException {
-		++iter;
-		disturbPower = rand.nextInt(41) + 35;
-		disturbWheel.setPower(-disturbPower);	//negate this since wheels face opposite directions
-		comm.sendInt(disturbPower);
-	}
-	
-	private boolean inRange(int val, int min, int max) {
-		return val >= min && val <= max;
 	}
 }
