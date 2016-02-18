@@ -1,8 +1,10 @@
-package server;
+package pid;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import server.Logger;
 
 public class PIDLogger implements Logger {
 	private PrintWriter out;

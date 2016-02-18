@@ -1,6 +1,10 @@
-package server;
+package pid;
 
 import java.io.IOException;
+
+import server.BrickComm;
+import server.BrickState;
+import server.MotorController;
 
 public class PIDController implements MotorController {
 	private BrickComm comm;
