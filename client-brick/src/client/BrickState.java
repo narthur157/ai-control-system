@@ -2,18 +2,19 @@
 package client;
 
 public class BrickState {
-	public int time, currentPower, angle;
-	public double currentSpeed;
+	public int time, controlPower, disturbPower, angle;
+	public double disturbSpeed;
 	
-	public BrickState(int time, double currentSpeed, int currentPower, int angle) {
+	public BrickState(int time, double currentSpeed, int currentPower, int disturbPower, int angle) {
 		this.time = time; 					//total elapsed time
-		this.currentSpeed = currentSpeed;
-		this.currentPower = currentPower; 	//power of the measured wheel
+		this.disturbSpeed = currentSpeed;
+		this.controlPower = currentPower; 	//power of the measured wheel
+		this.disturbPower = disturbPower;
 		this.angle = angle; 				//angle of the arm
 	}
 	
 	public String toString() {
-		return "" + time +  '\t' + currentSpeed + '\t' + currentPower + '\t' + angle;
+		return "" + time +  '\t' + disturbSpeed + '\t' + disturbPower + '\t' + controlPower + '\t' + angle;
 	}
 
 }

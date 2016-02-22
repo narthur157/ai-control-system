@@ -50,16 +50,18 @@ public class PCComm {
 	
 	public Command receiveCommand() throws IOException {
 		byte[] bytes = new byte[2];
-		LCD.clear();
-		LCD.drawString("Receiving command..", 1, 1);
 		dIn.read(bytes, 0, bytes.length);
 		return new Command(bytes);
 	}
 	
+	// could modify this to use far less bandwidth, but might not matter at all..
+	// should do a test at some point, just send far more data than necessary and
+	// see the effect on latency
 	public void sendBrick(BrickState bs) throws IOException {
 		dOut.writeInt(bs.time);
-		dOut.writeDouble(bs.currentSpeed);
-		dOut.writeInt(bs.currentPower);
+		dOut.writeDouble(bs.disturbSpeed);
+		dOut.writeInt(bs.disturbPower);
+		dOut.writeInt(bs.controlPower);
 		dOut.writeInt(bs.angle);
 		dOut.flush();
 	}

@@ -7,10 +7,26 @@ import java.io.IOException;
 import lejos.pc.comm.NXTCommLogListener;
 import lejos.pc.comm.NXTConnector;
 
-public class BrickComm {
+public class BrickComm extends Thread {
 	private DataInputStream inDat;
-	private DataOutputStream outDat;
+	private static DataOutputStream outDat;
 	private NXTConnector conn;
+	private BrickState bs;
+	
+	// asynchronously receive updates from the brick
+	public void run() {
+		while (true) {
+			try {
+				bs = readBrick();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	synchronized public BrickState getBrick() {
+		return bs;
+	}
 	
 	public BrickComm() {
 		conn = new NXTConnector();
@@ -38,21 +54,25 @@ public class BrickComm {
 		System.out.println("Successfully connected");
 	}
 	
-	public BrickState readBrick() throws IOException {
+	private BrickState readBrick() throws IOException {
 		//read values back from brick
 		try {
+			// the order matters here - it's the order they're sent in
+			// this could all be reduced to about 8 bytes total....
+			// but premature optimization and all right
 			int time = inDat.readInt();
-			double currentSpeed = inDat.readDouble();
-			int currentPower = inDat.readInt();
+			double disturbSpeed = inDat.readDouble();
+			int disturbPower = inDat.readInt();
+			int controlPower = inDat.readInt();
 			int angle = inDat.readInt();	
-			return new BrickState(time, currentSpeed, currentPower, angle);
+			return new BrickState(time, disturbSpeed, disturbPower, controlPower, angle);
 		} catch (IOException ioe) {
 			System.err.println("IO Exception reading reply");
 			throw ioe;
 		}
 	}
 	
-	public void sendCommand(Command c) {
+	public static void sendCommand(Command c) {
 		try {
 			outDat.write(c.bytes, 0, c.bytes.length);
 			System.out.println("Sending " + c);
@@ -62,26 +82,8 @@ public class BrickComm {
 		}
 	}
 	
-	public void sendCommand(byte wheel, int power) {
+	public static void sendCommand(byte wheel, int power) {
 		sendCommand(new Command(wheel, (byte) power));
-	}
-	
-	public void sendInt(int i) {
-		try {
-			outDat.writeInt(i);
-			outDat.flush();
-		} catch (IOException ioe) {
-			System.err.println("IO Exception writing bytes");
-		}
-	}
-	
-	public int receiveInt() throws IOException {
-		try {
-			return inDat.readInt();
-		} catch (IOException ioe) {
-			System.err.println("IO Exception reading reply");
-			throw ioe;
-		} 
 	}
 	
 	public void close() {

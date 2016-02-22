@@ -24,7 +24,7 @@ public class FileLogger implements Logger {
 		// credit: http://stackoverflow.com/questions/5683728/convert-java-util-date-to-string
 		// Create an instance of SimpleDateFormat used for formatting 
 		// the string representation of date (month/day/year)
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+		DateFormat df = new SimpleDateFormat("MM-dd-HH-mm");
 
 		// Get the date today using Calendar object.
 		Date today = Calendar.getInstance().getTime();        
@@ -37,6 +37,7 @@ public class FileLogger implements Logger {
 		// might want to write this file to a directory of test runs
 		// set auto flush to true
 		out = new PrintWriter(new FileWriter("testRuns/" + timestampFile()), true);
+		logln("Time \t LdSpd \t LdPwr \t CtrlPwr \t Angle \t Input");
 	}
 	
 	public void logln(String s) {

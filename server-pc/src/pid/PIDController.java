@@ -25,7 +25,7 @@ public class PIDController implements MotorController {
 	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
 				testStable = 10;			// number of loops speed must remain in range to move on
 
-	private BrickState bs = new BrickState(0, 0.0, 0, 0);
+	private BrickState bs = new BrickState(0, 0.0, 0, 0, 0);
 	
 	public PIDController(BrickComm commInit, PIDLogger loggerInit) {
 		comm = commInit;
@@ -38,9 +38,9 @@ public class PIDController implements MotorController {
 		//PID control loop
 		boolean stable = false;
 		while(!stable){
-			double result = clamp(pidCalc(bs.currentSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
+			double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
 
-			if (isStable(bs.currentSpeed, desiredSpeed)) { cyclesStable++; }
+			if (isStable(bs.disturbSpeed, desiredSpeed)) { cyclesStable++; }
 			else { cyclesStable = 0; }
 
 			// must stay stable for testStable cycles
@@ -49,7 +49,7 @@ public class PIDController implements MotorController {
 				cyclesStable = 0;
 			}
 			
-			comm.sendInt((int) result);
+	//TODO:	comm.sendInt((int) result);
 
 			logger.logln(bs.toString());
 			System.out.println("clamped PID output: " + result);
@@ -65,7 +65,7 @@ public class PIDController implements MotorController {
 	
 	// modifies totalError and prevError
 	private double pidCalc(double currentSpeed, double desiredSpeed) {
-		double error = desiredSpeed - bs.currentSpeed;
+		double error = desiredSpeed - currentSpeed;
 		
 		totalError += error;
 		double result = P * error + I * totalError + D * (error - prevError);

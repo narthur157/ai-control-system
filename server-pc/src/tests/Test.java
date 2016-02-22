@@ -8,6 +8,9 @@ import server.Logger;
 public abstract class Test {
 	protected BrickComm comm;
 	protected Logger logger;
+	protected int changeFlag = 0;
+	protected BrickState bs;
+	protected BrickState prevBs;
 	
 	public Test(BrickComm commInit) {
 		comm = commInit;
@@ -16,7 +19,14 @@ public abstract class Test {
 	public void runTest(int numLoops) throws IOException {
 		try {
 			for (int i=0;i<numLoops;++i) {
-				test();
+				// don't change anything until the system stabilizes
+				if (bs == prevBs) {
+					test();
+				}
+				else {
+					if (bs != null && prevBs != null) 
+						System.out.println("bs: " + bs.toString() + " != prevBs: "  + prevBs.toString());
+				}
 				collectData();
 			}
 		}
@@ -29,8 +39,9 @@ public abstract class Test {
 
 	public void collectData() throws IOException {
 		try {
-			BrickState bs = comm.readBrick();
-			logger.logln(bs.toString());
+			prevBs = bs;
+			bs = comm.readBrick();
+			logger.logln(bs.toString() + "\t" + changeFlag);
 			System.out.println(bs.toString());
 		}
 		catch(IOException ioe) {
