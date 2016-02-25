@@ -12,6 +12,8 @@ public class Send {
 		BrickComm comm 		  	= new BrickComm();
 		Test tester 			= new DataCollector(comm);
 		
+		// start receiving messages from the brick
+		comm.start();
 		tester.runTest(1000);
 		
 		comm.close();

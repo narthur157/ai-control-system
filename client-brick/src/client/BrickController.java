@@ -23,7 +23,6 @@ public class BrickController {
 	WheelTimer disturbTimer = new WheelTimer(disturbWheel);
 	Stopwatch procTimer = new Stopwatch();		//times the WHole process
 
-
 	public BrickController(PCComm commInit) {
 		comm = commInit;
 	}

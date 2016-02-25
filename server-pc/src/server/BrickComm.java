@@ -3,29 +3,35 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import lejos.pc.comm.NXTCommLogListener;
 import lejos.pc.comm.NXTConnector;
 
 public class BrickComm extends Thread {
 	private DataInputStream inDat;
-	private static DataOutputStream outDat;
+	private DataOutputStream outDat;
 	private NXTConnector conn;
-	private BrickState bs;
+	private ArrayList<BrickListener> listeners = new ArrayList<BrickListener>();
 	
 	// asynchronously receive updates from the brick
 	public void run() {
 		while (true) {
 			try {
-				bs = readBrick();
+				// blocking call
+				BrickState bs = readBrick();
+				for (BrickListener l : listeners) {
+					l.updateBrick(bs);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	synchronized public BrickState getBrick() {
-		return bs;
+
+	// Listener pattern 
+	public void addListener(BrickListener bl) {
+		listeners.add(bl);
 	}
 	
 	public BrickComm() {
@@ -40,7 +46,6 @@ public class BrickComm extends Thread {
 			public void logEvent(Throwable throwable) {
 				System.out.println("USBSend Log.listener - stack trace: ");
 				throwable.printStackTrace();
-
 			}
 		});
 		
@@ -72,7 +77,7 @@ public class BrickComm extends Thread {
 		}
 	}
 	
-	public static void sendCommand(Command c) {
+	public void sendCommand(Command c) {
 		try {
 			outDat.write(c.bytes, 0, c.bytes.length);
 			System.out.println("Sending " + c);
@@ -82,7 +87,7 @@ public class BrickComm extends Thread {
 		}
 	}
 	
-	public static void sendCommand(byte wheel, int power) {
+	public void sendCommand(byte wheel, int power) {
 		sendCommand(new Command(wheel, (byte) power));
 	}
 	

@@ -27,11 +27,11 @@ public class BrickState {
 		long temp;
 		temp = Double.doubleToLongBits(disturbSpeed);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + time;
 		return result;
 	}
 
 	// eclipse generated equals method
+	// doesn't include time in comparison
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -49,8 +49,6 @@ public class BrickState {
 			return false;
 		if (Double.doubleToLongBits(disturbSpeed) != Double
 				.doubleToLongBits(other.disturbSpeed))
-			return false;
-		if (time != other.time)
 			return false;
 		return true;
 	}
