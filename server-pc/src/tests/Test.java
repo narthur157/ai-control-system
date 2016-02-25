@@ -7,6 +7,8 @@ import server.BrickState;
 import server.Logger;
 
 public abstract class Test implements BrickListener {
+	private final int STABLE_COUNT = 300;
+	
 	protected BrickComm comm;
 	protected Logger logger;
 	protected int changeFlag = 0;
@@ -27,7 +29,9 @@ public abstract class Test implements BrickListener {
 			while(testCount < numLoops) {
 				// I don't think this needs to be synchronized because
 				// we know this will only be notified when the comparison fails
-				this.wait();
+				synchronized(this) {
+					this.wait();
+				}
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -48,7 +52,7 @@ public abstract class Test implements BrickListener {
 		// only run updates once stabilized
 		if (bs.equals(prevBs)) {
 			stableCount++;
-			if (stableCount > 50) {
+			if (stableCount > STABLE_COUNT) {
 				stableCount = 0;
 				
 				try {
@@ -58,7 +62,10 @@ public abstract class Test implements BrickListener {
 					e.printStackTrace();
 				}
 				if (testCount >= numLoops) {
-					this.notify();
+					System.out.println("Completed " + testCount + " tests");
+					synchronized(this) {
+						this.notify();
+					}
 				}
 			}
 		}
@@ -66,6 +73,6 @@ public abstract class Test implements BrickListener {
 	
 	final public void collectData() {
 		logger.logln(bs.toString() + "\t" + changeFlag);
-		System.out.println(bs.toString());
+		//System.out.println(bs.toString());
 	}
 }

@@ -15,7 +15,7 @@ public class WheelTimer extends Thread {
 	
 	// continuously update the value of speed rather than blocking and updating when called
 	public void run() {
-		while (true) {
+		while (!isInterrupted()) {
 			// multiply by 1000 to get degrees/second instead of degrees/millisecond
 			// fancy synchronized block
 			synchronized(this) {
@@ -36,5 +36,9 @@ public class WheelTimer extends Thread {
 	// synchronized for thread safety
 	synchronized double getSpeed() {
 		return speed;
+	}
+	
+	public void stopThread() {
+		this.interrupt();
 	}
 }

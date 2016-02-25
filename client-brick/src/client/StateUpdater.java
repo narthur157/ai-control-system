@@ -18,12 +18,20 @@ public class StateUpdater extends Thread {
 	// and we should always want them anyways
 	public void run() {
 		try {
-			while (true) {
+			while (!isInterrupted()) {
 				comm.sendBrick(bc.getState());
-				Delay.msDelay(5);
+				Thread.sleep(5);
 			}
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
+		catch (InterruptedException e) {
+			// we probably did this ourselves, so just stop
+		}
+	}
+	
+	public void stopThread() {
+		this.interrupt();
 	}
 }

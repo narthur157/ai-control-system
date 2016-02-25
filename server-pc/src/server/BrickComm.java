@@ -14,9 +14,11 @@ public class BrickComm extends Thread {
 	private NXTConnector conn;
 	private ArrayList<BrickListener> listeners = new ArrayList<BrickListener>();
 	
+	private boolean finished = false;
+	
 	// asynchronously receive updates from the brick
 	public void run() {
-		while (true) {
+		while (!finished) {
 			try {
 				// blocking call
 				BrickState bs = readBrick();
@@ -24,7 +26,11 @@ public class BrickComm extends Thread {
 					l.updateBrick(bs);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				if (!finished) {
+					System.err.println("Aborting brick reads");
+				}
+				
+				break;
 			}
 		}
 	}
@@ -56,6 +62,7 @@ public class BrickComm extends Thread {
 		
 		inDat = new DataInputStream(conn.getInputStream());
 		outDat = new DataOutputStream(conn.getOutputStream());
+		
 		System.out.println("Successfully connected");
 	}
 	
@@ -70,9 +77,21 @@ public class BrickComm extends Thread {
 			int disturbPower = inDat.readInt();
 			int controlPower = inDat.readInt();
 			int angle = inDat.readInt();	
+			
 			return new BrickState(time, disturbSpeed, disturbPower, controlPower, angle);
 		} catch (IOException ioe) {
-			System.err.println("IO Exception reading reply");
+			// we force this exception when we call close, so avoid complaining
+			// if we are doing this ourselves
+			if (!finished) {
+				System.err.println("IO Exception reading reply");
+			}
+			
+			for (BrickListener bl : listeners) {
+				synchronized(bl) {
+					bl.notify();
+				}
+			}
+			
 			throw ioe;
 		}
 	}
@@ -87,11 +106,17 @@ public class BrickComm extends Thread {
 		}
 	}
 	
+	public void stopBrick() {
+		sendCommand(Command.STOP, 0);
+	}
+	
 	public void sendCommand(byte wheel, int power) {
 		sendCommand(new Command(wheel, (byte) power));
 	}
 	
 	public void close() {
+		finished = true;
+		
 		try {
 			inDat.close();
 			outDat.close();

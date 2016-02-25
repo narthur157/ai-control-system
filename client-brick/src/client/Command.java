@@ -3,7 +3,8 @@ package client;
 public class Command {
 	public static final byte DISTURB_WHEEL = (byte) 0,
 							 TORQUE_ARM = (byte) 1,
-							 CONTROL_WHEEL = (byte) 2;
+							 CONTROL_WHEEL = (byte) 2,
+							 STOP = (byte) 3;
 	
 	public byte motor, power;
 	
