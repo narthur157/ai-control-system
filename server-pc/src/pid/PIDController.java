@@ -1,6 +1,7 @@
 package pid;
 
 import communication.BrickComm;
+import communication.Command;
 
 import framework.BrickState;
 import framework.MotorController;
@@ -26,36 +27,48 @@ public class PIDController implements MotorController {
 	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
 				testStable = 10;			// number of loops speed must remain in range to move on
 
-	private BrickState bs = new BrickState(0, 0.0, 0, 0, 0);
+	//private BrickState bs = new BrickState(0, 0.0, 0, 0, 0);
 	
 	public PIDController(BrickComm commInit, PIDLogger loggerInit) {
 		comm = commInit;
 		logger = loggerInit;
 	}
 	
-	// get to a target speed - the main point of a motor controller
-	public void setSpeed(double desiredSpeedVal) {
-		desiredSpeed = desiredSpeedVal;
-		//PID control loop
-		boolean stable = false;
-		while(!stable){
-			double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
-
-			if (isStable(bs.disturbSpeed, desiredSpeed)) { cyclesStable++; }
-			else { cyclesStable = 0; }
-
-			// must stay stable for testStable cycles
-			if (cyclesStable >= testStable) {
-				stable = true;
-				cyclesStable = 0;
-			}
-			
-	//TODO:	comm.sendInt((int) result);
-
-			logger.logln(bs.toString());
-			System.out.println("clamped PID output: " + result);
-		}
+	/**
+	 * Do a PID cycle, assumes desiredSpeed has been set already
+	 */
+	public void moveTowardsSpeed(BrickState bs) {
+		double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
+		
+		comm.sendCommand(Command.DISTURB_WHEEL, (int) result);
+		
+		System.out.println("clamped PID output: " + result);
 	}
+	
+//	// get to a target speed - the main point of a motor controller
+//	public void setSpeed(double desiredSpeedVal) {
+//		desiredSpeed = desiredSpeedVal;
+//		//PID control loop
+//		boolean stable = false;
+//		while(!stable){
+//			double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
+//
+//			if (isStable(bs.disturbSpeed, desiredSpeed)) { cyclesStable++; }
+//			else { cyclesStable = 0; }
+//
+//			// must stay stable for testStable cycles
+//			if (cyclesStable >= testStable) {
+//				stable = true;
+//				cyclesStable = 0;
+//			}
+//			
+//			comm.sendCommand(Command.DISTURB_WHEEL, (int) result);
+//	//TODO:	comm.sendInt((int) result);
+//
+//			logger.logln(bs.toString());
+//			System.out.println("clamped PID output: " + result);
+//		}
+//	}
 	
 	private boolean isStable(double currentSpeed, double desiredSpeed) {
 		double desiredMin = desiredSpeed - ERR_TOLERANCE;
@@ -89,5 +102,10 @@ public class PIDController implements MotorController {
 	
 	public String toString() {
 		return "" + desiredSpeed + '\t' + P + '\t' + I + '\t' + D;
+	}
+
+	public void setSpeed(double s) {
+		// TODO Auto-generated method stub
+		
 	}
 }

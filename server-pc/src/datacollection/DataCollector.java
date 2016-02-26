@@ -6,7 +6,6 @@ import java.util.Random;
 import communication.BrickComm;
 import communication.Command;
 
-import framework.FileLogger;
 import framework.Test;
 
 
@@ -17,7 +16,6 @@ public class DataCollector extends Test {
 	
 	public DataCollector(BrickComm commInit) throws IOException {
 		super(commInit);
-		logger = new FileLogger();
 		// give our column labels
 	}
 
