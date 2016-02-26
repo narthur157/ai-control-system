@@ -1,10 +1,14 @@
-package tests;
+package datacollection;
 
 import java.io.IOException;
 import java.util.Random;
 
-import server.BrickComm;
-import server.Command;
+import communication.BrickComm;
+import communication.Command;
+
+import framework.FileLogger;
+import framework.Test;
+
 
 public class DataCollector extends Test {
 

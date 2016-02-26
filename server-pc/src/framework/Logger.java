@@ -1,4 +1,4 @@
-package server;
+package framework;
 
 // might not be very useful as an interface, all implementations similar thus far
 public interface Logger {

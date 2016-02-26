@@ -1,4 +1,4 @@
-package server;
+package framework;
 
 public class BrickState {
 	public int time, controlPower, disturbPower, angle;

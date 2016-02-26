@@ -1,4 +1,4 @@
-package server;
+package communication;
 
 public class Command {
 	public static final byte DISTURB_WHEEL = (byte) 0,

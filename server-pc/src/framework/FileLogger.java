@@ -1,4 +1,4 @@
-package tests;
+package framework;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import server.Logger;
 
 public class FileLogger implements Logger {
 	private PrintWriter out;

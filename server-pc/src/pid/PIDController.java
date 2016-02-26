@@ -1,8 +1,9 @@
 package pid;
 
-import server.BrickComm;
-import server.BrickState;
-import server.MotorController;
+import communication.BrickComm;
+
+import framework.BrickState;
+import framework.MotorController;
 
 public class PIDController implements MotorController {
 	private BrickComm comm;

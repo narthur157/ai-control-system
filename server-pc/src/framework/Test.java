@@ -1,10 +1,9 @@
-package tests;
+package framework;
 
 import java.io.IOException;
-import server.BrickComm;
-import server.BrickListener;
-import server.BrickState;
-import server.Logger;
+
+import communication.BrickComm;
+import communication.BrickListener;
 
 public abstract class Test implements BrickListener {
 	private final int STABLE_COUNT = 300;
