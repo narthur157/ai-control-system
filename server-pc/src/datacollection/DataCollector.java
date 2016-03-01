@@ -18,6 +18,11 @@ public class DataCollector extends Test {
 		super(commInit);
 		// give our column labels
 	}
+	
+	@Override
+	public void update() {
+		
+	}
 
 	@Override
 	public void test() throws IOException {
