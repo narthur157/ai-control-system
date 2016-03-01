@@ -1,1 +1,4 @@
-Do `chmod +x run` to make the run script work. This script makes the lofty assumption that everything in the projects is compiled, ie by eclipse and in a very specific format. If you change editors, this script will almost definitely break.
+Research on using neural networks to make motor controllers better.
+
+To use run script:
+Do `chmod +x run`. This script makes the lofty assumption that everything in the projects is compiled, ie by eclipse and in a very specific format. If you change editors, this script will almost definitely break.
