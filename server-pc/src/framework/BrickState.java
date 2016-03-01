@@ -47,10 +47,16 @@ public class BrickState {
 			return false;
 		if (disturbPower != other.disturbPower)
 			return false;
-		if (Double.doubleToLongBits(disturbSpeed) != Double
-				.doubleToLongBits(other.disturbSpeed))
+		
+		// allow for a bit of error in this comparison..more than just float error
+		double diff = Math.abs(Math.abs(disturbSpeed) - Math.abs(other.disturbSpeed));
+		// allow 5% error on the speed
+		double errAllowance = Math.abs(disturbSpeed) / 20;
+		
+		if (diff > errAllowance) {
 			return false;
+		}
+			
 		return true;
 	}
-
 }

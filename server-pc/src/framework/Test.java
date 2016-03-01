@@ -6,7 +6,7 @@ import communication.BrickComm;
 import communication.BrickListener;
 
 public abstract class Test implements BrickListener {
-	private final int STABLE_COUNT = 50;
+	private final int STABLE_COUNT = 200;
 	
 	protected BrickComm comm;
 	protected Logger logger;
@@ -83,6 +83,9 @@ public abstract class Test implements BrickListener {
 		
 		// only run updates once stabilized
 		if (!bs.equals(prevBs)) {
+			//System.out.println("Resetting stable count. Count was " + stableCount);
+			if (bs != null && prevBs != null)
+				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
 			stableCount = 0;
 		}
 		else {

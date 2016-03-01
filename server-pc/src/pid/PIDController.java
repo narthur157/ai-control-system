@@ -6,9 +6,9 @@ import communication.Command;
 import framework.BrickState;
 import framework.MotorController;
 
+// this currently is quite broken/requires almost total re-write
 public class PIDController implements MotorController {
 	private BrickComm comm;
-	private PIDLogger logger;
 	
 	// constants
 	final private double P = 0.83, 	// proportional 
@@ -24,14 +24,13 @@ public class PIDController implements MotorController {
 					totalError = 0.0, 		// used to compute integral component
 					desiredSpeed = 0.0;
 	
-	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
-				testStable = 10;			// number of loops speed must remain in range to move on
+//	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
+//				testStable = 10;			// number of loops speed must remain in range to move on
 
 	//private BrickState bs = new BrickState(0, 0.0, 0, 0, 0);
 	
-	public PIDController(BrickComm commInit, PIDLogger loggerInit) {
+	public PIDController(BrickComm commInit) {
 		comm = commInit;
-		logger = loggerInit;
 	}
 	
 	/**

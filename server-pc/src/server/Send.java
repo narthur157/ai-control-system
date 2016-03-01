@@ -14,8 +14,8 @@ import framework.Test;
 
 public class Send {	
 	public static void main(String[] args) {
-		runPidTest();
-		//runDataTest();
+		//runPidTest();
+		runDataTest();
 	}
 	
 	public static void runPidTest() {
@@ -45,7 +45,7 @@ public class Send {
 			
 			// start receiving messages from the brick
 			comm.start();
-			tester.runTest(30);
+			tester.runTest(5);
 		}
 		catch (IOException e) {
 			
