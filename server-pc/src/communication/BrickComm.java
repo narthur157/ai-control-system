@@ -3,47 +3,31 @@ package communication;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-
-import framework.BrickState;
-
 
 import lejos.pc.comm.NXTCommLogListener;
 import lejos.pc.comm.NXTConnector;
 
-public class BrickComm extends Thread {
-	private DataInputStream inDat;
-	private DataOutputStream outDat;
-	private NXTConnector conn;
-	private ArrayList<BrickListener> listeners = new ArrayList<BrickListener>();
+/**
+ * This class manages everything in the communication package
+ * 
+ * @author Nick Arthur
+ */
+public class BrickComm {
+	private static DataInputStream inDat;
+	private static DataOutputStream outDat;
+	private static NXTConnector conn;
+	private static BrickUpdater updater;
 	
-	private boolean finished = false;
-	
-	// asynchronously receive updates from the brick
-	public void run() {
-		while (!finished) {
-			try {
-				// blocking call
-				BrickState bs = readBrick();
-				for (BrickListener l : listeners) {
-					l.updateBrick(bs);
-				}
-			} catch (IOException e) {
-				if (!finished) {
-					System.err.println("Aborting brick reads");
-				}
-				
-				break;
-			}
-		}
-	}
-
-	// Listener pattern 
-	public void addListener(BrickListener bl) {
-		listeners.add(bl);
+	// initialization
+	static {
+		start();
 	}
 	
-	public BrickComm() {
+	/**
+	 * Connect to a brick, set up streams and the brick
+	 * update event source
+	 */
+	public static void start() {
 		conn = new NXTConnector();
 
 		conn.addLogListener(new NXTCommLogListener() {
@@ -66,59 +50,58 @@ public class BrickComm extends Thread {
 		inDat = new DataInputStream(conn.getInputStream());
 		outDat = new DataOutputStream(conn.getOutputStream());
 		
+		updater = new BrickUpdater(inDat);
+		updater.start();
+		
 		System.out.println("Successfully connected");
 	}
-	
-	private BrickState readBrick() throws IOException {
-		//read values back from brick
-		try {
-			// the order matters here - it's the order they're sent in
-			// this could all be reduced to about 8 bytes total....
-			// but premature optimization and all right
-			int time = inDat.readInt();
-			double disturbSpeed = inDat.readDouble();
-			int disturbPower = inDat.readInt();
-			int controlPower = inDat.readInt();
-			int angle = inDat.readInt();	
-			
-			return new BrickState(time, disturbSpeed, disturbPower, controlPower, angle);
-		} catch (IOException ioe) {
-			// we force this exception when we call close, so avoid complaining
-			// if we are doing this ourselves
-			if (!finished) {
-				System.err.println("IO Exception reading reply");
-			}
-			
-			for (BrickListener bl : listeners) {
-				synchronized(bl) {
-					bl.notify();
-				}
-			}
-			
-			throw ioe;
-		}
+
+	// Listener/Observer pattern
+	public static void addListener(BrickListener bl) {
+		updater.listeners.add(bl);
 	}
 	
-	public void sendCommand(Command c) {
+	public static void rmListener(BrickListener bl) {
+		updater.listeners.remove(bl);
+	}
+	
+	/**
+	 * Send the bit representation of a command
+	 * @param c
+	 */
+	public static void sendCommand(Command c) {
 		try {
-			outDat.write(c.bytes, 0, c.bytes.length);
 			System.out.println("Sending " + c);
+			outDat.write(c.bytes, 0, c.bytes.length);
 			outDat.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			close();
 		}
 	}
 	
-	public void stopBrick() {
-		sendCommand(Command.STOP, 0);
-	}
-	
-	public void sendCommand(byte wheel, int power) {
+	/**
+	 * Convenience method to construct a Command and send it
+	 * 
+	 * @param wheel - Should be a wheel constant from Command
+	 * @param power - Power for the motor, should be in [-100, 100]
+	 */
+	public static void sendCommand(byte wheel, int power) {
 		sendCommand(new Command(wheel, (byte) power));
 	}
 	
-	public void close() {
-		finished = true;
+	/**
+	 * Stop all motors and execution on brick
+	 */
+	public static void stopBrick() {
+		sendCommand(Command.STOP, 0);
+	}
+	
+	/**
+	 * Should undo everything from start
+	 */
+	public static void close() {
+		updater.stopUpdater();
 		
 		try {
 			inDat.close();

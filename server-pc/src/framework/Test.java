@@ -8,26 +8,22 @@ import communication.BrickListener;
 public abstract class Test implements BrickListener {
 	private final int STABLE_COUNT = 200;
 	
-	protected BrickComm comm;
 	protected Logger logger;
 	protected int changeFlag = 0;
 	protected BrickState bs, prevBs;
 	
 	private int testCount = 0, numLoops = 0, stableCount = 0;
 	
-	public Test(BrickComm commInit) throws IOException {
-		comm = commInit;
+	public Test() throws IOException {
 		logger = new FileLogger();
 	}
 	
 	/**
 	 * 
-	 * @param commInit
 	 * @param loggerInit - Logger written to in collectData
 	 * @throws IOException
 	 */
-	public Test(BrickComm commInit, Logger loggerInit) throws IOException {
-		comm = commInit;
+	public Test(Logger loggerInit) throws IOException {
 		logger = loggerInit;
 	}
 	
@@ -47,7 +43,7 @@ public abstract class Test implements BrickListener {
 		numLoops = numLoopsIn;
 		
 		try {
-			comm.addListener(this);
+			BrickComm.addListener(this);
 			
 			while(testCount < numLoops) {
 				// I don't think this needs to be synchronized because
@@ -60,15 +56,10 @@ public abstract class Test implements BrickListener {
 			e.printStackTrace();
 		}
 		finally {
+			BrickComm.rmListener(this);
 			logger.close();
 		}
 	}
-		
-	/** 
-	 * this signifies that updateBrick has been called,
-	 * but a new test has not necessarily started
-	*/ 
-	protected void update() { /* do nothing unless overridden */ }
 	
 	/**
 	 * Implement BrickListener - receive a state update
@@ -78,9 +69,7 @@ public abstract class Test implements BrickListener {
 		prevBs = bs;
 		bs = bsIn;
 		collectData();
-		
-		update();
-		
+
 		// only run updates once stabilized
 		if (!bs.equals(prevBs)) {
 			//System.out.println("Resetting stable count. Count was " + stableCount);

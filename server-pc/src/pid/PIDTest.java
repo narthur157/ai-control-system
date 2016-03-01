@@ -8,8 +8,8 @@ import framework.Test;
 
 public class PIDTest extends Test {
 
-	public PIDTest(BrickComm commInit) throws IOException {
-		super(commInit);
+	public PIDTest() throws IOException {
+		super();
 	}
 
 	@Override

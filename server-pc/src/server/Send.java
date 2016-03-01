@@ -11,7 +11,10 @@ import framework.Test;
 
 //for use with Receive.java
 
-
+/**
+ * The driver for the server side code
+ * @author Nick Arthur
+ */
 public class Send {	
 	public static void main(String[] args) {
 		//runPidTest();
@@ -19,40 +22,32 @@ public class Send {
 	}
 	
 	public static void runPidTest() {
-		BrickComm comm = new BrickComm();
-
 		try {
-			Test tester = new PIDTest(comm);
+			Test tester = new PIDTest();
 			
-			// start receiving messages from the brick
-			comm.start();
 			tester.runTest(30);
 		}
 		catch (IOException e) {
 			
 		}
 		finally {
-			comm.stopBrick();
-			comm.close();
+			BrickComm.stopBrick();
+			BrickComm.close();
 		}
 	}
 	
 	public static void runDataTest() {
-		BrickComm comm = new BrickComm();
-		
 		try {
-			Test tester = new DataCollector(comm);
+			Test tester = new DataCollector();
 			
-			// start receiving messages from the brick
-			comm.start();
 			tester.runTest(5);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally {
-			comm.stopBrick();
-			comm.close();
+			BrickComm.stopBrick();
+			BrickComm.close();
 		}
 	}
 }

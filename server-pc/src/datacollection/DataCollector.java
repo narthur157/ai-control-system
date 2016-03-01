@@ -14,14 +14,8 @@ public class DataCollector extends Test {
 	private Random rand = new Random();
 	private int count = 0;
 	
-	public DataCollector(BrickComm commInit) throws IOException {
-		super(commInit);
-		// give our column labels
-	}
-	
-	@Override
-	public void update() {
-		
+	public DataCollector() throws IOException {
+		super();
 	}
 
 	@Override
@@ -31,12 +25,12 @@ public class DataCollector extends Test {
 		
 		switch (count) {
 			case 0: 
-				comm.sendCommand(Command.CONTROL_WHEEL, randPower);
+				BrickComm.sendCommand(Command.CONTROL_WHEEL, randPower);
 				changeFlag = 1;
 				break;
 			case 1:
 				// negate this since wheels face opposite directions
-				comm.sendCommand(Command.DISTURB_WHEEL, randPower * -1); 
+				BrickComm.sendCommand(Command.DISTURB_WHEEL, randPower * -1); 
 				changeFlag = 2;
 				break;
 		}
