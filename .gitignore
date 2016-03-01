@@ -1,5 +1,6 @@
 .metadata
 server-pc/testRuns
+testRuns/
 server-pc/bin/*
 *.nxj
 *.nxd

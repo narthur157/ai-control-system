@@ -48,7 +48,7 @@ public class Send {
 			tester.runTest(5);
 		}
 		catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 		finally {
 			comm.stopBrick();

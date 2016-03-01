@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p testRuns &&
+nxj -r client.Receive -cp client-brick/bin/ && 
+nxjpc -cp server-pc/bin/ server.Send 
