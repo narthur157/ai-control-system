@@ -19,7 +19,7 @@ public class DataCollector extends Test {
 	}
 
 	@Override
-	public void test() throws IOException {
+	public void test() {
 		changeFlag = 0;
 		int randPower = (rand.nextInt(41) + 35); 
 		

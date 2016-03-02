@@ -13,7 +13,7 @@ public class PIDTest extends Test {
 	}
 
 	@Override
-	public void test() throws IOException {
+	public void test() {
 		
 	}
 

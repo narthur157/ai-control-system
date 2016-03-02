@@ -32,7 +32,7 @@ public abstract class Test implements BrickListener {
 	 * Gets called once the system has stabilized
 	 * @throws IOException
 	 */
-	abstract protected void test() throws IOException;
+	abstract protected void test();
 	
 	/**
 	 * 
@@ -73,7 +73,7 @@ public abstract class Test implements BrickListener {
 		// only run updates once stabilized
 		if (!bs.equals(prevBs)) {
 			//System.out.println("Resetting stable count. Count was " + stableCount);
-			if (bs != null && prevBs != null)
+			//if (bs != null && prevBs != null)
 				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
 			stableCount = 0;
 		}
@@ -82,20 +82,20 @@ public abstract class Test implements BrickListener {
 			if (stableCount > STABLE_COUNT) {
 				stableCount = 0;
 				
-				try {
-					
-					test();
-					testCount++;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				test();
+				testCount++;
+				
 				if (testCount >= numLoops) {
-					System.out.println("Completed " + testCount + " tests");
-					synchronized(this) {
-						this.notify();
-					}
+					finishTest();
 				}
 			}
+		}
+	}
+	
+	final private void finishTest() {
+		System.out.println("Completed " + testCount + " tests");
+		synchronized(this) {
+			this.notify();
 		}
 	}
 	
