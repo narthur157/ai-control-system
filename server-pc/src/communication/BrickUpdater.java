@@ -40,9 +40,10 @@ public class BrickUpdater extends Thread {
 			double disturbSpeed = inDat.readDouble();
 			int disturbPower = inDat.readInt();
 			int controlPower = inDat.readInt();
+			int torquePower = inDat.readInt();
 			int angle = inDat.readInt();	
 			
-			return new BrickState(time, disturbSpeed, disturbPower, controlPower, angle);
+			return new BrickState(time, disturbSpeed, disturbPower, controlPower, torquePower, angle);
 		} catch (IOException ioe) {
 			// we force this exception when we call close, so avoid complaining
 			// if we are doing this ourselves

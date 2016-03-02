@@ -13,9 +13,13 @@ public class DataCollector extends Test {
 
 	private Random rand = new Random();
 	private int count = 0;
+	private AdHoc adhoc;
 	
 	public DataCollector() throws IOException {
 		super();
+		// make the torque arm resist movement
+		adhoc = new AdHoc(Command.TORQUE_ARM);
+		adhoc.holdPosition();
 	}
 
 	@Override

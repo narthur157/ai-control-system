@@ -74,6 +74,6 @@ public class BrickController {
 	public BrickState getState() {
 		return new BrickState(procTimer.elapsed(), disturbTimer.getSpeed(), 
 							  disturbWheel.getPower(), controlWheel.getPower(), 
-							  torqueArm.getTachoCount());
+							  torqueArm.getPower(), torqueArm.getTachoCount());
 	}
 }
