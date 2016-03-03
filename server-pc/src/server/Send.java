@@ -18,7 +18,7 @@ import framework.Test;
 public class Send {	
 	public static void main(String[] args) {
 		//runPidTest();
-		runDataTest();
+		runDataTest(5);
 	}
 	
 	public static void runPidTest() {
@@ -36,11 +36,11 @@ public class Send {
 		}
 	}
 	
-	public static void runDataTest() {
+	public static void runDataTest(int numRuns) {
 		try {
 			Test tester = new DataCollector();
 			
-			tester.runTest(5);
+			tester.runTest(numRuns);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

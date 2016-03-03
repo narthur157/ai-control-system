@@ -10,16 +10,12 @@ import framework.Test;
 
 
 public class DataCollector extends Test {
-
+	
 	private Random rand = new Random();
 	private int count = 0;
-	private AdHoc adhoc;
 	
 	public DataCollector() throws IOException {
 		super();
-		// make the torque arm resist movement
-		adhoc = new AdHoc(Command.TORQUE_ARM);
-		adhoc.holdPosition();
 	}
 
 	@Override
@@ -28,14 +24,14 @@ public class DataCollector extends Test {
 		int randPower = (rand.nextInt(41) + 35); 
 		
 		switch (count) {
-			case 0: 
-				BrickComm.sendCommand(Command.CONTROL_WHEEL, randPower);
+			case 0:
 				changeFlag = 1;
+				BrickComm.sendCommand(Command.CONTROL_WHEEL, randPower);
 				break;
 			case 1:
 				// negate this since wheels face opposite directions
-				BrickComm.sendCommand(Command.DISTURB_WHEEL, randPower * -1); 
 				changeFlag = 2;
+				BrickComm.sendCommand(Command.DISTURB_WHEEL, randPower * -1); 
 				break;
 		}
 		

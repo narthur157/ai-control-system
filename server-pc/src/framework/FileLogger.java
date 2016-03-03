@@ -33,10 +33,9 @@ public class FileLogger implements Logger {
 	}
 	
 	public FileLogger() throws IOException {
-		// might want to write this file to a directory of test runs
 		// set auto flush to true
 		out = new PrintWriter(new FileWriter("testRuns/" + timestampFile()), true);
-		logln("Time \t LdSpd \t LdPwr \t CtrlPwr \t Angle \t Input");
+		logln("Time\tLdSpd\tLdPwr\tCtrlPwr\tTrqPwr\tAngle\tInput");
 	}
 	
 	public void logln(String s) {

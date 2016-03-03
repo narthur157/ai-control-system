@@ -2,8 +2,6 @@ package client;
 
 import java.io.IOException;
 
-import lejos.util.Delay;
-
 public class StateUpdater extends Thread {
 	private PCComm comm;
 	private BrickController bc;

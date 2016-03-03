@@ -10,8 +10,8 @@ public class BrickState {
 		this.time = time; 					//total elapsed time
 		this.disturbSpeed = currentSpeed;
 		this.controlPower = currentPower; 	//power of the measured wheel
-		this.torquePower = torquePower;
 		this.disturbPower = disturbPower;
+		this.torquePower = torquePower;
 		this.angle = angle; 				//angle of the arm
 	}
 	
