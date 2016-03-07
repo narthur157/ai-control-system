@@ -6,6 +6,8 @@ import pandas as pd
 import sys
 import random
 
+
+
 def collect_rand():
 	for index, item in enumerate(df.Time):
 		if 1 > random.randrange(0,10):
@@ -56,15 +58,17 @@ def get_future_speed(index, offset):
 def make_row(l):
 	return '\t'.join([str(x) for x in l]) + '\n'
 
+# output format:
+# LdPsd	TrqArm	DPow	T1	T5	T16	T20
+
 if __name__ == '__main__':
-	outFile = open('output', 'w')
+	if len(sys.argv) != 2:
+		sys.exit(0)
+	outFile = open('training-set.csv', 'w')
 	outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))
 	df = pd.read_csv(sys.argv[1], sep='\t');
 	
 	collect_torque_changes()
 	collect_drive_changes()	
 	collect_rand()
-
-# output format:
-# LdPsd	TrqArm	DPow	T1	T5	T16	T20
 

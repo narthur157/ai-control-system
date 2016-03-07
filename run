@@ -1,4 +1,9 @@
 #!/bin/sh
+# this will only create the dir if not already there
 mkdir -p testRuns &&
+# load program onto the brick
 nxj -r client.Receive -cp client-brick/bin/ && 
-nxjpc -cp server-pc/bin/ server.Send 
+# run our server program
+nxjpc -cp server-pc/bin/ server.Send &&
+# parse the most recent test, the one we just made
+python dataparser.py testRuns/`ls -t testRuns/ | head -1`
