@@ -1,0 +1,47 @@
+LightSpeedANN (LSANN) is a Ruby program that generates optimized C code that 
+implements an artificial neural network (ANN) whose topology you specify.  
+Forward and backward propagation are both supported.  If you want to support
+more than one ANN topology, you can run LSANN multiple times with different
+layer specifications.  The output of the Ruby program is C code that makes
+heavy use of SSE vector intrinsics and unrolled loops.  Although there is
+further improvement that can be done, LSANN output code is efficient because
+there is a relative lack of conditional instructions, and the memory layout
+is compact and friendly to cache prefetchers.  
+
+Although LSANN itself is under GPLv2, its output is not under any kind of 
+licensing restrictions.
+
+Usage:
+
+    ruby gen_sse.rb {list of layers} > mynet.c
+
+A layer is specified by a number and an activation function suffix.  The
+number is how many nodes are in the layer.  Activation function suffixes
+are:
+
+    l - linear
+    t - tanh
+    s - logistic
+    r - ReLU
+    
+With ReLU, you must also specify if the function is hard (h) or soft (s).  
+This is specified separately for forward and backward propagation.  Thus,
+"rhh" specifies hard ReLU for both forward and back, while "rhs" specifies
+hard for forward and soft for backward.
+
+Following the activation spec, you can specify quantization in the form of
+"q#.#", where '#' represents numbers of integer and fractional bits.  
+This feature needs some work and is currently optimized for tanh activation, 
+where specifying "q0.8" would quantize a layer to a signed 8-bit value, 
+for instance.  If you really care about quantization, you can look at the
+code for more detail.
+
+The input layer has no activation function, and ReLU is currently not
+supported on the output layer.
+
+This is an example of generating an ANN using LSANN:
+    ruby gen_sse.rb 16 32t 64rhh 3l
+    
+This would give you 16 input nodes (layer zero), 32 nodes in layer 1 with
+tanh activation, 64 nodes in layer 2 with hard ReLU activation (forward and
+backward), and 3 nodes in the output layer with no applied nonlinearity.

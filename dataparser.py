@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # this makes the assumption that the file we're using fits in memory
 # if it doesn't you can make this a stream and do things like that but
 # that would be significantly more complex
@@ -6,7 +7,41 @@ import pandas as pd
 import sys
 import random
 
+# from http://stackoverflow.com/questions/15389768/standard-deviation-of-a-list
+def mean(data):
+    """Return the sample arithmetic mean of data."""
+    n = len(data)
+    if n < 1:
+        raise ValueError('mean requires at least one data point')
+    return sum(data)/float(n)
 
+def _ss(data):
+    """Return sum of square deviations of sequence data."""
+    c = mean(data)
+    ss = sum((x-c)**2 for x in data)
+    return ss
+
+def stddev(data):
+    """Calculates the sample standard deviation."""
+    n = len(data)
+    if n < 2:
+        raise ValueError('variance requires at least two data points')
+    ss = _ss(data)
+    pvar = ss/(n-1) # the population variance
+
+    return pvar**0.5
+def normalize(l):
+	print "normalizing..."
+	m = mean(l)
+	dev = stddev(l)
+
+	return [(i-m)/dev for i in l]
+
+def normalize_input():
+	df.Angle = normalize(df.Angle)
+	df.LdSpd = normalize(df.LdSpd)
+	df.Input = normalize(df.Input)
+	df.CtrlPwr = normalize(df.CtrlPwr)
 
 def collect_rand():
 	for index, item in enumerate(df.Time):
@@ -51,7 +86,7 @@ def get_future_speeds(index, offsets):
 	return [get_future_speed(index, offset) for offset in offsets]
 
 def get_future_speed(index, offset):
-	if index + offset > len(df.LdSpd):
+	if index + offset >= len(df.LdSpd):
 		raise ValueError('Invalid index')		
 	return df.LdSpd[index + offset]
 
@@ -63,12 +98,15 @@ def make_row(l):
 
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
+		print "arg length must = 2"
 		sys.exit(0)
 	outFile = open('training-set.csv', 'w')
-	outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))
+	#outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))
 	df = pd.read_csv(sys.argv[1], sep='\t');
+
+	normalize_input()
 	
 	collect_torque_changes()
 	collect_drive_changes()	
 	collect_rand()
-
+	

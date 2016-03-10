@@ -1,4 +1,6 @@
 .metadata
+.*
+weights*.net
 training-set.csv
 server-pc/testRuns
 testRuns/
@@ -6,3 +8,7 @@ server-pc/bin/*
 *.nxj
 *.nxd
 *.class
+LightSpeedANN/old
+LightSpeedANN/eval.dSYM/
+train
+eval

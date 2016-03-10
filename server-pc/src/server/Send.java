@@ -18,7 +18,7 @@ import framework.Test;
 public class Send {	
 	public static void main(String[] args) {
 		//runPidTest();
-		runDataTest(5);
+		runDataTest(500);
 	}
 	
 	public static void runPidTest() {
