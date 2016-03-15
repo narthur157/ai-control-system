@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
     compute_err(testData, mem, forward_ann, sse, max);
     cout << lr << " " << sse << " " << max << endl;
     for (int i=0; i<1000000 && !global_quit; i++) {
-        lr = 0.000588475;//find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
+        lr = 0.00058;//find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
         for (int j=0; j<100; j++) {
             //printf("%d    \r", j);
             //fflush(stdout);

@@ -35,6 +35,9 @@ def normalize(l):
 	m = mean(l)
 	dev = stddev(l)
 
+	f = open("normalizationData", "w")
+	f.write(str(mean) + "\n" + str(dev))
+
 	return [(i-m)/dev for i in l]
 
 def normalize_input():
@@ -98,7 +101,7 @@ def make_row(l):
 
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
-		print "arg length must = 2"
+		print "arg format: input_data"
 		sys.exit(0)
 	outFile = open('training-set.csv', 'w')
 	#outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))

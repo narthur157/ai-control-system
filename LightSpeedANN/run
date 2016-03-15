@@ -1,4 +1,9 @@
 #!/bin/bash
+if [[ $# -ne 0 ]]
+	then
+		echo "Passing arguments to gen_sse"
+		./gen_sse.rb "$@" && make && ./train	
+	else
+		make && ./train
+fi
 
-make
-./train
