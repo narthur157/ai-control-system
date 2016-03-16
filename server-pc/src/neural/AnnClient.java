@@ -3,41 +3,67 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package annclient;
+package neural;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.Socket;
+import java.util.Scanner;
+
+import framework.BrickState;
 
 /**
  *
  * @author millerti
  */
 public class AnnClient {
-    Socket sock;
-    PrintWriter writer;
-    BufferedReader reader;
+    private static Socket sock;
+    private static PrintWriter writer;
+    private static BufferedReader reader;
     
-    void init(String addr, int port) throws IOException {
+    static void init(String addr, int port) throws IOException {
         sock = new Socket(addr, port);
         writer = new PrintWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF8"));
         reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        
+
     }
     
-    void sendLine(String s) {
+    public static double[] testInputs(int power, BrickState bs) throws IOException {
+    	sendLine(power, bs);
+    	return getNumbers();
+    }
+    
+    static void sendLine(int power, BrickState bs) {
+    	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, power });
+    }
+    
+    static void sendLine(String s) {
         writer.println(s);
         writer.flush();
         System.out.println("Sending: " + s);
     }
     
-    void sendNumbers(double[] inputs) {
+    /**
+     * 
+     * @param inputs - must be length 3 in order LdSpd, Angle, CtrlPwr
+     */
+    static void sendNumbers(double[] inputs) {
+    	if (inputs.length != 3) {
+    		System.err.println("Invalid input size to neural net");
+    	}
+    	
+    	inputs[0] = Normalization.normalizeLoad(inputs[0]);
+    	inputs[1] = Normalization.normalizeAngle(inputs[1]);
+    	inputs[2] = Normalization.normalizeControl(inputs[2]);
+    	
         StringBuilder sb = new StringBuilder();
+        
         for (int i=0; i<inputs.length; i++) {
             sb.append(String.format("%.40f", inputs[i]));
             if (i != inputs.length-1) sb.append(' ');
@@ -45,35 +71,22 @@ public class AnnClient {
         sendLine(sb.toString());
     }
     
-    String getLine() throws IOException {
+    static String getLine() throws IOException {
         String line = null;
         line = reader.readLine();
+        
         return line;
     }
     
-    double[] getNumbers() throws IOException {
+    static double[] getNumbers() throws IOException {
         String line = getLine();
         String[] line_split = line.split(" ");
         double[] numbers = new double[line_split.length];
+        
         for (int i=0; i<line_split.length; i++) {
-            numbers[i] = Double.parseDouble(line_split[i]);
+            numbers[i] = Normalization.normalizeLoad(Double.parseDouble(line_split[i]));
         }
+        
         return numbers;
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws IOException {
-        AnnClient ann = new AnnClient();
-        ann.init("127.0.0.1", 8888);
-        double[] d = {1, 2, 3};
-        ann.sendNumbers(d);
-        double[] e;
-        e = ann.getNumbers();
-        for (int i=0; i<e.length; i++) {
-            System.out.println(e[i]);            
-        }
-    }
-    
 }

@@ -30,21 +30,23 @@ def stddev(data):
     pvar = ss/(n-1) # the population variance
 
     return pvar**0.5
-def normalize(l):
+def normalize(l, normalizationFile):
 	print "normalizing..."
 	m = mean(l)
 	dev = stddev(l)
 
-	f = open("normalizationData", "w")
-	f.write(str(mean) + "\n" + str(dev))
+	normalizationFile.write(str(m) + "\t" + str(dev) + "\n")
 
 	return [(i-m)/dev for i in l]
 
 def normalize_input():
-	df.Angle = normalize(df.Angle)
-	df.LdSpd = normalize(df.LdSpd)
-	df.Input = normalize(df.Input)
-	df.CtrlPwr = normalize(df.CtrlPwr)
+	f = open("normalizationData", "w")
+
+	df.LdSpd = normalize(df.LdSpd, f)
+	df.Angle = normalize(df.Angle, f)
+	df.CtrlPwr = normalize(df.CtrlPwr, f)
+
+	f.close()
 
 def collect_rand():
 	for index, item in enumerate(df.Time):
