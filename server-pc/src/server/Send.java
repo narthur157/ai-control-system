@@ -2,6 +2,8 @@ package server;
 
 import java.io.IOException;
 
+import neural.NeuralTest;
+
 import pid.PIDTest;
 
 import communication.BrickComm;
@@ -16,29 +18,33 @@ import framework.Test;
  * @author Nick Arthur
  */
 public class Send {	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		if (args.length != 2) {
+			System.err.println("Usage: test_type num_tests\ntest_type must be either neural, pid, or data");
+			System.exit(1);
+		}
+		
+		if (args[0].equals("neural")) {
+			runNeuralTest(Integer.parseInt(args[1]));
+		}
+		if (args[1].equals("data")) {
+			runDataTest(Integer.parseInt(args[1]));
+		}
 		//runPidTest();
-		runDataTest(500);
+		//runNeuralTest(5);
+		runDataTest(5);
 	}
 	
-	public static void runPidTest() {
-		try {
-			Test tester = new PIDTest();
-			
-			tester.runTest(30);
-		}
-		catch (IOException e) {
-			
-		}
-		finally {
-			BrickComm.stopBrick();
-			BrickComm.close();
-		}
+	private static void runNeuralTest(int numRuns) throws IOException {
+		runTest(new NeuralTest(), numRuns);
 	}
 	
-	public static void runDataTest(int numRuns) {
+	private static void runDataTest(int numRuns) throws IOException {
+		runTest(new DataCollector(), numRuns);
+	}
+	
+	private static void runTest(Test tester, int numRuns) {
 		try {
-			Test tester = new DataCollector();
 			
 			tester.runTest(numRuns);
 		}

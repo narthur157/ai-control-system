@@ -10,14 +10,30 @@ import neural.AnnClient;
 
 public class NeuralController implements BrickListener {
 	private BrickState bs;
-	private final static int MIN_POWER = -100, MAX_POWER = 100;
+	private final static int MIN_POWER = -100, MAX_POWER = 100, ERR_ALLOWANCE = 30;
+	private int targetSpeed;
+	private boolean speedSet = false;
+	
+	public NeuralController() {
+		BrickComm.addListener(this);
+	}
 	
 	public void updateBrick(BrickState bs) {
 		this.bs = bs;
+		
+		if (!speedSet) {
+			try {
+				BrickComm.sendCommand(Command.CONTROL_WHEEL, findPower(targetSpeed));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setSpeed(int targetSpeed) throws IOException {
-		BrickComm.sendCommand(Command.CONTROL_WHEEL, findPower(targetSpeed));
+		// wait for a new brick update before setting the speed
+		speedSet = false;
+		this.targetSpeed = targetSpeed;
 	}
 	
 	public int findPower(int targetSpeed) throws IOException {
@@ -43,6 +59,10 @@ public class NeuralController implements BrickListener {
 	 * @throws IOException 
 	 */
 	public int binarySearch(int targetSpeed, int lowerBound, int upperBound) throws IOException {
+		if (targetSpeed != this.targetSpeed) {
+			System.out.println("Old speed not reached, interrupting for new speed");
+			return findPower(this.targetSpeed);
+		}
 		// test if array is empty
 		if (upperBound < lowerBound) {
 			// set is empty, so return value showing not found
@@ -59,11 +79,11 @@ public class NeuralController implements BrickListener {
 			System.out.println("Power " + mid + " predicts " + predictedSpeed);
 			
 			// three-way comparison
-			if (predictedSpeed > targetSpeed) {
+			if (predictedSpeed + ERR_ALLOWANCE > targetSpeed) {
 				// key is in lower subset
 				return binarySearch(targetSpeed, lowerBound, mid - 1);
 			}
-			else if (predictedSpeed < targetSpeed) {
+			else if (predictedSpeed - ERR_ALLOWANCE < targetSpeed) {
 				// key is in upper subset
 				return binarySearch(targetSpeed, mid + 1, upperBound);
 			}

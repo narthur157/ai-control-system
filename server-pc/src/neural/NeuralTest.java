@@ -13,7 +13,13 @@ public class NeuralTest extends Test {
 
 	@Override
 	protected void test() {
-	
+		try {
+			System.out.println("Trying to set speed");
+			nc.setSpeed(50);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

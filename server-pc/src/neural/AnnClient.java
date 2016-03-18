@@ -26,12 +26,17 @@ public class AnnClient {
     private static PrintWriter writer;
     private static BufferedReader reader;
     
+    static {
+    	try {
+			init("127.0.0.1", 8888);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
     static void init(String addr, int port) throws IOException {
         sock = new Socket(addr, port);
         writer = new PrintWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF8"));
         reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        
-
     }
     
     public static double[] testInputs(int power, BrickState bs) throws IOException {
@@ -40,13 +45,14 @@ public class AnnClient {
     }
     
     static void sendLine(int power, BrickState bs) {
+    	System.out.println("power: " + power + " bs: " + bs.toString());
     	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, power });
     }
     
     static void sendLine(String s) {
         writer.println(s);
         writer.flush();
-        System.out.println("Sending: " + s);
+        System.out.println("Sending (normalized): " + s);
     }
     
     /**
@@ -62,12 +68,14 @@ public class AnnClient {
     	inputs[1] = Normalization.normalizeAngle(inputs[1]);
     	inputs[2] = Normalization.normalizeControl(inputs[2]);
     	
+    	
         StringBuilder sb = new StringBuilder();
         
         for (int i=0; i<inputs.length; i++) {
             sb.append(String.format("%.40f", inputs[i]));
             if (i != inputs.length-1) sb.append(' ');
         }
+
         sendLine(sb.toString());
     }
     
@@ -84,7 +92,7 @@ public class AnnClient {
         double[] numbers = new double[line_split.length];
         
         for (int i=0; i<line_split.length; i++) {
-            numbers[i] = Normalization.normalizeLoad(Double.parseDouble(line_split[i]));
+            numbers[i] = Normalization.denormalizeLoad(Double.parseDouble(line_split[i]));
         }
         
         return numbers;

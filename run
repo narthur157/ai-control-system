@@ -1,9 +1,68 @@
-#!/bin/sh
+#!/bin/bash
+
+# fancy argument options
+# note that you shouldn't pass -n and -d
+
+if [[ $# -eq 0 ]]
+	then
+		echo "usage: -f or --format to format the result of test runs for training"
+		echo "-n or --neural to run a neural motor test"
+		echo "-d or --datacollect to collect training data"
+		echo "either -n or -d is required."
+		exit 1
+fi
+
+FORMAT=0
+ 
+while [[ $# > 0 ]]
+do
+key="$1"
+
+case $key in
+    -f|--format)
+	FORMAT=1
+    ;;
+    -n|--neural)
+	TEST=neural
+    TESTS="$2"
+    shift # past argument
+    ;;
+    -d|--datacollect)
+	TEST=data
+    TESTS="$2"
+    shift # past argument
+    ;;
+    *)
+    echo "Invalid Argument"
+	exit 1        # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+if [[ -z $TEST ]]
+	then	
+		echo $TEST
+		echo "Invalid arguments, please use --neural or --data"
+		exit 1
+fi
+
+if [[ -z $TESTS ]]
+	then 
+		echo "Invalid arguments, please specify number of tests, ie -n 10"
+		exit 1
+fi
+
 # this will only create the dir if not already there
 mkdir -p testRuns &&
 # load program onto the brick
 nxj -r client.Receive -cp client-brick/bin/ && 
 # run our server program
-nxjpc -cp server-pc/bin/ server.Send &&
-# parse the most recent test, the one we just made
-python dataparser.py testRuns/`ls -t testRuns/ | head -1`
+nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+
+# $? is the exit code from last script
+if [[ $? -eq 0 && $FORMAT ]]
+	then
+		# parse the most recent test, the one we just made
+		python dataparser.py testRuns/`ls -t testRuns/ | head -1`
+fi
