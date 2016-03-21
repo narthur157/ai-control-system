@@ -114,17 +114,22 @@ int main()
             //cout << "Reading\n";
             string line;
             int r = read_line(s, line);
+
             if (r < 0) break;
             
             int n = parse_floats(line.c_str(), inputs);
+
             outputs = forward_ann(inputs, mem);
             stringstream ss;
             ss << std::setprecision(40);
+
             for (int i=0; i<4; i++) {
                 ss << outputs[i];
                 if (i != 3) ss << " ";
             }
+
             ss << "\n";
+
             const string& st(ss.str());
             size_t bytes_written = write(s, st.c_str(), st.size());
             

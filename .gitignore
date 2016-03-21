@@ -1,6 +1,5 @@
 .metadata
 .*
-weights*.net
 training-set.csv
 server-pc/testRuns
 testRuns/

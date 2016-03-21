@@ -24,7 +24,7 @@ h=$(expr $lineCount \* 8 / 10)
 t=$(expr $lineCount - $h)
 
 # could be optimized
-shuf $outputFile | head -$h > headFile
-shuf $outputFile | tail -$t > tailFile
+shuf $outputFile | head -$h > $headFile &&
+shuf $outputFile | tail -$t > $tailFile &&
 
 echo "Wrote $h lines to $headFile and $t lines to $tailFile"

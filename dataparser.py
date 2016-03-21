@@ -77,7 +77,7 @@ def collect_torque_changes():
 def collect_index(index):
 	try:
 		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [5,10,15,20])
+		outputs = get_future_speeds(index, [5])
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)
@@ -104,7 +104,7 @@ def make_row(l):
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
 		print "arg format: input_data"
-		sys.exit(0)
+		sys.exit(1)
 	outFile = open('training-set.csv', 'w')
 	#outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))
 	df = pd.read_csv(sys.argv[1], sep='\t');

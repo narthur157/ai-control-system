@@ -148,6 +148,7 @@ static void catch_sigint(int signo) {
 
 int main(int argc, char* argv[])
 {
+	// default file names for testing and training
 	string testFile = "test-set.csv";
 	string trainFile = "train-set.csv";
 	
@@ -159,28 +160,46 @@ int main(int argc, char* argv[])
     //asm("fnclex");
     //asm("fldcw _fpflags");
     
-    DataSet<ValueType> trainData(3, 4), testData(3, 4);
-    trainData.loadFile("iiioooo", trainFile);
-    testData.loadFile("iiioooo", testFile);
+    DataSet<ValueType> trainData(3, 1), testData(3, 1);
+    trainData.loadFile("iiio", trainFile);
+    testData.loadFile("iiio", testFile);
 	
-    ValueType *mem = allocate_ann();
-    randomize_ann(mem);
     
-    ValueType lr = 0.10;
+	ValueType lr = 0.10;
     ValueType sse, max;
     ValueType best_sse = 1000000, best_max = 1000000;
-    
+	ValueType *mem = allocate_ann();
+
+    FILE *out = fopen("weights.net", "rb");
+
+    if (!out) {
+		cout << "No weights file found, using random weights" << endl;
+		randomize_ann(mem);
+	}
+	else {
+		size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
+		compute_err(testData, mem, forward_ann, sse, max);
+        
+        best_sse = sse;
+        best_max = max;
+	}
+
+
+
     signal(SIGINT, catch_sigint);
     
     compute_err(testData, mem, forward_ann, sse, max);
     cout << lr << " " << sse << " " << max << endl;
-    for (int i=0; i<1000000 && !global_quit; i++) {
-        lr = 0.00058;//find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
-        for (int j=0; j<100; j++) {
+
+	for (int i=0; i<1000000 && !global_quit; i++) {
+        lr = 0.006;//find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
+
+		for (int j=0; j<100; j++) {
             //printf("%d    \r", j);
             //fflush(stdout);
             training_epoch(trainData, mem, forward_ann, backward_ann, lr);
         }
+
         compute_err(testData, mem, forward_ann, sse, max);
         cout << lr << " " << sse << " " << max << endl;
         
