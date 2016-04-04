@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 # opens a given file and makes sure that the relation between
 # control power and load speed is monotonic
@@ -26,8 +26,10 @@ if __name__ == '__main__':
 
 	pwrIncreasing = None
 	spdIncreasing = None
+	curPwr = None
+
 	
-	for i in enumerate(df.Time):
+	for i, time in enumerate(df.Time):
 		if curPwr is None:
 			curPwr = df.CtrlPwr[i]
 			curSpd = df.LdSpd[i]
@@ -45,5 +47,5 @@ if __name__ == '__main__':
 			if curSpd < prevSpd:
 				spdIncreasing = False
 			
-			check_match(spdIncresaing, pwrIncreasing)
+			check_match(spdIncreasing, pwrIncreasing)
 
