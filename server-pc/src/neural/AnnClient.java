@@ -39,14 +39,14 @@ public class AnnClient {
         reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
     }
     
-    public static double[] testInputs(int power, BrickState bs) throws IOException {
-    	sendLine(power, bs);
+    public static double[] testInputs(int targetSpeed, BrickState bs) throws IOException {
+    	sendLine(targetSpeed, bs);
     	return getNumbers();
     }
     
-    static void sendLine(int power, BrickState bs) {
-    	System.out.println("power: " + power + " bs: " + bs.toString());
-    	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, power });
+    static void sendLine(int targetSpeed, BrickState bs) {
+    	System.out.println("targetSpeed: " + targetSpeed + " bs: " + bs.toString());
+    	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, bs.controlPower, targetSpeed });
     }
     
     static void sendLine(String s) {
@@ -57,16 +57,17 @@ public class AnnClient {
     
     /**
      * 
-     * @param inputs - must be length 3 in order LdSpd, Angle, CtrlPwr
+     * @param inputs - must be length 4 in order LdSpd, Angle, CtrlPwr, TargetSpeed
      */
     static void sendNumbers(double[] inputs) {
-    	if (inputs.length != 3) {
+    	if (inputs.length != 4) {
     		System.err.println("Invalid input size to neural net");
     	}
-    	
-    	inputs[0] = Normalization.normalizeLoad(inputs[0]);
-    	inputs[1] = Normalization.normalizeAngle(inputs[1]);
-    	inputs[2] = Normalization.normalizeControl(inputs[2]);
+    
+    	// Normalization now occurs in eval
+//    	inputs[0] = Normalization.normalizeLoad(inputs[0]);
+//    	inputs[1] = Normalization.normalizeAngle(inputs[1]);
+//    	inputs[2] = Normalization.normalizeControl(inputs[2]);
     	
     	
         StringBuilder sb = new StringBuilder();
@@ -97,4 +98,8 @@ public class AnnClient {
         
         return numbers;
     }
+
+	public static int searchSpeed(int targetSpeed, BrickState bs) throws IOException {
+		return (int) testInputs(targetSpeed, bs)[0];
+	}
 }

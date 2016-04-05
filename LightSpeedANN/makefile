@@ -6,6 +6,6 @@ all:
 	g++ ann.c data_set.cpp train.cpp  -std=c++11 -O3 -msse3 -o train
 	g++ ann.c data_set.cpp eval.cpp  -std=c++11 -O3 -msse3 -o eval 
 train: 
-	./train
+	g++ ann.c data_set.cpp train.cpp  -std=c++11 -O3 -msse3 -o train
 eval: 
-	./eval
+	g++ ann.c data_set.cpp eval.cpp  -std=c++11 -O3 -msse3 -o eval 

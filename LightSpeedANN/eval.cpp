@@ -3,6 +3,7 @@
 #include "ann.c"
 #include "data_set.hpp"
 #include <unistd.h>
+#include <cmath>
 #include <math.h>
 #include <signal.h>
 #include <sys/types.h> 
@@ -11,6 +12,7 @@
 #include <netinet/ip.h> 
 #include <ctype.h>
 #include <sstream>
+#include <fstream>
 #include <iomanip>      // std::setprecision
 
 using namespace std;
@@ -26,6 +28,52 @@ void bail(const char *s)
 int listen_socket;
 int sock;
 struct sockaddr_in my_addr;
+
+float loadSpdMean, loadSpdStdDev, angleMean,
+	  angleStdDev, controlPwrMean, controlPwrStdDev;
+
+/*
+			loadSpdMean = scan.nextDouble();
+			loadSpdStdDev = scan.nextDouble();
+			angleMean = scan.nextDouble();
+			angleStdDev = scan.nextDouble();
+			controlPwrMean = scan.nextDouble();
+			controlPwrStdDev = scan.nextDouble();
+*/
+void setNormalizationData() {
+	std::ifstream normalizationFile("../normalizationData");
+	std::string line; 
+
+	normalizationFile >> loadSpdMean;
+	normalizationFile >> loadSpdStdDev;
+	normalizationFile >> angleMean;
+	normalizationFile >> angleStdDev;
+	normalizationFile >> controlPwrMean;
+	normalizationFile >> controlPwrStdDev;
+	
+	normalizationFile.close();
+}
+
+float normalize(float val, float mean, float dev) {
+	return (val-mean)/dev;
+}
+
+float normalizeSpeed(float speed) {
+	return normalize(speed, loadSpdMean, loadSpdStdDev);
+}
+
+float denormalizeSpeed(float speed) {
+	return (speed * loadSpdStdDev) + loadSpdMean;
+}
+
+float normalizeAngle(float angle) {
+	return normalize(angle, angleMean, angleStdDev);
+}
+
+float normalizePower(int power) {
+	return normalize((float) power, controlPwrMean, controlPwrStdDev);
+}
+
 
 void setup_socket(int port)
 {
@@ -104,6 +152,8 @@ int main()
     if (!out) bail("opening weights");
     size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
     fclose(out);
+
+	setNormalizationData();
     
     setup_socket(8888);
     
@@ -119,14 +169,39 @@ int main()
             
             int n = parse_floats(line.c_str(), inputs);
 
-            outputs = forward_ann(inputs, mem);
+			inputs[0] = normalizeSpeed(inputs[0]);
+			inputs[1] = normalizeAngle(inputs[1]);
+			inputs[2] = normalizePower(inputs[2]);
+			
+			int bestPower = 0;
+			float minErr = 666;
+			float targetSpeed = inputs[3];
+			targetSpeed = normalizeSpeed(targetSpeed);
+				
+			for (int i = -100; std::abs(i) <= 100; i++) {
+				inputs[2] = normalizePower(i);
+
+				float predictedSpeed = forward_ann(inputs, mem)[0];
+				float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
+				
+				if (err < minErr) {
+					minErr = err;
+					bestPower = inputs[2];
+				}
+			}
+			
+			inputs[2] = bestPower;
+
+			cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
+
+			outputs = forward_ann(inputs, mem);
             stringstream ss;
             ss << std::setprecision(40);
 
-            for (int i=0; i<4; i++) {
-                ss << outputs[i];
-                if (i != 3) ss << " ";
-            }
+//          for (int i=0; i<4; i++) {
+            ss << denormalizeSpeed(outputs[0]);
+//				if (i != 3) ss << " ";
+//          }
 
             ss << "\n";
 
