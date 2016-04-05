@@ -38,7 +38,7 @@ public class NeuralController implements BrickListener {
 	
 	public int findPower(int targetSpeed) throws IOException {
 		long beginTimer = System.currentTimeMillis();
-		int result = binarySearch(targetSpeed, MIN_POWER, MAX_POWER);
+		int result = completeSearch(targetSpeed);
 		long endTimer = System.currentTimeMillis();
 		System.out.println("Took " + (endTimer-beginTimer) + " ms to search for power");
 		
@@ -49,7 +49,34 @@ public class NeuralController implements BrickListener {
 		return (a+b)/2;
 	}
 	
+	private int completeSearch(int targetSpeed) throws IOException {
+		return completeSearchHelper(targetSpeed, -100, 666, -666);
+	}
+	
+	private int completeSearchHelper(int targetSpeed, int testPower, double minErr, int bestPower) throws IOException {
+		if (testPower <= MAX_POWER) {
+			double computedErr = computeTestErr(targetSpeed, testPower);
+			if (computedErr < minErr) {
+				minErr = computedErr;
+				bestPower	 = testPower;
+			}
+			return completeSearchHelper(targetSpeed, testPower+1, minErr, bestPower);
+		}
+		else {
+			System.out.println("Best power found for target " + targetSpeed + " is " + bestPower + " with err " + minErr);
+			return bestPower;
+		}
+	}
+	
+	private double computeTestErr(double targetSpeed, int testPower) throws IOException {
+		double predictedSpeed = AnnClient.testInputs(testPower, bs)[0];
+		return Math.abs(Math.abs(targetSpeed) - Math.abs(predictedSpeed));
+	}
+	
 	/**
+	 * This is unused because our neural net is currently not monotonic
+	 * If we are able to achieve this, this search will give us O(lgn) 
+	 * instead of O(n)
 	 * So we put in our goal load speed annnnnd get out a power
 	 * which achieves this load speed
 	 * @param key - The power setting we're checking
@@ -58,7 +85,7 @@ public class NeuralController implements BrickListener {
 	 * @return - The power setting that supposedly gets us closest to our target in the next 5ms
 	 * @throws IOException 
 	 */
-	public int binarySearch(int targetSpeed, int lowerBound, int upperBound) throws IOException {
+	private int binarySearch(int targetSpeed, int lowerBound, int upperBound) throws IOException {
 		if (targetSpeed != this.targetSpeed) {
 			System.out.println("Old speed not reached, interrupting for new speed");
 			return findPower(this.targetSpeed);
@@ -73,7 +100,7 @@ public class NeuralController implements BrickListener {
 		}
 		else {
 			// calculate midpoint to cut set in half
-			int mid = midpoint(upperBound, lowerBound);;
+			int mid = midpoint(upperBound, lowerBound);
 			double predictedSpeed = AnnClient.testInputs(mid, bs)[0];
 
 			System.out.println("Power " + mid + " predicts " + predictedSpeed);

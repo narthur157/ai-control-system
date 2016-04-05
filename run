@@ -12,8 +12,6 @@ if [[ $# -eq 0 ]]
 		exit 1
 fi
 
-FORMAT=0
- 
 while [[ $# > 0 ]]
 do
 key="$1"
