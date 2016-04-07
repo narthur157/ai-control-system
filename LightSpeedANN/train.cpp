@@ -151,11 +151,18 @@ int main(int argc, char* argv[])
 	// default file names for testing and training
 	string testFile = "test-set.csv";
 	string trainFile = "train-set.csv";
+
+	ValueType lr = 0.10;
+	if (argc == 2) {
+		cout << "Using given learning rate " << argv[1] << endl;
+		lr = stof(argv[1]);
+	}
 	
+	/*
 	if (argc != 2) {
 		cout << "No args, defaulting to use " << testFile 
 			 << " and " << trainFile << endl;
-	}
+	}*/
 
     //asm("fnclex");
     //asm("fldcw _fpflags");
@@ -165,7 +172,6 @@ int main(int argc, char* argv[])
     testData.loadFile("iiio", testFile);
 	
     
-	ValueType lr = 0.10;
     ValueType sse, max;
     ValueType best_sse = 1000000, best_max = 1000000;
 	ValueType *mem = allocate_ann();
@@ -184,16 +190,15 @@ int main(int argc, char* argv[])
         best_max = max;
 	}
 
-
-
     signal(SIGINT, catch_sigint);
     
     compute_err(testData, mem, forward_ann, sse, max);
     cout << lr << " " << sse << " " << max << endl;
 
 	for (int i=0; i<1000000 && !global_quit; i++) {
-        lr = 0.006;//find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
-
+		if (argc == 1) {
+			lr = find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
+		}
 		for (int j=0; j<100; j++) {
             //printf("%d    \r", j);
             //fflush(stdout);
@@ -216,3 +221,4 @@ int main(int argc, char* argv[])
     trainData.print_stats(cout);
     return 0;
 }
+
