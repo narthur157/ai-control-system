@@ -1074,13 +1074,17 @@ def emit_tanh(len, net)
       x += "    __m128 Foffset = _mm_set1_ps(1065353216.0);\n"
       x += "    __m128 Fone = _mm_set1_ps(1.0);\n"
       x += "    __m128 Fhalf = _mm_set1_ps(0.5);\n"
-      x += "    __m128 x, u, v, a, b;\n"
+      x += "    __m128 min = _mm_set1_ps(-32.0);\n"
+      x += "    __m128 max = _mm_set1_ps(32.0);\n"
+      x += "    __m128 x, u, v, a, b, g;\n"
       loops = (len+3)/4
       if (loops > 1)
         x += "    int i;\n"
         x += "    for (i=0; i<#{loops}; i++) {\n"
       end
       x += "        x = _mm_load_ps(in);\n"
+      x += "        x = _mm_min_ps(x, max);\n"
+      x += "        x = _mm_max_ps(x, min);\n"
       x += "        x = _mm_mul_ps(x, Fscale);\n"
       x += "        u = _mm_add_ps(x, Foffset);\n"
       x += "        u = (__m128)_mm_cvtps_epi32(u);\n"
@@ -1677,7 +1681,6 @@ class Network
     @need_logistic.each { |i| sigfuncs += emit_logistic(i, self); }
     @need_relu_hard.each { |i| sigfuncs += emit_relu_hard(i, self, true); }
     @need_relu_soft.each { |i| sigfuncs += emit_relu_soft(i, self, true); }
-    @funcs += sigfuncs
     if @need_scalar_tanh
       if $double
         @funcs += scalar_tanh_double()
@@ -1692,6 +1695,7 @@ class Network
         @funcs += scalar_logistic_float()
       end
     end
+    @funcs += sigfuncs
 
     @need_dotprod.each { |i| @funcs += dotprod(i); }
     @need_sum_scaled.each { |i| @funcs += sum_scaled(i); }
@@ -1732,9 +1736,7 @@ class Network
     
     
   def allocate(layer_list)
-	@name = "ann"
-	#@name = layer_list.map{|l| l.to_s}.join("_")
-    #@name = layer_list.join("_") + (outsig ? "s" : "l")
+    @name = "ann"
         
     # Find homes for all values, weights, and deltas
     @needs_dotprod = []

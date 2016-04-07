@@ -1,6 +1,7 @@
 
 #define ANN_HEADER
 #include "ann.c"
+#include <pmmintrin.h>
 #include "data_set.hpp"
 #include <math.h>
 #include <signal.h>
@@ -62,6 +63,20 @@ bool compute_err(
 }
 
 template<typename T>
+void weight_decay(T *mem, T lr)
+{
+    int i;
+    __m128 sca, x;
+    sca = _mm_set1_ps(1.0f - lr*0.1f);
+    //sca = _mm_set1_ps(1.0f - lr);
+    for (i=0; i<MEM_SIZE_ann/4; i+=4) {
+        x = _mm_load_ps(mem + i);
+        x = _mm_mul_ps(x, sca);
+        _mm_store_ps(mem + i, x);
+    }
+}
+
+template<typename T>
 void training_epoch(
     DataSet<T>& data,
     T* mem,
@@ -70,6 +85,7 @@ void training_epoch(
     T lr)
 {
     int i;
+	weight_decay(mem, lr);
     for (i=0; i<data.numSamples(); i++) {
         T *s = data.getSample(i);
         T *o = fw(data.getIns(s), mem);

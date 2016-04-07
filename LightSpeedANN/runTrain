@@ -2,8 +2,8 @@
 if [[ $# -ne 0 ]]
 	then
 		echo "Passing arguments to gen_sse"
-		./gen_sse.rb "$@" > ann.c && make train && ./train	
+		./gen_sse.rb "$@" > ann.c && make && ./train	
 	else
-		make train && ./train
+		make && ./train
 fi
 
