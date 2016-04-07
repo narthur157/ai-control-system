@@ -204,10 +204,14 @@ __attribute__((noinline)) static void tanh_64(float *in) {
     __m128 Foffset = _mm_set1_ps(1065353216.0);
     __m128 Fone = _mm_set1_ps(1.0);
     __m128 Fhalf = _mm_set1_ps(0.5);
-    __m128 x, u, v, a, b;
+    __m128 min = _mm_set1_ps(-32.0);
+    __m128 max = _mm_set1_ps(32.0);
+    __m128 x, u, v, a, b, g;
     int i;
     for (i=0; i<16; i++) {
         x = _mm_load_ps(in);
+        x = _mm_min_ps(x, max);
+        x = _mm_max_ps(x, min);
         x = _mm_mul_ps(x, Fscale);
         u = _mm_add_ps(x, Foffset);
         u = (__m128)_mm_cvtps_epi32(u);
