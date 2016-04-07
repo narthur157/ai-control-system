@@ -21,7 +21,7 @@ public class DataCollector extends Test {
 	@Override
 	public void test() {
 		changeFlag = 0;
-		int randPower = (rand.nextInt(41) + 35); 
+		int randPower = (rand.nextInt(30) + 35); 
 		
 		switch (count) {
 			case 0:

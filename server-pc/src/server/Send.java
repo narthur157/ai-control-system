@@ -27,7 +27,7 @@ public class Send {
 		if (args[0].equals("neural")) {
 			runNeuralTest(Integer.parseInt(args[1]));
 		}
-		if (args[1].equals("data")) {
+		if (args[0].equals("data")) {
 			runDataTest(Integer.parseInt(args[1]));
 		}
 		//runPidTest();

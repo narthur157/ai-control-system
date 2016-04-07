@@ -31,7 +31,6 @@ def stddev(data):
 
     return pvar**0.5
 def normalize(l, normalizationFile):
-	print "normalizing..."
 	m = mean(l)
 	dev = stddev(l)
 
@@ -47,6 +46,7 @@ def normalize_input():
 	df.CtrlPwr = normalize(df.CtrlPwr, f)
 
 	f.close()
+	print "Wrote means and std devs to normalizationData"
 
 def collect_rand():
 	for index, item in enumerate(df.Time):
@@ -77,7 +77,7 @@ def collect_torque_changes():
 def collect_index(index):
 	try:
 		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [10])
+		outputs = get_future_speeds(index, [100])
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)
@@ -114,4 +114,6 @@ if __name__ == '__main__':
 	collect_torque_changes()
 	collect_drive_changes()	
 	collect_rand()
+
+	print "Wrote to training-set.csv"
 	
