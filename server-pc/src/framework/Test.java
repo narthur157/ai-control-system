@@ -5,6 +5,19 @@ import java.io.IOException;
 import communication.BrickComm;
 import communication.BrickListener;
 
+
+/**
+ * This abstract class requires the extension of the 'test' method
+ * which gets called when the system has stabilized for the amount of
+ * brick updates indicated by STABLE_COUNT. Brick updates come about
+ * every 10ms with some variation. 
+ * 
+ * runTest is the only method users of the class should use, as updateBrick
+ * is intended only for the BrickUpdater. 
+ * 
+ * @author Nicholas Arthur
+ *
+ */
 public abstract class Test implements BrickListener {
 	private final int STABLE_COUNT = 200;
 	
@@ -94,12 +107,15 @@ public abstract class Test implements BrickListener {
 	
 	final private void finishTest() {
 		System.out.println("Completed " + testCount + " tests");
+		
 		synchronized(this) {
+			// wake up the thread in runTest
 			this.notify();
 		}
 	}
 	
 	final private void collectData() {
+		// logger is paramterized in constructor, can write to file
 		logger.logln(bs.toString() + "\t" + changeFlag);
 	}
 }

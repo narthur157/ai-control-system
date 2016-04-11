@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 import framework.BrickState;
 
+/**
+ * Observer pattern to send async brick updates to listeners
+ * @author Nicholas Arthur
+ *
+ */
 public class BrickUpdater extends Thread {
 	// asynchronously receive updates from the brick
 	private boolean finished = false;
@@ -22,7 +27,6 @@ public class BrickUpdater extends Thread {
 			try {
 				// blocking call
 				update(readBrick());
-				
 			} catch (IOException e) {
 				if (!finished) {
 					System.err.println("Aborting brick reads");
@@ -57,7 +61,6 @@ public class BrickUpdater extends Thread {
 		}
 	}
 	
-	// package private - should be called only by BrickUpdater
 	private void update(BrickState bs) {
 		for (BrickListener l : listeners) {
 			l.updateBrick(bs);

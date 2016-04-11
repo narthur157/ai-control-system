@@ -1,5 +1,10 @@
 package client;
 
+/**
+ * This class must always match the class in server-pc
+ * @author Nicholas Arthur
+ *
+ */
 public class Command {
 	public static final byte DISTURB_WHEEL = (byte) 0,
 							 TORQUE_ARM = (byte) 1,

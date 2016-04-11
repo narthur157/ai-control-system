@@ -18,6 +18,7 @@ public class StateUpdater extends Thread {
 		try {
 			while (!isInterrupted()) {
 				comm.sendBrick(bc.getState());
+				// update every 5ms
 				Thread.sleep(5);
 			}
 		} 

@@ -48,7 +48,8 @@ public class BrickState {
 		return result;
 	}
 
-	// eclipse generated equals method
+	// partiallyeclipse generated equals method
+	// 10% error allowance for equality on disturb speed
 	// doesn't include time in comparison
 	@Override
 	public boolean equals(Object obj) {
@@ -70,8 +71,8 @@ public class BrickState {
 		
 		// allow for a bit of error in this comparison..more than just float error
 		double diff = Math.abs(Math.abs(disturbSpeed) - Math.abs(other.disturbSpeed));
-		// allow 5% error on the speed
-		double errAllowance = Math.abs(disturbSpeed) / 20;
+		// allow 10% error on the speed
+		double errAllowance = Math.abs(disturbSpeed) / 10;
 		
 		if (diff > errAllowance) {
 			return false;

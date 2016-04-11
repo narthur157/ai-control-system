@@ -1,5 +1,6 @@
 package client;
 
+import lejos.nxt.LCD;
 import lejos.nxt.NXTMotor;
 import lejos.util.Delay;
 import lejos.util.Stopwatch;
@@ -21,17 +22,18 @@ public class WheelTimer extends Thread {
 			
 			synchronized(this) {
 				// multiply by 1000 to get degrees/second instead of degrees/millisecond
-				speed = (double) count * 1000.0 /speedTimer.elapsed();
+				speed = ((double) count) * 1000.0 / (double) speedTimer.elapsed();
 			}
 			
 			speedTimer.reset();
 			// 10 Hz update
-			Delay.msDelay(10);
+			Delay.msDelay(30);
 		}
 	}
 	
 	// synchronized for thread safety
 	synchronized double getSpeed() {
+		LCD.drawString("speed: " + speed, 0, 6);
 		return speed;
 	}
 	

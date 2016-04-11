@@ -1,21 +1,27 @@
 package communication;
 
+/**
+ * Ensure tht this class matches the one in client-brick 
+ * @author Nicholas Arthur
+ *
+ */
 public class Command {
 	public static final byte DISTURB_WHEEL = (byte) 0,
 							 TORQUE_ARM = (byte) 1,
 							 CONTROL_WHEEL = (byte) 2,
 							 STOP = (byte) 3;
 	// bytes[0] = which wheel to change
-	// bytes[1] = power setting for this wheel
+	// bytes[1] = power setting for this wheel, or stop command
 	
 	public byte[] bytes = new byte[2];
 	
-	// motor can also tell the brick to shut down
+	// server can also tell the brick to shut down
 	public Command(int motor, int power) {
 		bytes[0] = (byte) motor;
 		bytes[1] = (byte) power;
 	}
 	
+	// toString does not need to match
 	public String toString() {
 		String s = "Command: Set ";
 		if(bytes[0] == DISTURB_WHEEL) {

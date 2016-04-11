@@ -8,11 +8,12 @@ import lejos.util.Stopwatch;
 public class BrickController {
 	private PCComm comm;
 	
-	NXTMotor controlWheel = new NXTMotor(MotorPort.A),	//use port A for the wheel we want to control
-			 disturbWheel = new NXTMotor(MotorPort.B),	//use port B for the disturbance wheel
-			 torqueArm 	  =	new NXTMotor(MotorPort.C);	//use port C for the arm angle
+	private NXTMotor controlWheel = new NXTMotor(MotorPort.B),	//use port B for the wheel we want to control
+			 		 disturbWheel = new NXTMotor(MotorPort.A),	//use port A for the disturbance wheel
+			 		 torqueArm 	  =	new NXTMotor(MotorPort.C);	//use port C for the arm angle
 
 	WheelTimer disturbTimer = new WheelTimer(disturbWheel);
+	
 	Stopwatch procTimer = new Stopwatch();		// times the whole process
 
 	public BrickController(PCComm commInit) {
@@ -29,6 +30,8 @@ public class BrickController {
 				NXTMotor motor;
 				
 				if (c.motor == Command.CONTROL_WHEEL) {
+					// motor faces opposite direction of disturb wheel
+					c.power = (byte) (-1 * c.power);
 					motor = controlWheel;
 				}
 				else if (c.motor == Command.DISTURB_WHEEL) {
