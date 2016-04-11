@@ -4,11 +4,75 @@
 #include <pmmintrin.h>
 #include "data_set.hpp"
 #include <math.h>
+#include <fstream>
 #include <signal.h>
 
 using namespace std;
 
 typedef float ValueType;
+
+float loadSpdMean, loadSpdStdDev, angleMean,
+	  angleStdDev, controlPwrMean, controlPwrStdDev;
+
+/*
+			loadSpdMean = scan.nextDouble();
+			loadSpdStdDev = scan.nextDouble();
+			angleMean = scan.nextDouble();
+			angleStdDev = scan.nextDouble();
+			controlPwrMean = scan.nextDouble();
+			controlPwrStdDev = scan.nextDouble();
+*/
+void setNormalizationData() {
+	std::ifstream normalizationFile("../normalizationData");
+	std::string line; 
+
+	normalizationFile >> loadSpdMean;
+	normalizationFile >> loadSpdStdDev;
+	normalizationFile >> angleMean;
+	normalizationFile >> angleStdDev;
+	normalizationFile >> controlPwrMean;
+	normalizationFile >> controlPwrStdDev;
+
+	cout << "Using normalizationData" << std::endl;
+	cout << "LdSpdMean " << loadSpdMean << "\tLdSpdStdDev " << loadSpdStdDev << std::endl;
+	cout << "AngleMean " << angleMean << "\tAngleStdDEv " << angleStdDev << std::endl;
+	cout << "ControlPwrMean " << controlPwrMean << "\tControlPwrStdDev " << controlPwrStdDev << std::endl;
+	
+	normalizationFile.close();
+}
+
+float normalize(float val, float mean, float dev) {
+	return (val-mean)/dev;
+}
+
+float denormalize(float val, float mean, float dev) {
+	return (val * dev) + mean;
+}
+
+float normalizeSpeed(float speed) {
+	return normalize(speed, loadSpdMean, loadSpdStdDev);
+}
+
+float denormalizeSpeed(float speed) {
+	return denormalize(speed, loadSpdMean, loadSpdStdDev);
+}
+
+float normalizeAngle(float angle) {
+	return normalize(angle, angleMean, angleStdDev);
+}
+
+float denormalizeAngle(float angle) {
+	return denormalize(angle, angleMean, angleStdDev);
+}
+
+float normalizePower(int power) {
+	return normalize((float) power, controlPwrMean, controlPwrStdDev);
+}
+
+float denormalizePower(int power) {
+	return denormalize((float) power, controlPwrMean, controlPwrStdDev);
+}
+
 
 template<typename T>
 bool compute_err(
@@ -44,9 +108,20 @@ bool compute_err(
 				max = sum = 1.0/0.0;
 				return false;            
 			}
+
             v = computed_dn[j] - expected_dn[j];
             v = fabs(v);
-//            if (v > 10) printf("Wanted %f, got %f\n", expected_dn[j], computed_dn[j]);
+			if (denormalizeSpeed(data.getIns(s)[0] != 0)) {
+				cout << "non zero speed " << denormalizeSpeed(data.getIns(s)[0]);
+						}
+			/*
+            if (v > 2) {
+				printf("Wanted %f, got %f\n", expected_dn[j], computed_dn[j]);
+				cout << "Inputs: LdSpd\t" << denormalizeSpeed(data.getIns(s)[0]);
+				cout << "\tAngle\t" << denormalizeAngle(data.getIns(s)[1]);
+				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[2]) << std::endl;
+			}*/
+
             if (v > max) max = v;
             sum += v*v;
 			//cout << "Sum: " << sum << " max: " << max << endl;

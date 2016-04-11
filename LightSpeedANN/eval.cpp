@@ -50,6 +50,11 @@ void setNormalizationData() {
 	normalizationFile >> angleStdDev;
 	normalizationFile >> controlPwrMean;
 	normalizationFile >> controlPwrStdDev;
+
+	cout << "Using normalizationData" << std::endl;
+	cout << "LdSpdMean " << loadSpdMean << "\tLdSpdStdDev " << loadSpdStdDev << std::endl;
+	cout << "AngleMean " << angleMean << "\tAngleStdDEv " << angleStdDev << std::endl;
+	cout << "ControlPwrMean " << controlPwrMean << "\tControlPwrStdDev " << controlPwrStdDev << std::endl;
 	
 	normalizationFile.close();
 }
@@ -58,22 +63,33 @@ float normalize(float val, float mean, float dev) {
 	return (val-mean)/dev;
 }
 
+float denormalize(float val, float mean, float dev) {
+	return (val * dev) + mean;
+}
+
 float normalizeSpeed(float speed) {
 	return normalize(speed, loadSpdMean, loadSpdStdDev);
 }
 
 float denormalizeSpeed(float speed) {
-	return (speed * loadSpdStdDev) + loadSpdMean;
+	return denormalize(speed, loadSpdMean, loadSpdStdDev);
 }
 
 float normalizeAngle(float angle) {
 	return normalize(angle, angleMean, angleStdDev);
 }
 
+float denormalizeAngle(float angle) {
+	return denormalize(angle, angleMean, angleStdDev);
+}
+
 float normalizePower(int power) {
 	return normalize((float) power, controlPwrMean, controlPwrStdDev);
 }
 
+float denormalizePower(int power) {
+	return denormalize((float) power, controlPwrMean, controlPwrStdDev);
+}
 
 void setup_socket(int port)
 {
@@ -158,8 +174,11 @@ int main()
     setup_socket(8888);
     
     do {
-        //cout << "Listening\n";
-        int s = listen_wait();
+        cout << "Listening\n";
+		cout << "Format: CurSpd Angle CtrlPwr TargetSpd" << std::endl;
+        
+		int s = listen_wait();
+
         do {
             //cout << "Reading\n";
             string line;
@@ -178,7 +197,7 @@ int main()
 			float targetSpeed = inputs[3];
 			targetSpeed = normalizeSpeed(targetSpeed);
 				
-			for (int i = -100; std::abs(i) <= 100; i++) {
+			for (int i = -100; i <= 100; i++) {
 				inputs[2] = normalizePower(i);
 
 				float predictedSpeed = forward_ann(inputs, mem)[0];
@@ -186,12 +205,10 @@ int main()
 				
 				if (err < minErr) {
 					minErr = err;
-					bestPower = inputs[2];
+					bestPower = i;
 				}
 			}
 			
-			inputs[2] = bestPower;
-
 			cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
 
 			outputs = forward_ann(inputs, mem);
@@ -199,7 +216,7 @@ int main()
             ss << std::setprecision(40);
 
 //          for (int i=0; i<4; i++) {
-            ss << denormalizeSpeed(outputs[0]);
+            ss << bestPower;
 //				if (i != 3) ss << " ";
 //          }
 

@@ -77,7 +77,7 @@ def collect_torque_changes():
 def collect_index(index):
 	try:
 		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [100])
+		outputs = get_future_speeds(index, [300])
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)

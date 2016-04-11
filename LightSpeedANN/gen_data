@@ -23,6 +23,8 @@ lineCount=$(wc -l $outputFile | cut -d' ' -f1)
 h=$(expr $lineCount \* 8 / 10)
 t=$(expr $lineCount - $h)
 
+rm $headfile $tailFile
+
 # could be optimized
 shuf $outputFile | head -$h > $headFile &&
 shuf $outputFile | tail -$t > $tailFile &&
