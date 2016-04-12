@@ -15,7 +15,7 @@ if [[ $# -eq 3 ]]
 	then 
 		headFile=$2
 		tailFile=$3
-		echo "Using $headFile and $tailFile as output files"
+		echo "Using $headFile as train set and $tailFile as test set"
 fi
 
 outputFile=$1

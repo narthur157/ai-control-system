@@ -38,7 +38,7 @@ public class DataCollector extends Test {
 				changeFlag = 2;
 				// disturbance is defined as any speed slower than the drive wheel
 				// positive power now goes forward, direction set on brick
-				BrickComm.sendCommand(Command.DISTURB_WHEEL, prevCtrlPwr - rand.nextInt(20)); 
+				BrickComm.sendCommand(Command.DISTURB_WHEEL, prevCtrlPwr - rand.nextInt(40)); 
 				break;
 		}
 		

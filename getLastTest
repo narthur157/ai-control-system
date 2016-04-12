@@ -2,4 +2,4 @@
 
 # Convenience script to get the last test we made
 # because it's annoying to type out the dates
-echo testRuns/`ls -t testRuns/ | head -1`
+vim testRuns/`ls -t testRuns/ | head -1`

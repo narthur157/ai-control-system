@@ -1,7 +1,13 @@
 #!/bin/bash
 
+# This is a convenience script to do things with the NXT
+# It does not concern itself with the neural network beyond formatting
+# data for training
+
 # fancy argument options
 # note that you shouldn't pass -n and -d
+
+ANN_FOLDER=LightSpeedANN
 
 if [[ $# -eq 0 ]]
 	then
@@ -54,13 +60,36 @@ fi
 # this will only create the dir if not already there
 mkdir -p testRuns &&
 # load program onto the brick
-nxj -r client.Receive -cp client-brick/bin/ && 
-# run our server program
-nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+nxj -r client.Receive -cp client-brick/bin/ 
+
+if [[ $? -ne 0 ]]
+	then
+		echo "USB connection failed, retrying in 5 seconds..."
+		sleep 5
+		nxj -r client.Receive -cp client-brick/bin/ 
+		if [[ $? -ne 0 ]]
+			then
+				echo "USB connection failed again, please plug-in NXT and hit enter"
+				read null
+				sleep 3
+				# if it's not plugged in now just quit. There's no hope at this point
+				nxj -r client.Receive -cp client-brick/bin/ || exit 1
+		fi
+fi
+
+if [[ $? -eq 0 ]]
+	then
+		# run our server program
+		nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+fi
 
 # $? is the exit code from last script
 if [[ $? -eq 0 && $FORMAT ]]
 	then
 		# parse the most recent test, the one we just made
-		python dataparser.py testRuns/`ls -t testRuns/ | head -1`
+		python dataparser.py testRuns/`ls -t testRuns/ | head -1` &&
+		# shuffle training set and split into 2 files 80/20
+		./$ANN_FOLDER/gen_data training-set.csv $ANN_FOLDER/train-set.csv $ANN_FOLDER/test-set.csv 
+		echo "Files ready for training, use runTrain in $ANN_FOLDER after deleting the weights file"
 fi
+

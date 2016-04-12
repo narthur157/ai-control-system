@@ -63,7 +63,9 @@ public class BrickUpdater extends Thread {
 	
 	private void update(BrickState bs) {
 		for (BrickListener l : listeners) {
-			l.updateBrick(bs);
+			synchronized(l) {
+				l.updateBrick(bs);
+			}
 		}
 	}
 	
