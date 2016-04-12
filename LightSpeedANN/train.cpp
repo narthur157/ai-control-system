@@ -111,16 +111,17 @@ bool compute_err(
 
             v = computed_dn[j] - expected_dn[j];
             v = fabs(v);
-			if (denormalizeSpeed(data.getIns(s)[0] != 0)) {
-				cout << "non zero speed " << denormalizeSpeed(data.getIns(s)[0]);
-						}
-			/*
-            if (v > 2) {
+
+			if (computed_dn[j] > 100) {
+				cout << "Large computed: " << computed_dn[j] << std::endl;
+			}
+
+            if (v > 5) {
 				printf("Wanted %f, got %f\n", expected_dn[j], computed_dn[j]);
 				cout << "Inputs: LdSpd\t" << denormalizeSpeed(data.getIns(s)[0]);
 				cout << "\tAngle\t" << denormalizeAngle(data.getIns(s)[1]);
 				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[2]) << std::endl;
-			}*/
+			}
 
             if (v > max) max = v;
             sum += v*v;
@@ -242,6 +243,8 @@ int main(int argc, char* argv[])
 	// default file names for testing and training
 	string testFile = "test-set.csv";
 	string trainFile = "train-set.csv";
+
+	setNormalizationData();
 
 	ValueType lr = 0.10;
 	if (argc == 2) {
