@@ -13,8 +13,8 @@ public class DataCollector extends Test {
 	
 	private Random rand = new Random();
 	private int count = 0;
-	// impossible control value
-	private int prevCtrlPwr = 666;
+	private int prevCtrlPwr = 50;
+	private int prevDisturbPwr = 50;
 	
 	public DataCollector() throws IOException {
 		super();
@@ -23,26 +23,51 @@ public class DataCollector extends Test {
 	@Override
 	public void test() {
 		changeFlag = 0;
-		
-		switch (count) {
-			case 0:
-				int randPower = 30+rand.nextInt(70); 
-				changeFlag = 1;
-				BrickComm.sendCommand(Command.CONTROL_WHEEL, randPower);
-				BrickComm.sendCommand(Command.DISTURB_WHEEL, randPower);
-				
-				prevCtrlPwr = randPower;
-				break;
-			case 1:
-				// negate this since wheels face opposite directions
-				changeFlag = 2;
-				// disturbance is defined as any speed slower than the drive wheel
-				// positive power now goes forward, direction set on brick
-				BrickComm.sendCommand(Command.DISTURB_WHEEL, prevCtrlPwr - rand.nextInt(40)); 
-				break;
+		int power;
+		if (count == 0) {
+			power = prevDisturbPwr + 5;
+			if (power > 100) power = 0;
+			BrickComm.sendCommand(Command.DISTURB_WHEEL, power); 
+			prevDisturbPwr = power;
+			changeFlag = 2;
+		} else {		
+			power = getNextPower(prevDisturbPwr);
+			BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
+			changeFlag = 1;
+			prevCtrlPwr = power;
 		}
 		
-		count = (count+1) % 2;
+//		switch (count) {
+//			case 0:
+//				power = getNextPower(prevDisturbPwr);
+//				BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
+//				changeFlag = 1;
+//				prevCtrlPwr = power;
+//				break;
+//			case 1:
+//				power = getNextPower(prevCtrlPwr);
+//				// negate this since wheels face opposite directions
+//				changeFlag = 2;
+//				// disturbance is defined as any speed slower than the drive wheel
+//				// positive power now goes forward, direction set on brick
+//				BrickComm.sendCommand(Command.DISTURB_WHEEL, power); 
+//				prevDisturbPwr = power;
+//				break;
+//		}
+		
+		count = (count+1) % 6;
+	}
+	
+	private int getNextPower(int prevPower) {
+		int randPower = prevPower+rand.nextInt(81)-40; 
+		
+		if (randPower < 0) {
+			randPower = rand.nextInt(40);
+		}
+		if (randPower > 100) {
+			randPower = 100-rand.nextInt(40);
+		}
+		return randPower;
 	}
 
 }

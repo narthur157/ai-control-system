@@ -19,11 +19,13 @@ import communication.BrickListener;
  *
  */
 public abstract class Test implements BrickListener {
-	private final int STABLE_COUNT = 200;
+	//private final int STABLE_COUNT = 200;
 	
 	protected Logger logger;
 	protected int changeFlag = 0;
 	protected BrickState bs, prevBs;
+	
+	private long prevTime = -1;
 	
 	private int testCount = 0, numLoops = 0, stableCount = 0;
 	
@@ -91,10 +93,9 @@ public abstract class Test implements BrickListener {
 			stableCount = 0;
 		}
 		else {
-			stableCount++;
-			if (stableCount > STABLE_COUNT) {
-				stableCount = 0;
-				
+			long curTime = System.currentTimeMillis();
+			if (curTime - prevTime > 2000 || prevTime == -1) {
+				prevTime = curTime;
 				test();
 				testCount++;
 				
@@ -102,6 +103,12 @@ public abstract class Test implements BrickListener {
 					finishTest();
 				}
 			}
+//			stableCount++;
+//			if (stableCount > STABLE_COUNT) {
+//				stableCount = 0;
+//				
+//				
+//			}
 		}
 	}
 	
