@@ -158,19 +158,34 @@ int parse_floats(const char *line, float *f)
     } while (1);
 }
 
-int main()
-{
-    ValueType *mem = allocate_ann();
-    float inputs[10], *outputs;
-    
-    // READ WEIGHTS
-    FILE *out = fopen("weights.net", "rb");
-    if (!out) bail("opening weights");
-    size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
-    fclose(out);
+int power_search(float * inputs, ValueType *mem) {
+	inputs[0] = normalizeSpeed(inputs[0]);
+	inputs[1] = normalizeAngle(inputs[1]);
+	inputs[2] = normalizePower(inputs[2]);
 
-	setNormalizationData();
-    
+	int bestPower = 0;
+	float minErr = 666;
+	float targetSpeed = inputs[3];
+	targetSpeed = normalizeSpeed(targetSpeed);
+		
+	for (int i = -100; i <= 100; i++) {
+		inputs[2] = normalizePower(i);
+
+		float predictedSpeed = forward_ann(inputs, mem)[0];
+		float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
+		
+		if (err < minErr) {
+			minErr = err;
+			bestPower = i;
+		}
+	}
+	
+	cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
+	return bestPower;
+}
+
+void eval_socket(ValueType *mem) {
+    float inputs[10], *outputs;
     setup_socket(8888);
     
     do {
@@ -188,37 +203,12 @@ int main()
             
             int n = parse_floats(line.c_str(), inputs);
 
-			inputs[0] = normalizeSpeed(inputs[0]);
-			inputs[1] = normalizeAngle(inputs[1]);
-			inputs[2] = normalizePower(inputs[2]);
 			
-			int bestPower = 0;
-			float minErr = 666;
-			float targetSpeed = inputs[3];
-			targetSpeed = normalizeSpeed(targetSpeed);
-				
-			for (int i = -100; i <= 100; i++) {
-				inputs[2] = normalizePower(i);
 
-				float predictedSpeed = forward_ann(inputs, mem)[0];
-				float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
-				
-				if (err < minErr) {
-					minErr = err;
-					bestPower = i;
-				}
-			}
-			
-			cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
-
-			outputs = forward_ann(inputs, mem);
             stringstream ss;
             ss << std::setprecision(40);
 
-//          for (int i=0; i<4; i++) {
-            ss << bestPower;
-//				if (i != 3) ss << " ";
-//          }
+            ss << power_search(inputs, mem);
 
             ss << "\n";
 
@@ -228,6 +218,23 @@ int main()
             cout << line << endl;
         } while (1);
     } while (1);
+}
+
+int main()
+{
+    ValueType *mem = allocate_ann();
+    
+    // READ WEIGHTS
+    FILE *out = fopen("weights.net", "rb");
+    
+	if (!out) bail("opening weights");
+   
+	size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
+    
+	fclose(out);
+
+	setNormalizationData();
+	eval_socket(mem);    
     
 	return 0;
 }
