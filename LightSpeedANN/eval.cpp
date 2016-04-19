@@ -180,7 +180,7 @@ int power_search(float * inputs, ValueType *mem) {
 		}
 	}
 	
-	cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
+	//cout << "Best Power " << bestPower << " found with min err " << minErr << std::endl;
 	return bestPower;
 }
 
@@ -220,7 +220,41 @@ void eval_socket(ValueType *mem) {
     } while (1);
 }
 
-int main()
+void make_tables(ValueType *mem) {
+	// make a csv file full of various inputs/outputs to the ann
+	// for simplicity, fix all numbers at their means and change only 1 at once
+	
+	float inputs[10];
+	
+		
+	stringstream evalTableStr;
+
+	// 18*18*15 = 4860 loops
+	//for(float targetSpeed = 0; targetSpeed <= 900; targetSpeed+=50) {
+	for(int testPower = -100; testPower <= 100; testPower++) {
+		for (float angle = 0; angle <= 15; angle++) {
+			for (float loadSpeed = 0; loadSpeed <= 900; loadSpeed+=50) {
+				inputs[0] = loadSpeed;
+				inputs[1] = angle;
+				inputs[2] = testPower;
+				
+			//	int result = power_search(inputs, mem);
+				float result = forward_ann(inputs, mem)[0];
+
+				evalTableStr << loadSpeed << "," << angle << "," << testPower << "," << result << std::endl;
+			}
+		}
+	}
+	
+	ofstream evalTable;
+	evalTable.open ("evalTable.csv");
+	// column headers
+	evalTable << "LoadSpeed,Angle,TestPower,PredictedSpeed" << std::endl;
+	evalTable << evalTableStr.rdbuf();
+	evalTable.close();
+}
+
+int main(int argc, char* argv[])
 {
     ValueType *mem = allocate_ann();
     
@@ -234,7 +268,13 @@ int main()
 	fclose(out);
 
 	setNormalizationData();
-	eval_socket(mem);    
-    
+	if (argc == 1) {
+		eval_socket(mem);    
+	}
+	
+	if (argc == 2 && argv[1]) {
+		make_tables(mem);	
+	}
+
 	return 0;
 }
