@@ -45,14 +45,14 @@ public class AnnClient {
     }
     
     static void sendLine(int targetSpeed, BrickState bs) {
-    	System.out.println("targetSpeed: " + targetSpeed + " bs: " + bs.toString());
+    	//System.out.println("targetSpeed: " + targetSpeed + " bs: " + bs.toString());
     	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, bs.controlPower, targetSpeed });
     }
     
     static void sendLine(String s) {
         writer.println(s);
         writer.flush();
-        System.out.println("Sending (normalized): " + s);
+        //System.out.println("Sending (normalized): " + s);
     }
     
     /**

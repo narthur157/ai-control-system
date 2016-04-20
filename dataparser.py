@@ -109,7 +109,7 @@ if __name__ == '__main__':
 	#outFile.write(make_row(['LdSpd', 'Angle', 'CtrlPwr', 'T5', 'T10', 'T20', 'T30']))
 	df = pd.read_csv(sys.argv[1], sep='\t');
 
-	normalize_input()
+#	normalize_input()
 	
 	collect_torque_changes()
 	collect_drive_changes()	

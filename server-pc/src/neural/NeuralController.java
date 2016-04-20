@@ -2,6 +2,8 @@ package neural;
 
 import java.io.IOException;
 
+import lejos.util.Delay;
+
 import communication.BrickComm;
 import communication.BrickListener;
 import communication.Command;
@@ -24,15 +26,18 @@ public class NeuralController implements BrickListener {
 		
 		if (!speedSet && !setting) {
 			// avoid trying to change before a previous loop finishes
-			setting = true;
-			
-			try {
-				BrickComm.sendCommand(Command.CONTROL_WHEEL, findPower(targetSpeed));
-			} catch (IOException e) {
-				e.printStackTrace();
+			synchronized(this) {
+				setting = true;
+				
+				try {
+					BrickComm.sendCommand(Command.CONTROL_WHEEL, findPower(targetSpeed));
+					Delay.msDelay(200);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				setting = false;
 			}
-			
-			setting = false;
 		}
 	}
 	
@@ -45,10 +50,10 @@ public class NeuralController implements BrickListener {
 	public int findPower(int targetSpeed) throws IOException {
 		long beginTimer = System.currentTimeMillis();
 		//int result = completeSearch(targetSpeed);
-		System.out.println("Attempting to set speed: " + targetSpeed);
+		//System.out.println("Attempting to set speed: " + targetSpeed);
 		int result = AnnClient.searchSpeed(targetSpeed, bs);
 		long endTimer = System.currentTimeMillis();
-		System.out.println("Took " + (endTimer-beginTimer) + " ms to search for power");
+		//System.out.println("Took " + (endTimer-beginTimer) + " ms to search for power");
 		
 		return result;
 	}
@@ -98,6 +103,7 @@ public class NeuralController implements BrickListener {
 			System.out.println("Old speed not reached, interrupting for new speed");
 			return findPower(this.targetSpeed);
 		}
+		
 		// test if array is empty
 		if (upperBound < lowerBound) {
 			// set is empty, so return value showing not found

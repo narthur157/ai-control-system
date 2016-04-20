@@ -23,6 +23,7 @@ public abstract class Test implements BrickListener {
 	
 	protected Logger logger;
 	protected int changeFlag = 0;
+	protected long testLength = 2000;
 	protected BrickState bs, prevBs;
 	
 	private long prevTime = -1;
@@ -94,7 +95,7 @@ public abstract class Test implements BrickListener {
 		}
 		else {
 			long curTime = System.currentTimeMillis();
-			if (curTime - prevTime > 2000 || prevTime == -1) {
+			if (curTime - prevTime > testLength || prevTime == -1) {
 				prevTime = curTime;
 				test();
 				testCount++;
@@ -122,6 +123,7 @@ public abstract class Test implements BrickListener {
 	}
 	
 	final private void collectData() {
+		System.out.println(bs.toString());
 		// logger is paramterized in constructor, can write to file
 		logger.logln(bs.toString() + "\t" + changeFlag);
 	}

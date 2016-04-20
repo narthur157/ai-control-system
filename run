@@ -87,9 +87,9 @@ fi
 if [[ $? -eq 0 && $FORMAT ]]
 	then
 		# parse the most recent test, the one we just made
+		# these two files should probably be combined
 		python dataparser.py testRuns/`ls -t testRuns/ | head -1` &&
-		# shuffle training set and split into 2 files 80/20
-		./$ANN_FOLDER/gen_data training-set.csv $ANN_FOLDER/train-set.csv $ANN_FOLDER/test-set.csv 
+		java -cp server-pc/bin/ datacollection/RebalanceData &&
 		echo "Files ready for training, use runTrain in $ANN_FOLDER after deleting the weights file"
 fi
 

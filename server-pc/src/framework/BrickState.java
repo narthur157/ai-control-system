@@ -3,10 +3,9 @@ package framework;
 import communication.Command;
 
 public class BrickState {
-	public int time, controlPower, disturbPower, angle, torquePower;
-	public double disturbSpeed;
+	public int time, controlPower, disturbSpeed, disturbPower, angle, torquePower;
 	
-	public BrickState(int time, double disturbSpeed, int disturbPower, 
+	public BrickState(int time, int disturbSpeed, int disturbPower, 
 					  int controlPower, int torquePower, int angle) {
 		this.time = time; 					// total elapsed time
 		this.disturbSpeed = disturbSpeed;

@@ -2,9 +2,13 @@ package client;
 
 import java.io.IOException;
 
+import lejos.util.Stopwatch;
+
 public class StateUpdater extends Thread {
+	private static final int UPDATE_DELAY = 5;
 	private PCComm comm;
 	private BrickController bc;
+	private Stopwatch sendTimer = new Stopwatch();
 	
 	public StateUpdater(PCComm commInit, BrickController bcInit) {
 		comm = commInit;
@@ -16,10 +20,14 @@ public class StateUpdater extends Thread {
 	// and we should always want them anyways
 	public void run() {
 		try {
+			sendTimer.reset();
 			while (!isInterrupted()) {
 				comm.sendBrick(bc.getState());
 				// update every 5ms
-				Thread.sleep(5);
+				// sendBrick may take 
+				if (UPDATE_DELAY - sendTimer.elapsed() > 0) {
+					Thread.sleep(UPDATE_DELAY - sendTimer.elapsed());
+				}
 			}
 		} 
 		catch (IOException e) {

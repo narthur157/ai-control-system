@@ -51,11 +51,11 @@ public class Normalization {
 		return denormalize(ctrl, controlPwrMean, controlPwrStdDev);
 	}
 	
-	private static double normalize(double val, double mean, double stdDev) {
+	public static double normalize(double val, double mean, double stdDev) {
 		return (val - mean) / stdDev;
 	}
 	
-	private static double denormalize(double val, double mean, double stdDev) {
+	public static double denormalize(double val, double mean, double stdDev) {
 		return (val * stdDev) + mean;
 	}
 }

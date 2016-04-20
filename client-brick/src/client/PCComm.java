@@ -59,7 +59,7 @@ public class PCComm {
 	// see the effect on latency
 	public void sendBrick(BrickState bs) throws IOException {
 		dOut.writeInt(bs.time);
-		dOut.writeDouble(bs.disturbSpeed);
+		dOut.writeInt((int) bs.disturbSpeed);
 		dOut.writeInt(bs.disturbPower);
 		dOut.writeInt(bs.controlPower);
 		dOut.writeInt(bs.torquePower);

@@ -41,7 +41,7 @@ public class BrickUpdater extends Thread {
 		try {
 			// could be optimized
 			int time = inDat.readInt();
-			double disturbSpeed = inDat.readDouble();
+			int disturbSpeed = inDat.readInt();
 			int disturbPower = inDat.readInt();
 			int controlPower = inDat.readInt();
 			int torquePower = inDat.readInt();

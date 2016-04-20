@@ -5,7 +5,7 @@ public class BrickState {
 	public int time, controlPower, disturbPower, torquePower, angle;
 	public double disturbSpeed;
 	
-	public BrickState(int time, double currentSpeed, int currentPower, 
+	public BrickState(int time, int currentSpeed, int currentPower, 
 					  int disturbPower, int torquePower, int angle) {
 		this.time = time; 					//total elapsed time
 		this.disturbSpeed = currentSpeed;

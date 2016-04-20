@@ -8,12 +8,11 @@ import lejos.util.Delay;
 import lejos.util.Stopwatch;
 
 public class WheelTimer extends Thread {
-	Stopwatch speedTimer = new Stopwatch();
-	Stopwatch executionTimer = new Stopwatch();
-	NXTMotor mot;
-	double speed = 0;
-	double altSpeed = 0;
-	ArrayList<Double> queue = new ArrayList<Double>();
+	private Stopwatch speedTimer = new Stopwatch();
+
+	private NXTMotor mot;
+	private double speed = 0;
+	private ArrayList<Double> queue = new ArrayList<Double>();
 	private final static int QUEUE_SIZE = 10;
 	
 	public WheelTimer(NXTMotor motInit) {
@@ -23,14 +22,13 @@ public class WheelTimer extends Thread {
 	// continuously update the value of speed rather than blocking and updating when called
 	public void run() {
 		while (!isInterrupted()) {
-			executionTimer.reset();
 			int count = mot.getTachoCount();
 			mot.resetTachoCount();
 			
 			synchronized(this) {
 				// multiply by 1000 to get degrees/second instead of degrees/millisecond
 				queue.add(((double) count) * 1000.0 / (double) speedTimer.elapsed());
-				altSpeed = ((double) count) * 1000.0 / (double) speedTimer.elapsed();
+
 				if (queue.size() > QUEUE_SIZE) {
 					queue.remove(0);
 				}
@@ -46,16 +44,14 @@ public class WheelTimer extends Thread {
 			
 			speedTimer.reset();
 			
-			// would prefer a more accurate timer
 			Delay.msDelay(10);
 		}
 	}
 	
 	// synchronized for thread safety
-	synchronized double getSpeed() {
+	synchronized int getSpeed() {
 		LCD.drawString("speed: " + speed, 0, 6);
-		LCD.drawString("altSpeed: " + altSpeed, 0, 1);
-		return speed;
+		return (int) speed;
 	}
 	
 	public void stopThread() {
