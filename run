@@ -7,6 +7,14 @@
 # fancy argument options
 # note that you shouldn't pass -n and -d
 
+function format {
+	# parse the most recent test, the one we just made
+	# these two files should probably be combined
+	python dataparser.py testRuns/`ls -t testRuns/ | head -1` &&
+	java -cp server-pc/bin/ datacollection/RebalanceData &&
+	echo "Files ready for training, use runTrain in $ANN_FOLDER after deleting the weights file"
+}
+
 ANN_FOLDER=LightSpeedANN
 
 if [[ $# -eq 0 ]]
@@ -44,11 +52,16 @@ esac
 shift # past argument or value
 done
 
-if [[ -z $TEST ]]
-	then	
+if [[ -z $TEST ]]; then
+	if [[ $FORMAT ]]; then
+		format
+		exit 0
+	else
 		echo $TEST
 		echo "Invalid arguments, please use --neural or --data"
 		exit 1
+	fi
+
 fi
 
 if [[ -z $TESTS ]]
@@ -84,12 +97,7 @@ if [[ $? -eq 0 ]]
 fi
 
 # $? is the exit code from last script
-if [[ $? -eq 0 && $FORMAT ]]
-	then
-		# parse the most recent test, the one we just made
-		# these two files should probably be combined
-		python dataparser.py testRuns/`ls -t testRuns/ | head -1` &&
-		java -cp server-pc/bin/ datacollection/RebalanceData &&
-		echo "Files ready for training, use runTrain in $ANN_FOLDER after deleting the weights file"
+if [[ $? -eq 0 && $FORMAT ]]; then
+	format
 fi
 
