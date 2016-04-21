@@ -33,6 +33,7 @@ public class AnnClient {
 			e.printStackTrace();
 		}
     }
+    
     static void init(String addr, int port) throws IOException {
         sock = new Socket(addr, port);
         writer = new PrintWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF8"));

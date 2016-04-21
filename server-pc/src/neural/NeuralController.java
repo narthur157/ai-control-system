@@ -12,10 +12,14 @@ import neural.AnnClient;
 
 public class NeuralController implements BrickListener {
 	private BrickState bs;
-	private final static int MIN_POWER = -100, MAX_POWER = 100, ERR_ALLOWANCE = 30;
+	private final static int MIN_POWER = -100, 
+							 MAX_POWER = 100, 
+							 ERR_ALLOWANCE = 30, 
+							 CONTROL_DELAY = 100;
 	private int targetSpeed;
 	private boolean speedSet = false;
 	private boolean setting = false;
+	private long startTime = -1;
 	
 	public NeuralController() {
 		BrickComm.addListener(this);
@@ -30,8 +34,13 @@ public class NeuralController implements BrickListener {
 				setting = true;
 				
 				try {
-					BrickComm.sendCommand(Command.CONTROL_WHEEL, findPower(targetSpeed));
-					Delay.msDelay(200);
+					startTime = System.currentTimeMillis();
+					int power = findPower(targetSpeed);
+					BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
+					BrickComm.sendCommand(Command.DISTURB_WHEEL, power);
+					// delay may be necessary
+					Delay.msDelay(CONTROL_DELAY - (startTime-System.currentTimeMillis()));
+					startTime = System.currentTimeMillis();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

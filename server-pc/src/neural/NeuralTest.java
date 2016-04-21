@@ -7,7 +7,7 @@ import framework.Test;
 public class NeuralTest extends Test {
 	private NeuralController nc = new NeuralController();
 	
-	int count = 3;
+	int count = 6;
 	
 	public NeuralTest() throws IOException {
 		super();
@@ -25,7 +25,7 @@ public class NeuralTest extends Test {
 			e.printStackTrace();
 		}
 		
-		count = count % 10;
+		count = (count+1) % 10;
 	}
 
 }

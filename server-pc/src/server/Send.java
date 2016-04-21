@@ -45,7 +45,6 @@ public class Send {
 	
 	private static void runTest(Test tester, int numRuns) {
 		try {
-			
 			tester.runTest(numRuns);
 		}
 		catch (IOException e) {

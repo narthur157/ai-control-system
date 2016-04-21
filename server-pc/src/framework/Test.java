@@ -85,17 +85,18 @@ public abstract class Test implements BrickListener {
 		prevBs = bs;
 		bs = bsIn;
 		collectData();
-
-		// only run updates once stabilized
-		if (!bs.equals(prevBs)) {
-			//System.out.println("Resetting stable count. Count was " + stableCount);
-			//if (bs != null && prevBs != null)
-				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
-			stableCount = 0;
-		}
-		else {
+//
+//		// only run updates once stabilized
+//		if (!bs.equals(prevBs)) {
+//			//System.out.println("Resetting stable count. Count was " + stableCount);
+//			//if (bs != null && prevBs != null)
+//				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
+//			stableCount = 0;
+//		}
+//		else {
 			long curTime = System.currentTimeMillis();
 			if (curTime - prevTime > testLength || prevTime == -1) {
+				System.out.println("???");
 				prevTime = curTime;
 				test();
 				testCount++;
@@ -110,7 +111,7 @@ public abstract class Test implements BrickListener {
 //				
 //				
 //			}
-		}
+//		}
 	}
 	
 	final private void finishTest() {
@@ -123,7 +124,7 @@ public abstract class Test implements BrickListener {
 	}
 	
 	final private void collectData() {
-		System.out.println(bs.toString());
+		//System.out.println(bs.toString());
 		// logger is paramterized in constructor, can write to file
 		logger.logln(bs.toString() + "\t" + changeFlag);
 	}

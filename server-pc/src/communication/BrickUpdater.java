@@ -29,7 +29,9 @@ public class BrickUpdater extends Thread {
 				update(readBrick());
 			} catch (IOException e) {
 				if (!finished) {
+					// probably pressed the orange nxt button
 					System.err.println("Aborting brick reads");
+					BrickComm.close();
 				}
 				break;
 			}

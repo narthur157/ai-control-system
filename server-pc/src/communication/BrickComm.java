@@ -17,6 +17,7 @@ public class BrickComm {
 	private static DataOutputStream outDat;
 	private static NXTConnector conn;
 	private static BrickUpdater updater;
+	private static boolean sending;
 	
 	// initialization
 	static {
@@ -71,10 +72,16 @@ public class BrickComm {
 	 */
 	public static void sendCommand(Command c) {
 		try {
-			System.out.println("Sending " + c);
+			if (sending) {
+				throw new IOException("Tried to interrupt command write");
+			}
+			//System.out.println("Sending " + c);
+			sending = true;
 			outDat.write(c.bytes, 0, c.bytes.length);
 			outDat.flush();
+			sending = false;
 		} catch (IOException e) {
+			
 			e.printStackTrace();
 			close();
 		}
@@ -107,8 +114,10 @@ public class BrickComm {
 			inDat.close();
 			outDat.close();
 			System.out.println("Closed data streams");
+			System.exit(0);
 		} catch (IOException ioe) {
 			System.err.println("IO Exception Closing connection");
+			System.exit(1);
 		}
 	}
 }
