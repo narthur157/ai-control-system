@@ -289,7 +289,7 @@ int main(int argc, char* argv[])
     compute_err(testData, mem, forward_ann, sse, max);
     cout << lr << " " << sse << " " << max << endl;
 
-	for (int i=0; i<1000000 && !global_quit; i++) {
+	for (int i = 0; i < 1000 && !global_quit; i++) {
 		if (argc == 1) {
 			lr = find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
 		}
