@@ -168,6 +168,8 @@ public class RebalanceData {
 	
 	void dumpMeanStd(String fname) throws IOException {
 		PrintWriter pw = new PrintWriter(new FileWriter(fname));
+		System.out.println("Wrote normalization data to " + fname);
+		
 		pw.println(sums[0] + "\t" + vars[0]);
 		pw.println(sums[1] + "\t" + vars[1]);
 		pw.println(sums[2] + "\t" + vars[2]);
@@ -184,6 +186,7 @@ public class RebalanceData {
 		
 		rd.dumpFile("LightSpeedANN/train-set.csv", false);
 		rd.dumpFile("LightSpeedANN/test-set.csv", true);
+		System.out.println("Wrote train-set.csv and test-set.csv to LightSpeedANN");
 		
 		rd.dumpMeanStd("normalizationData");
 	}
