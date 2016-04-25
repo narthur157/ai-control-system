@@ -152,7 +152,7 @@ public class RebalanceData {
 				for (int k=1; k<r.columns.length; k++) {
 					int normalizationIndex = k;
 					
-					if (normalizationIndex == 3) normalizationIndex = 0;
+					if (normalizationIndex == PREDICTED_SPEED_INDEX) normalizationIndex = 0;
 					
 					double 	val = r.columns[k],
 							mean = sums[normalizationIndex],
@@ -171,8 +171,9 @@ public class RebalanceData {
 		System.out.println("Wrote normalization data to " + fname);
 		
 		pw.println(sums[0] + "\t" + vars[0]);
+		//pw.println(sums[1] + "\t" + vars[1]);
+		pw.println("-1\t-1");
 		pw.println(sums[1] + "\t" + vars[1]);
-		pw.println(sums[2] + "\t" + vars[2]);
 		pw.close();
 	}
 	
