@@ -53,6 +53,7 @@ def collect_rand():
 		if 1 > random.randrange(0,10):
 			collect_index(index)
 
+'''
 def collect_drive_changes():
 	prevFlag = 0
 
@@ -63,6 +64,19 @@ def collect_drive_changes():
 		if flag == 2 and flag != prevFlag:
 			collect_index(index)
 		prevFlag = flag
+'''
+
+def collect_drive_changes():
+	prevPower = 0
+
+	for index, power in enumerate(df.CtrlPwr):
+		if index == 0:
+			prevPower = power
+
+		if power != prevPower:
+			collect_index(index)
+
+		prevPower = power
 
 def collect_torque_changes():
 	prevAng = 0
@@ -76,7 +90,7 @@ def collect_torque_changes():
 
 def collect_index(index):
 	try:
-		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index]]
+		inputs = [df.LdSpd[index], df.CtrlPwr[index]]
 		outputs = get_future_speeds(index, [100])
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
@@ -111,7 +125,7 @@ if __name__ == '__main__':
 
 #	normalize_input()
 	
-	collect_torque_changes()
+#	collect_torque_changes()
 	collect_drive_changes()	
 	collect_rand()
 

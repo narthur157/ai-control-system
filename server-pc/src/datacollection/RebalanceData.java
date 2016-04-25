@@ -12,8 +12,8 @@ import java.util.Random;
 import neural.Normalization;
 
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 4;
-	private static final int PREDICTED_SPEED_INDEX = 3;
+	private static final int NUM_COLUMNS = 3;
+	private static final int PREDICTED_SPEED_INDEX = 2;
 	
 	private class Row {
 		int[] columns = new int[NUM_COLUMNS];

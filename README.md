@@ -9,7 +9,7 @@ Research on using neural networks to make motor controllers better.
 -----------------
 `LightspeedANN` - This directory holds the artifical neural network implementation. There is a makefile for the neural net, 2 scripts, and 2 programs. 
 
-`runTrain` is a convenience script to compile `train` and `eval` and then run training. Arguments to `gen_sse.rb` may supplied, creating a new ann in `ann.c`. 
+`runTrain` is a convenience script to compile `train` and `eval` and then run training. Arguments to `gen_sse.rb` may supplied, creating a new ann in `ann.c`. Without arguments, `runTrain` will run `train` with learning rates decreasing by factors of 10 up to 10^-8.
 
 `gen_data` is a bash script which takes in a training set and splits it into 2 files, one of which contains 80% of the randomized, and the other containing the other 20%. These default to test-set.csv and train-set.csv, and a sample is included in the repo. 
 
@@ -17,7 +17,7 @@ Research on using neural networks to make motor controllers better.
 
 `train` is the training program which by default uses train-set.csv and test-set.csv for its training. Learning rate is accepted as an argument.
 
-`eval` is a program which uses sockets to test inputs to a neural net, one line at a time. To test, run `./eval`, and then in another terminal, `telnet localhost 8888` and then upon connecting, type `1 2 3` (assuming 3 inputs) and then enter. 
+`eval` is a program which uses sockets to test inputs to a neural net, one line at a time. To test, run `./eval`, and then in another terminal, `telnet localhost 8888` and then upon connecting, type `1 2 3 4` (assuming 3 inputs and then last a target speed) and then enter. 
 
 -----------------
 
