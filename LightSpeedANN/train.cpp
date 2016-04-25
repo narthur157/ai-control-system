@@ -247,23 +247,15 @@ int main(int argc, char* argv[])
 	setNormalizationData();
 
 	ValueType lr = 0.10;
+
 	if (argc == 2) {
 		cout << "Using given learning rate " << argv[1] << endl;
 		lr = stof(argv[1]);
 	}
 	
-	/*
-	if (argc != 2) {
-		cout << "No args, defaulting to use " << testFile 
-			 << " and " << trainFile << endl;
-	}*/
-
-    //asm("fnclex");
-    //asm("fldcw _fpflags");
-    
-    DataSet<ValueType> trainData(3, 1), testData(3, 1);
-    trainData.loadFile("iiio", trainFile);
-    testData.loadFile("iiio", testFile);
+    DataSet<ValueType> trainData(2, 1), testData(2, 1);
+    trainData.loadFile("iio", trainFile);
+    testData.loadFile("iio", testFile);
 	
     
     ValueType sse, max;
