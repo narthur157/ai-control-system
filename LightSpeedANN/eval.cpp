@@ -160,16 +160,19 @@ int parse_floats(const char *line, float *f)
 
 int power_search(float * inputs, ValueType *mem) {
 	inputs[0] = normalizeSpeed(inputs[0]);
-	inputs[1] = normalizeAngle(inputs[1]);
-	inputs[2] = normalizePower(inputs[2]);
+	//inputs[1] = normalizeAngle(inputs[1]);
+	//inputs[2] = normalizePower(inputs[2]);
+	inputs[1] = normalizePower(inputs[1]);
 
 	int bestPower = 0;
 	float minErr = 666;
-	float targetSpeed = inputs[3];
+	//float targetSpeed = inputs[3];
+	float targetSpeed = inputs[2];
 	targetSpeed = normalizeSpeed(targetSpeed);
 		
 	for (int i = -100; i <= 100; i++) {
-		inputs[2] = normalizePower(i);
+		//inputs[2] = normalizePower(i);
+		inputs[1] = normalizePower(i);
 
 		float predictedSpeed = forward_ann(inputs, mem)[0];
 		float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
@@ -268,6 +271,7 @@ int main(int argc, char* argv[])
 	fclose(out);
 
 	setNormalizationData();
+
 	if (argc == 1) {
 		eval_socket(mem);    
 	}
