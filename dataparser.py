@@ -53,18 +53,16 @@ def collect_rand():
 		if 1 > random.randrange(0,10):
 			collect_index(index)
 
-'''
-def collect_drive_changes():
-	prevFlag = 0
-
-	for index, flag in enumerate(df.Input):
-		if index == 0:
-			prevFlag = flag
-	
-		if flag == 2 and flag != prevFlag:
-			collect_index(index)
-		prevFlag = flag
-'''
+#def collect_drive_changes():
+#	prevFlag = 0
+#
+#	for index, flag in enumerate(df.Input):
+#		if index == 0:
+#			prevFlag = flag
+#	
+#		if flag == 2 and flag != prevFlag:
+#			collect_index(index)
+#		prevFlag = flag
 
 def collect_drive_changes():
 	prevPower = 0
