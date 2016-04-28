@@ -88,8 +88,9 @@ def collect_torque_changes():
 
 def collect_index(index):
 	try:
-		inputs = [df.LdSpd[index], df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [100])
+#inputs = [df.LdSpd[index], df.CtrlPwr[index]]
+		inputs = [df.CtrlPwr[index]]
+		outputs = get_future_speeds(index, [1500])
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)
@@ -125,7 +126,7 @@ if __name__ == '__main__':
 	
 #	collect_torque_changes()
 	collect_drive_changes()	
-	collect_rand()
+#	collect_rand()
 
 	print "Wrote to training-set.csv"
 	

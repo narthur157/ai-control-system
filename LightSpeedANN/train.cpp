@@ -69,8 +69,8 @@ float normalizePower(int power) {
 	return normalize((float) power, controlPwrMean, controlPwrStdDev);
 }
 
-float denormalizePower(int power) {
-	return denormalize((float) power, controlPwrMean, controlPwrStdDev);
+float denormalizePower(float power) {
+	return denormalize(power, controlPwrMean, controlPwrStdDev);
 }
 
 
@@ -101,10 +101,11 @@ bool compute_err(
 		expected_dn = expected;
 		//data.denormalizeOuts(computed, computed_dn);
         //data.denormalizeOuts(expected, expected_dn);
-		
         for (j=0; j<data.nOuts(); j++) {
 			//cout << "computed[j]: " << computed[j] << endl;
-            if (!isfinite(computed[j])) {
+    
+			if (!isfinite(computed[j])) {
+				cout << "Not finite" << std::endl;
 				max = sum = 1.0/0.0;
 				return false;            
 			}
@@ -117,10 +118,11 @@ bool compute_err(
 			}
 
             if (v > 5) {
-				printf("Wanted %f, got %f\n", expected_dn[j], computed_dn[j]);
-				cout << "Inputs: LdSpd\t" << denormalizeSpeed(data.getIns(s)[0]);
-				cout << "\tAngle\t" << denormalizeAngle(data.getIns(s)[1]);
-				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[2]) << std::endl;
+				printf("Wanted %f, got %f\n", denormalizeSpeed(expected_dn[j]), denormalizeSpeed(computed_dn[j]));
+				cout << "LdSpd\t" << denormalizeSpeed(data.getOuts(s)[0]);
+//				cout << "\tAngle\t" << denormalizeAngle(data.getIns(s)[1]);
+				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[0]) << std::endl;
+//				cout << "getSample(" << i << ") in " << data.getIns(s)[0] << std::endl;
 			}
 
             if (v > max) max = v;
@@ -253,9 +255,9 @@ int main(int argc, char* argv[])
 		lr = stof(argv[1]);
 	}
 	
-    DataSet<ValueType> trainData(2, 1), testData(2, 1);
-    trainData.loadFile("iio", trainFile);
-    testData.loadFile("iio", testFile);
+    DataSet<ValueType> trainData(1, 1), testData(1, 1);
+    trainData.loadFile("io", trainFile);
+    testData.loadFile("io", testFile);
 	
     
     ValueType sse, max;
@@ -281,7 +283,7 @@ int main(int argc, char* argv[])
     compute_err(testData, mem, forward_ann, sse, max);
     cout << lr << " " << sse << " " << max << endl;
 
-	for (int i = 0; i < 1000 && !global_quit; i++) {
+	for (int i = 0; i < 10000 && !global_quit; i++) {
 		if (argc == 1) {
 			lr = find_learning_rate(lr, trainData, mem, forward_ann, backward_ann, MEM_SIZE_ann);    
 		}

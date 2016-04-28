@@ -81,36 +81,22 @@ public abstract class Test implements BrickListener {
 	 * Implement BrickListener - receive a state update
 	 * from a brick
 	 */
-	final public void updateBrick(BrickState bsIn) {
+	final public void updateBrick(BrickState bsIn) {	
 		prevBs = bs;
 		bs = bsIn;
 		collectData();
-//
-//		// only run updates once stabilized
-//		if (!bs.equals(prevBs)) {
-//			//System.out.println("Resetting stable count. Count was " + stableCount);
-//			//if (bs != null && prevBs != null)
-//				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
-//			stableCount = 0;
-//		}
-//		else {
-			long curTime = System.currentTimeMillis();
-			if (curTime - prevTime > testLength || prevTime == -1) {
-				prevTime = curTime;
-				test();
-				testCount++;
-				
-				if (testCount >= numLoops) {
-					finishTest();
-				}
-			}
-//			stableCount++;
-//			if (stableCount > STABLE_COUNT) {
-//				stableCount = 0;
-//				
-//				
-//			}
-//		}
+		
+		if (testCount >= numLoops) {
+			finishTest();
+		}
+		
+
+		long curTime = System.currentTimeMillis();
+		if (curTime - prevTime > testLength || prevTime == -1) {
+			prevTime = curTime;
+			test();
+			testCount++;
+		}
 	}
 	
 	final private void finishTest() {

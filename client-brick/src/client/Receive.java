@@ -16,11 +16,13 @@ public class Receive {
 		LCD.drawString("Controller done",  0,  3);
 		updater.stopThread();
 		LCD.drawString("Updater stopped", 0, 4);
+		
 		try {
 			comm.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		LCD.drawString("Connections closed",  0,  5);
 	}
 }

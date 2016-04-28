@@ -203,15 +203,18 @@ void eval_socket(ValueType *mem) {
             int r = read_line(s, line);
 
             if (r < 0) break;
-            
-            int n = parse_floats(line.c_str(), inputs);
-
 			
+			inputs[1] = normalizePower(inputs[1]);
+			inputs[0] = 0;
+			inputs[2] = 0;
 
-            stringstream ss;
+            int n = parse_floats(line.c_str(), inputs);
+            
+			stringstream ss;
             ss << std::setprecision(40);
 
-            ss << power_search(inputs, mem);
+            //ss << power_search(inputs, mem);
+			ss << denormalizeSpeed(forward_ann(inputs, mem)[0]);
 
             ss << "\n";
 

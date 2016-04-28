@@ -12,29 +12,30 @@ import java.util.Random;
 import neural.Normalization;
 
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 3;
-	private static final int PREDICTED_SPEED_INDEX = 2;
+	private static final int NUM_COLUMNS = 2;
+//	private static final int LOAD_SPEED_INDEX = 0;
+	private static final int POWER_INDEX = 0;
+	private static final int PREDICTED_SPEED_INDEX = 1;
+
+	private ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
+	
+	private int max_size = 0;
+	private double[] sums = new double[NUM_COLUMNS];
+	private double[] vars = new double[NUM_COLUMNS];
+	
 	
 	private class Row {
 		int[] columns = new int[NUM_COLUMNS];
 		// loadspd angle control future-loadspd
 	}
 
-	int max_size = 0;
-	double[] sums = new double[NUM_COLUMNS];
-	double[] vars = new double[NUM_COLUMNS];
-	
-	void computeMean() {
-		int subset_size = max_size;
+	private void computeMean() {
 		int count = 0;
 		
-		for (int bucketIndex = 0; bucketIndex<dataset.size(); bucketIndex++) {
-			if (dataset.get(bucketIndex).size() == 0) continue;
-			
-			for (int rowIndex = 0; rowIndex < subset_size; rowIndex++) {
-				Row r = dataset.get(bucketIndex).get(rowIndex);
+		for (ArrayList<Row> bucket : dataset) {
+			for (Row r : bucket) {
 				
-				for (int colIndex=0; colIndex < r.columns.length; colIndex++) {
+				for (int colIndex=0; colIndex < NUM_COLUMNS; colIndex++) {
 					sums[colIndex] += r.columns[colIndex];
 					count++;
 				}
@@ -46,14 +47,10 @@ public class RebalanceData {
 		}
 		
 		count = 0;
-		
-		for (int i=0; i<dataset.size(); i++) {
-			if (dataset.get(i).size() == 0) continue;
-			
-			for (int j=0; j<subset_size; j++) {
-				Row r = dataset.get(i).get(j);
-				
-				for (int k=0; k < r.columns.length; k++) {
+
+		for (ArrayList<Row> bucket : dataset) {
+			for (Row r : bucket) {
+				for (int k = 0; k < r.columns.length; k++) {
 					double v = r.columns[k];
 					v -= sums[k];
 					vars[k] += v*v;
@@ -61,12 +58,13 @@ public class RebalanceData {
 				}
 			}
 		}
+		
 		for (int k=0; k<NUM_COLUMNS; k++) {
 			vars[k] = Math.sqrt(vars[k] / count);
 		}
 	}
 	
-	Row parseRow(String line) {
+	private Row parseRow(String line) {
 		String[] fields = line.split("\\s+");
 		Row r = new Row();
 		
@@ -77,9 +75,8 @@ public class RebalanceData {
 		return r;
 	}
 	
-	ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
 	
-	void readFile(String fname) throws Exception {
+	private void readFile(String fname) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fname));
 		
 		// skip column headers, which is the first line
@@ -102,7 +99,7 @@ public class RebalanceData {
 		br.close();
 	}
 	
-	void balanceDataset() {
+	private void balanceDataset() {
 		for (int i=0; i<dataset.size(); i++) {
 			int s = dataset.get(i).size();
 			
@@ -126,54 +123,72 @@ public class RebalanceData {
 		}
 	}
 	
-	void dumpFile(String fname, boolean isValidationSet) throws IOException {
-		PrintWriter pw = new PrintWriter(new FileWriter(fname));
+	private ArrayList<ArrayList<Double>> normalize() {
+		ArrayList<ArrayList<Double>> normalizedOutput = new ArrayList<ArrayList<Double>>();
 		
-		int subset_size = max_size;
-		int startIndex, endIndex;
-		
-		if (!isValidationSet) {
-			startIndex = 0;
-			endIndex = (int) (subset_size * 0.8);
-		} 
-		else {
-			startIndex = (int) (subset_size * 0.8);
-			endIndex = subset_size;
-		}
-		
-		for (int rowIndex=startIndex; rowIndex < endIndex; rowIndex++) {
-			for (int bucketIndex=0; bucketIndex<dataset.size(); bucketIndex++) {
-				if (dataset.get(bucketIndex).size() == 0) continue;
+		for (ArrayList<Row> bucket : dataset) {
+			for (Row row : bucket) {
+				ArrayList<Double> outputRow = new ArrayList<Double>();
 				
-				Row r = dataset.get(bucketIndex).get(rowIndex);
-				
-				pw.print((r.columns[0] - sums[0]) / vars[0]);
-				
-				for (int k=1; k<r.columns.length; k++) {
+				for (int k = 0; k < NUM_COLUMNS; k++) {
 					int normalizationIndex = k;
-					
-					if (normalizationIndex == PREDICTED_SPEED_INDEX) normalizationIndex = 0;
-					
-					double 	val = r.columns[k],
-							mean = sums[normalizationIndex],
-							stdDev = vars[normalizationIndex];
-					
-					pw.print("\t" + Normalization.normalize(val, mean, stdDev));
+
+					// if (normalizationIndex == PREDICTED_SPEED_INDEX)
+					// normalizationIndex = LOAD_SPEED_INDEX;
+
+					double val = row.columns[k], 
+						   mean = sums[normalizationIndex], 
+						   stdDev = vars[normalizationIndex];
+						
+					outputRow.add(Normalization.normalize(val, mean, stdDev));
 				}
-				pw.println();
+				
+				normalizedOutput.add(outputRow);
 			}
 		}
+	
+		return normalizedOutput;
+	}
+	
+	private void dumpFile(String fname, ArrayList<ArrayList<Double>> data) throws IOException {
+		PrintWriter pw = new PrintWriter(new FileWriter(fname));
+		
+//		int subset_size = max_size;
+//		int startIndex, endIndex;
+//		
+//		if (!isValidationSet) {
+//			startIndex = 0;
+//			endIndex = (int) (subset_size * 0.8);
+//		} 
+//		else {
+//			startIndex = (int) (subset_size * 0.8);
+//			endIndex = subset_size;
+//		}
+		
+		for(ArrayList<Double> row : data) {
+			String line = "";
+			
+			// hack to make this work without changing train
+//			line += 0 + "\t";
+			
+			for (Double d : row) {
+				line += d + "\t";
+			}
+			
+			pw.println(line.trim());
+		}
+		
 		pw.close();
 	}
 	
-	void dumpMeanStd(String fname) throws IOException {
+	private void dumpMeanStd(String fname) throws IOException {
 		PrintWriter pw = new PrintWriter(new FileWriter(fname));
 		System.out.println("Wrote normalization data to " + fname);
 		
-		pw.println(sums[0] + "\t" + vars[0]);
+		pw.println(sums[PREDICTED_SPEED_INDEX] + "\t" + vars[PREDICTED_SPEED_INDEX]);
 		//pw.println(sums[1] + "\t" + vars[1]);
 		pw.println("-1\t-1");
-		pw.println(sums[1] + "\t" + vars[1]);
+		pw.println(sums[POWER_INDEX] + "\t" + vars[POWER_INDEX]);
 		pw.close();
 	}
 	
@@ -182,11 +197,13 @@ public class RebalanceData {
 		
 		rd.readFile("training-set.csv");
 		
-		rd.balanceDataset();
+		//rd.balanceDataset();
 		rd.computeMean();
+		ArrayList<ArrayList<Double>> normalizedData = rd.normalize();
 		
-		rd.dumpFile("LightSpeedANN/train-set.csv", false);
-		rd.dumpFile("LightSpeedANN/test-set.csv", true);
+		rd.dumpFile("LightSpeedANN/train-set.csv", normalizedData);
+		rd.dumpFile("LightSpeedANN/test-set.csv", normalizedData);
+		
 		System.out.println("Wrote train-set.csv and test-set.csv to LightSpeedANN");
 		
 		rd.dumpMeanStd("normalizationData");
