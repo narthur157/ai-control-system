@@ -69,7 +69,7 @@ float normalizePower(int power) {
 	return normalize((float) power, controlPwrMean, controlPwrStdDev);
 }
 
-float denormalizePower(int power) {
+float denormalizePower(float power) {
 	return denormalize((float) power, controlPwrMean, controlPwrStdDev);
 }
 
