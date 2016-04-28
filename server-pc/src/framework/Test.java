@@ -9,7 +9,7 @@ import communication.BrickListener;
 /**
  * This abstract class requires the extension of the 'test' method
  * which gets called when the system has stabilized for the amount of
- * brick updates indicated by STABLE_COUNT. Brick updates come about
+ * time specified by testLength (milliseconds). Brick updates come about
  * every 10ms with some variation. 
  * 
  * runTest is the only method users of the class should use, as updateBrick
@@ -45,7 +45,7 @@ public abstract class Test implements BrickListener {
 	
 	/**
 	 * Do anything that should change between tests
-	 * Gets called once the system has stabilized
+	 * Gets called every testLength milliseconds
 	 * @throws IOException
 	 */
 	abstract protected void test();
@@ -109,7 +109,6 @@ public abstract class Test implements BrickListener {
 	}
 	
 	final private void collectData() {
-		//System.out.println(bs.toString());
 		// logger is paramterized in constructor, can write to file
 		logger.logln(bs.toString() + "\t" + changeFlag);
 	}

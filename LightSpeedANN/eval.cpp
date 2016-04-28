@@ -204,11 +204,12 @@ void eval_socket(ValueType *mem) {
 
             if (r < 0) break;
 			
-			inputs[1] = normalizePower(inputs[1]);
-			inputs[0] = 0;
-			inputs[2] = 0;
 
             int n = parse_floats(line.c_str(), inputs);
+			
+			inputs[0] = normalizePower(inputs[0]);
+			inputs[1] = 0;
+			inputs[2] = 0;
             
 			stringstream ss;
             ss << std::setprecision(40);
@@ -237,25 +238,21 @@ void make_tables(ValueType *mem) {
 
 	// 18*18*15 = 4860 loops
 	//for(float targetSpeed = 0; targetSpeed <= 900; targetSpeed+=50) {
-	for(int testPower = -100; testPower <= 100; testPower++) {
-		for (float angle = 0; angle <= 15; angle++) {
-			for (float loadSpeed = 0; loadSpeed <= 900; loadSpeed+=50) {
-				inputs[0] = loadSpeed;
-				inputs[1] = angle;
-				inputs[2] = testPower;
-				
-			//	int result = power_search(inputs, mem);
-				float result = forward_ann(inputs, mem)[0];
+	for(int testPower = 0; testPower <= 100; testPower++) {
+		inputs[0] = normalizePower(testPower);
+		inputs[1] = 0;
+		inputs[2] = 0;
+		
+	//	int result = power_search(inputs, mem);
+		float result = forward_ann(inputs, mem)[0];
 
-				evalTableStr << loadSpeed << "," << angle << "," << testPower << "," << result << std::endl;
-			}
-		}
+		evalTableStr << testPower << "," << denormalizeSpeed(result) << std::endl;
 	}
 	
 	ofstream evalTable;
 	evalTable.open ("evalTable.csv");
 	// column headers
-	evalTable << "LoadSpeed,Angle,TestPower,PredictedSpeed" << std::endl;
+	evalTable << "TestPower,PredictedSpeed" << std::endl;
 	evalTable << evalTableStr.rdbuf();
 	evalTable.close();
 }
