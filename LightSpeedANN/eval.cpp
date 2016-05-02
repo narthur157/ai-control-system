@@ -159,9 +159,6 @@ int parse_floats(const char *line, float *f)
 }
 
 int power_search(float * inputs, ValueType *mem) {
-	inputs[0] = normalizeSpeed(inputs[0]);
-	inputs[1] = normalizeAngle(inputs[1]);
-	inputs[2] = normalizePower(inputs[2]);
 
 	int bestPower = 0;
 	float minErr = 666;
@@ -203,14 +200,19 @@ void eval_socket(ValueType *mem) {
             
             int n = parse_floats(line.c_str(), inputs);
 
+			inputs[0] = normalizeSpeed(inputs[0]);
+			inputs[1] = normalizeAngle(inputs[1]);
+			inputs[2] = normalizePower(inputs[2]);
 			
 
             stringstream ss;
             ss << std::setprecision(40);
 
-            ss << power_search(inputs, mem);
-
-            ss << "\n";
+            //ss << power_search(inputs, mem);
+			float result = forward_ann(inputs, mem)[0];
+			ss << denormalizeSpeed(result);
+            
+			ss << "\n";
 
             const string& st(ss.str());
             size_t bytes_written = write(s, st.c_str(), st.size());
