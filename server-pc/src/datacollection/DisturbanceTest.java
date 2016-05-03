@@ -8,7 +8,7 @@ import communication.Command;
 
 import framework.Test;
 
-
+//Select this in server/Send.java
 public class DisturbanceTest extends Test {
 	
 	private Random rand = new Random();

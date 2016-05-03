@@ -7,6 +7,7 @@ import communication.Command;
 
 import framework.Test;
 
+// Select this in server/Send.java
 public class SpeedTest extends Test {
 		private int prevPower = -1;
 		

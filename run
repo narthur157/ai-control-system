@@ -92,9 +92,10 @@ fi
 
 if [[ $? -eq 0 ]]; then	
 	if [[ $TEST -eq "neural" ]]; then
+		echo "neural test"
 		cd LightSpeedANN
-			./eval &
-			PID=$!
+		./eval &
+		PID=$!
 		cd ..
 	fi
 	# run our server program
