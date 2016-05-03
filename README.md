@@ -1,21 +1,5 @@
-Make motor controllers better with ANN based model predictive controllers or something like that
-
-`run` - This is a script to run tests on the NXT. For data collection, use -d numTests, and optionally -f to format data for training afterwards. Raw data is output to the `testRuns` folder, and a version formatted for neural network training is written to `training-set.csv` if -f is used. Use -n to run tests for the ann motor controller. This requires the lejos folder to be in your path, which can be found here: `https://sourceforge.net/projects/lejos/`. This project uses LeJOS 0.9.1-beta-3 (note that some methods vary from the documentation do to this being a beta)
-
-`getLastTest` - Open up the latest test in `testRuns` in vim
-
-`dataparser.py` - This script outputs specific parts of the test data and removes unused columns, outputs to `training-set.csv`
-
------------------
-`LightspeedANN` - This directory holds the artifical neural network implementation. There is a makefile for the neural net, 2 scripts, and 2 programs. 
-
-`server-pc` - This directory holds the code for a PC communicating with the NXT. It includes a framework for accessing a raw NXT motor without motor controls over USB, as well as a framework for running tests, and then instances of these tests. There is also a (currently broken) PID implementation over this framework. 
-
-`client-brick` - This directory holds the NXT side of the raw motor communications framework. State updates are sent and received asynchronously. A multithreaded approach to non-blocking tachometer readings is also given.
-
------------------
-
 GENERAL PROCESSES
+---------
 
 There a few sets of actions you do with this project, they are
 
@@ -37,7 +21,7 @@ can then be safely forgotten or deleted. The purpose of keeping the branches is 
 the same idea as creating releases. Releases are good, but we're doing this instead because I prefer it.
 
 COLLECTING DATA
----------------
+-------
 
 To collect data, you will usually want to do `run -d num_tests -f`, which will run `num_tests` tests and then format
 the output for training. The run script will inform you that you probably should delete your `weights.net` file in `LightSpeedANN`.
@@ -53,7 +37,7 @@ power setting (101 because 0 and 100 are both included). Thus you might 2 in 1 o
 for full coverage.
 
 TRAINING AN ANN
------------------
+-------
 
 Go to `LightSpeedANN`. You will need to have the `train-set.csv` and `test-set.csv` files up to date from the previous process.
 
@@ -63,11 +47,27 @@ Use `runTrain` to do training. This will compile `train` and then run tests with
 
 
 USING A NEURAL NET
-------------------
+-------
 
 Making sure you have the correct branch checked out (commit changes before switching), use `run -n num_tests`. This will run `LightSpeedANN/eval` in the background and run whatever a `NeuralTest` (see `server-pc/src/framework` for explanation of what tests are in this context) for this branch. 
 
 NON-NEURAL NET CONTROLLER
--------------------------
+-------
 
 Not yet implemented
+
+--------
+
+`run` - This is a script to run tests on the NXT. For data collection, use -d numTests, and optionally -f to format data for training afterwards. Raw data is output to the `testRuns` folder, and a version formatted for neural network training is written to `training-set.csv` if -f is used. Use -n to run tests for the ann motor controller. This requires the lejos folder to be in your path, which can be found here: `https://sourceforge.net/projects/lejos/`. This project uses LeJOS 0.9.1-beta-3 (note that some methods vary from the documentation do to this being a beta)
+
+`getLastTest` - Open up the latest test in `testRuns` in vim
+
+`dataparser.py` - This script outputs specific parts of the test data and removes unused columns, outputs to `training-set.csv`
+
+-----------------
+`LightspeedANN` - This directory holds the artifical neural network implementation. There is a makefile for the neural net, 2 scripts, and 2 programs. 
+
+`server-pc` - This directory holds the code for a PC communicating with the NXT. It includes a framework for accessing a raw NXT motor without motor controls over USB, as well as a framework for running tests, and then instances of these tests. There is also a (currently broken) PID implementation over this framework. 
+
+`client-brick` - This directory holds the NXT side of the raw motor communications framework. State updates are sent and received asynchronously. A multithreaded approach to non-blocking tachometer readings is also given.
+
