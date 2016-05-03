@@ -11,7 +11,7 @@ public class NeuralTest extends Test {
 	
 	public NeuralTest() throws IOException {
 		super();
-		testLength = 10000;
+		testLength = 4000;
 	}
 
 	@Override

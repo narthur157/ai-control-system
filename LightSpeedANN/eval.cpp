@@ -159,25 +159,26 @@ int parse_floats(const char *line, float *f)
 }
 
 int power_search(float * inputs, ValueType *mem) {
-	inputs[0] = normalizeSpeed(inputs[0]);
+	//inputs[0] = normalizeSpeed(inputs[0]);
 	//inputs[1] = normalizeAngle(inputs[1]);
 	//inputs[2] = normalizePower(inputs[2]);
-	inputs[1] = normalizePower(inputs[1]);
+	//inputs[1] = normalizePower(inputs[1]);
 
 	int bestPower = 0;
 	float minErr = 666;
-	//float targetSpeed = inputs[3];
-	float targetSpeed = inputs[2];
-	targetSpeed = normalizeSpeed(targetSpeed);
+	float targetSpeed = inputs[3];
+	float testIns[10];
 		
-	for (int i = -100; i <= 100; i++) {
+	for (int i = 0; i <= 100; i++) {
 		//inputs[2] = normalizePower(i);
-		inputs[1] = normalizePower(i);
+		testIns[0] = normalizePower(i);
 
-		float predictedSpeed = forward_ann(inputs, mem)[0];
-		float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
-		
+		float predictedSpeed = forward_ann(testIns, mem)[0];
+		float err = std::abs(predictedSpeed > targetSpeed ? (predictedSpeed - targetSpeed) : (targetSpeed - predictedSpeed));
+			
 		if (err < minErr) {
+//			cout << "New best power " << i << " predicts speed of " << denormalizeSpeed(predictedSpeed);
+//			cout << " compared to target speed of " << denormalizeSpeed(targetSpeed) << " with err " << err << std::endl;
 			minErr = err;
 			bestPower = i;
 		}
@@ -207,16 +208,18 @@ void eval_socket(ValueType *mem) {
 
             int n = parse_floats(line.c_str(), inputs);
 			
-			inputs[0] = normalizePower(inputs[0]);
-			inputs[1] = 0;
+			inputs[0] = 0;//normalizeSpeed(inputs[0]);
+			inputs[1] = 0;//normalizeSpeed(inputs[1]);
 			inputs[2] = 0;
+			inputs[3] = normalizeSpeed(inputs[3]);
+			inputs[4] = 0;
             
 			stringstream ss;
             ss << std::setprecision(40);
 
-            //ss << power_search(inputs, mem);
-			ss << denormalizeSpeed(forward_ann(inputs, mem)[0]);
-
+            ss << power_search(inputs, mem);
+//			ss << denormalizeSpeed(forward_ann(inputs, mem)[0]);
+//			ss << "\tPredicted power for speed: " << power_search(inputs, mem);
             ss << "\n";
 
             const string& st(ss.str());

@@ -6,14 +6,11 @@
 package neural;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 import framework.BrickState;
 
@@ -94,7 +91,7 @@ public class AnnClient {
         double[] numbers = new double[line_split.length];
         
         for (int i=0; i<line_split.length; i++) {
-            numbers[i] = Normalization.denormalizeLoad(Double.parseDouble(line_split[i]));
+            numbers[i] = Double.parseDouble(line_split[i]);
         }
         
         return numbers;
