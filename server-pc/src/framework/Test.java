@@ -61,7 +61,7 @@ public abstract class Test implements BrickListener {
 		try {
 			BrickComm.addListener(this);
 			
-			while(testCount < numLoops) {
+			while(testCount <= numLoops) {
 				// I don't think this needs to be synchronized because
 				// we know this will only be notified when the comparison fails
 				synchronized(this) {
@@ -85,23 +85,23 @@ public abstract class Test implements BrickListener {
 		prevBs = bs;
 		bs = bsIn;
 		collectData();
-		
-		if (testCount >= numLoops) {
-			finishTest();
-		}
-		
 
 		long curTime = System.currentTimeMillis();
 		if (curTime - prevTime > testLength || prevTime == -1) {
+			testCount++;
+			
+			if (testCount > numLoops) {
+				finishTest();
+			}
+			
 			prevTime = curTime;
 			System.out.print("Test " + testCount + " out of " + numLoops + "\r");
 			test();
-			testCount++;
 		}
 	}
 	
 	final private void finishTest() {
-		System.out.println("Completed " + testCount + " tests");
+		System.out.println("Completed " + (testCount-1) + " tests");
 		
 		synchronized(this) {
 			// wake up the thread in runTest

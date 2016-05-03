@@ -9,7 +9,7 @@ import framework.Test;
 
 // Select this in server/Send.java
 public class SpeedTest extends Test {
-		private int prevPower = -1;
+		private int prevPower = 10;
 		
 		public SpeedTest() throws IOException {
 			super();

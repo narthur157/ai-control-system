@@ -91,8 +91,7 @@ if [[ $? -ne 0 ]]
 fi
 
 if [[ $? -eq 0 ]]; then	
-	if [[ $TEST -eq "neural" ]]; then
-		echo "neural test"
+	if [[ $TEST == "neural" ]]; then
 		cd LightSpeedANN
 		./eval &
 		PID=$!
@@ -101,7 +100,7 @@ if [[ $? -eq 0 ]]; then
 	# run our server program
 	nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
 	
-	if [[ -n PID ]]; then
+	if [[ -n $PID ]]; then
 		kill $PID
 	fi
 fi

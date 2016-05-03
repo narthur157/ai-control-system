@@ -104,9 +104,23 @@ def get_future_speeds(index, offsets):
 	return [get_future_speed(index, offset) for offset in offsets]
 
 def get_future_speed(index, offset):
-	if index + offset >= len(df.LdSpd):
-		raise ValueError('Invalid index')		
-	return df.LdSpd[index + offset]
+	startTime = df.Time[index]
+	endTime = startTime + offset
+	
+	for i, time in enumerate(df.Time):
+		if time == endTime:
+			return df.LdSpd[i]
+
+		if time > endTime:
+			# we use whichever time is closer, this time, or the previous
+			if i > 0 and time - endTime < endTime - df.Time[i-1]:
+				return df.LdSpd[i] 
+			else:
+				return df.LdSpd[i-1]
+	
+	# this will happen when we don't wait long enough before stopping the machine
+	print "Machine did not collect future data long enough, tried to get data for time %d" % (endTime)
+	raise ValueError('Invalid index')		
 
 def make_row(l):
 	return '\t'.join([str(x) for x in l]) + '\n'
