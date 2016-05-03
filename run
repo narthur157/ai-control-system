@@ -90,10 +90,19 @@ if [[ $? -ne 0 ]]
 		fi
 fi
 
-if [[ $? -eq 0 ]]
-	then
-		# run our server program
-		nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+if [[ $? -eq 0 ]]; then	
+	if [[ $TEST -eq "neural" ]]; then
+		cd LightSpeedANN
+			./eval &
+			PID=$!
+		cd ..
+	fi
+	# run our server program
+	nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+	
+	if [[ -n PID ]]; then
+		kill $PID
+	fi
 fi
 
 # $? is the exit code from last script

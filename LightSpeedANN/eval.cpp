@@ -225,7 +225,7 @@ void eval_socket(ValueType *mem) {
             const string& st(ss.str());
             size_t bytes_written = write(s, st.c_str(), st.size());
             
-            cout << line << endl;
+//            cout << line << endl;
         } while (1);
     } while (1);
 }
@@ -267,7 +267,12 @@ int main(int argc, char* argv[])
     // READ WEIGHTS
     FILE *out = fopen("weights.net", "rb");
     
-	if (!out) bail("opening weights");
+	if (!out) {
+		out = fopen("LightSpeedANN/weights.net", "rb");
+		if (!out) {
+			bail("opening weights");
+		}
+	}
    
 	size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
     

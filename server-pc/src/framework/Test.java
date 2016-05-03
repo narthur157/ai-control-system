@@ -94,6 +94,7 @@ public abstract class Test implements BrickListener {
 		long curTime = System.currentTimeMillis();
 		if (curTime - prevTime > testLength || prevTime == -1) {
 			prevTime = curTime;
+			System.out.print("Test " + testCount + " out of " + numLoops + "\r");
 			test();
 			testCount++;
 		}
