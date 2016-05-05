@@ -2,10 +2,11 @@ package neural;
 
 import java.io.IOException;
 
+import framework.MotorController;
 import framework.Test;
 
 public class NeuralTest extends Test {
-	private NeuralController nc = new NeuralController();
+	private MotorController nc = new NeuralController();
 	
 	int count = 6;
 	
@@ -16,16 +17,11 @@ public class NeuralTest extends Test {
 
 	@Override
 	protected void test() {
-		try {
-			int speed = count * 100;
-			System.out.println("Trying to set speed: " + speed);
-			nc.setSpeed(speed);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int speed = count * 100;
+		System.out.println("Trying to set speed: " + speed);
+		nc.setSpeed(speed);
 		
-		count = (count+1) % 10;
+		count = 6;//(count+1) % 10;
 	}
 
 }

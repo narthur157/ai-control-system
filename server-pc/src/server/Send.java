@@ -24,11 +24,16 @@ public class Send {
 			System.exit(1);
 		}
 		
+		System.out.println("Doing test " + args[0]);
+		
 		if (args[0].equals("neural")) {
 			runNeuralTest(Integer.parseInt(args[1]));
 		}
 		if (args[0].equals("data")) {
 			runDataTest(Integer.parseInt(args[1]));
+		}
+		if (args[0].equals("pid")) {
+			runPIDTest(Integer.parseInt(args[1]));
 		}
 		//runPidTest();
 		//runNeuralTest(5);
@@ -41,6 +46,10 @@ public class Send {
 	
 	private static void runDataTest(int numRuns) throws IOException {
 		runTest(new DisturbanceTest(), numRuns);
+	}
+	
+	private static void runPIDTest(int numRuns) throws IOException {
+		runTest(new PIDTest(), numRuns);
 	}
 	
 	private static void runTest(Test tester, int numRuns) {

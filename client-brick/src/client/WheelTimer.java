@@ -44,7 +44,7 @@ public class WheelTimer extends Thread {
 			
 			speedTimer.reset();
 			
-			Delay.msDelay(10);
+			Delay.msDelay(20);
 		}
 	}
 	
