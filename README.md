@@ -1,3 +1,5 @@
+This branch is a lie, it actually has 2 outputs
+
 Most important folders in this project have a `README`, of increasing technicality. This one is the most general and deals with running the project and less about exactly how that is achieved internally. Currently the `client-brick` lacks a README, however it is much simpler than everything else as it is a slave to what occurs in `server-pc`. Note in particular the README's in `server-pc/src/framework` and `server-pc/src/communications`.
 
 GENERAL PROCESSES
