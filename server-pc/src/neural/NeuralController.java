@@ -14,8 +14,8 @@ public class NeuralController implements BrickListener {
 	private BrickState bs;
 	private final static int MIN_POWER = -100, 
 							 MAX_POWER = 100, 
-							 ERR_ALLOWANCE = 30, 
-							 CONTROL_DELAY = 200;
+							 ERR_ALLOWANCE = 40, 
+							 CONTROL_DELAY = 50;
 	private int targetSpeed;
 	private boolean speedSet = false;
 	private boolean setting = false;
@@ -28,6 +28,10 @@ public class NeuralController implements BrickListener {
 	public void updateBrick(BrickState bs) {
 		this.bs = bs;
 		
+//		if (Math.abs(targetSpeed - bs.disturbSpeed) < ERR_ALLOWANCE) {
+//			speedSet = true;
+//		}
+		
 		if (!speedSet && !setting && (System.currentTimeMillis() - startTime) > CONTROL_DELAY) {
 			// avoid trying to change before a previous loop finishes
 			synchronized(this) {
@@ -38,6 +42,7 @@ public class NeuralController implements BrickListener {
 					int power = findPower(targetSpeed);
 					BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
 					BrickComm.sendCommand(Command.DISTURB_WHEEL, power);
+					System.out.println("Current bs: " + bs.toString() + " found power " + power);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

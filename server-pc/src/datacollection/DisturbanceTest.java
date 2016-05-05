@@ -10,11 +10,9 @@ import framework.Test;
 
 //Select this in server/Send.java
 public class DisturbanceTest extends Test {
-	
+	private int prevPower = 10;
+	private int powerChange = 1;
 	private Random rand = new Random();
-	private int count = 0;
-	private int prevCtrlPwr = 50;
-	private int prevDisturbPwr = 50;
 	
 	public DisturbanceTest() throws IOException {
 		super();
@@ -22,36 +20,19 @@ public class DisturbanceTest extends Test {
 
 	@Override
 	public void test() {
-		changeFlag = 0;
 		int power;
-		if (count == 0) {
-			power = prevDisturbPwr + 5;
-			
-			if (power > 100) power = 0;
-			
-			BrickComm.sendCommand(Command.DISTURB_WHEEL, power); 
-			prevDisturbPwr = power;
-			changeFlag = 2;
-		} else {		
-			power = getNextPower(prevDisturbPwr);
-			BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
-			changeFlag = 1;
-			prevCtrlPwr = power;
-		}
-		
-		count = (count+1) % 6;
-	}
 	
-	private int getNextPower(int prevPower) {
-		int randPower = prevPower+rand.nextInt(81)-40; 
+		power = prevPower + powerChange;
 		
-		if (randPower < 0) {
-			randPower = rand.nextInt(40);
+		if (power > 100) powerChange = -1;
+		
+		if (testCount > 203) {
+			power = rand.nextInt(101);
 		}
-		if (randPower > 100) {
-			randPower = 100-rand.nextInt(40);
-		}
-		return randPower;
+		
+		BrickComm.sendCommand(Command.DISTURB_WHEEL, power); 
+		BrickComm.sendCommand(Command.CONTROL_WHEEL, power); 
+		
+		prevPower = power;
 	}
-
 }

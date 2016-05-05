@@ -9,7 +9,6 @@ import pid.PIDTest;
 import communication.BrickComm;
 
 import datacollection.DisturbanceTest;
-import datacollection.SpeedTest;
 import framework.Test;
 
 //for use with Receive.java
@@ -29,7 +28,7 @@ public class Send {
 			runNeuralTest(Integer.parseInt(args[1]));
 		}
 		if (args[0].equals("data")) {
-			runDataTest(Integer.parseInt(args[1]), true);
+			runDataTest(Integer.parseInt(args[1]));
 		}
 		//runPidTest();
 		//runNeuralTest(5);
@@ -40,13 +39,8 @@ public class Send {
 		runTest(new NeuralTest(), numRuns);
 	}
 	
-	private static void runDataTest(int numRuns, boolean simple) throws IOException {
-		if (simple) {
-			runTest(new SpeedTest(), numRuns);
-		}
-		else {
-			runTest(new DisturbanceTest(), numRuns);
-		}
+	private static void runDataTest(int numRuns) throws IOException {
+		runTest(new DisturbanceTest(), numRuns);
 	}
 	
 	private static void runTest(Test tester, int numRuns) {

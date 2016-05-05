@@ -28,7 +28,9 @@ public abstract class Test implements BrickListener {
 	
 	private long prevTime = -1;
 	
-	private int testCount = 0, numLoops = 0, stableCount = 0;
+	protected int testCount = 0;
+	private int numLoops = 0;
+	private int stableCount = 0;
 	
 	public Test() throws IOException {
 		logger = new FileLogger();

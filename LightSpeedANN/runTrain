@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ $# -ne 0 ]]; then
 	echo "Passing arguments to gen_sse"
-	./gen_sse.rb "$@" > ann.c && make && ./train	
+	./gen_sse.rb "$@" > ann.c && make & rm weights.net
 else
 	make
 	if [[ $? -eq 0 ]]; then

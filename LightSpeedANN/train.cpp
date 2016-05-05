@@ -117,11 +117,11 @@ bool compute_err(
 				cout << "Large computed: " << computed_dn[j] << std::endl;
 			}
 
-            if (v > 5) {
+            if (v > 3) {
 				printf("Wanted %f, got %f\n", denormalizeSpeed(expected_dn[j]), denormalizeSpeed(computed_dn[j]));
-				cout << "LdSpd\t" << denormalizeSpeed(data.getOuts(s)[0]);
+				cout << "LdSpd\t" << denormalizeSpeed(data.getIns(s)[0]);
 //				cout << "\tAngle\t" << denormalizeAngle(data.getIns(s)[1]);
-				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[0]) << std::endl;
+				cout << "\tCtrlPwr\t" << denormalizePower(data.getIns(s)[1]) << std::endl;
 //				cout << "getSample(" << i << ") in " << data.getIns(s)[0] << std::endl;
 			}
 
@@ -255,9 +255,9 @@ int main(int argc, char* argv[])
 		lr = stof(argv[1]);
 	}
 	
-    DataSet<ValueType> trainData(1, 1), testData(1, 1);
-    trainData.loadFile("io", trainFile);
-    testData.loadFile("io", testFile);
+    DataSet<ValueType> trainData(2, 1), testData(2, 1);
+    trainData.loadFile("iio", trainFile);
+    testData.loadFile("iio", testFile);
 	
     
     ValueType sse, max;
@@ -296,7 +296,7 @@ int main(int argc, char* argv[])
         compute_err(testData, mem, forward_ann, sse, max);
         cout << lr << " " << sse << " " << max << endl;
         
-        if (sse < best_sse || max < best_max) {
+        if (sse < best_sse) {
             best_sse = sse;
             best_max = max;
             

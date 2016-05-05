@@ -48,9 +48,9 @@ def normalize_input():
 	f.close()
 	print "Wrote means and std devs to normalizationData"
 
-def collect_rand():
+def collect_rand(randChance):
 	for index, item in enumerate(df.Time):
-		if 1 > random.randrange(0,10):
+		if 1 > random.randrange(0,randChance):
 			collect_index(index)
 
 #def collect_drive_changes():
@@ -73,7 +73,15 @@ def collect_drive_changes():
 
 		if power != prevPower:
 			collect_index(index)
+			collect_index(get_future_time(index, 100))
+			collect_index(get_future_time(index, 200))
+			collect_index(get_future_time(index, 300))
+			collect_index(get_future_time(index, 400))
+			collect_index(get_future_time(index, 500))
+			collect_index(get_future_time(index, 600))
+			collect_index(get_future_time(index, 700))
 
+			
 		prevPower = power
 
 def collect_torque_changes():
@@ -88,9 +96,8 @@ def collect_torque_changes():
 
 def collect_index(index):
 	try:
-#inputs = [df.LdSpd[index], df.CtrlPwr[index]]
-		inputs = [df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [1500])
+		inputs = [df.LdSpd[index], df.CtrlPwr[index]]
+		outputs = get_future_speeds(index, [50]) 
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)
@@ -100,27 +107,39 @@ def collect_index(index):
 		# when trying to look into the future
 		# don't need to do anything, just skip the case
 
+# find speeds at offset milliseconds in the future of df.Time[index]
 def get_future_speeds(index, offsets):
-	return [get_future_speed(index, offset) for offset in offsets]
+	try:
+		return [get_future_speed(index, offset) for offset in offsets]
+	except ValueError as err:
+		raise
 
 def get_future_speed(index, offset):
+	try:
+		return df.LdSpd[get_future_time(index, offset)]
+	except ValueError as err:
+		raise
+
+def get_future_time(index, timeOffset):
 	startTime = df.Time[index]
-	endTime = startTime + offset
-	
+	endTime = startTime + timeOffset
+
 	for i, time in enumerate(df.Time):
 		if time == endTime:
-			return df.LdSpd[i]
+			return i
 
 		if time > endTime:
 			# we use whichever time is closer, this time, or the previous
 			if i > 0 and time - endTime < endTime - df.Time[i-1]:
-				return df.LdSpd[i] 
+				return i 
 			else:
-				return df.LdSpd[i-1]
+				return i-1
 	
 	# this will happen when we don't wait long enough before stopping the machine
-	print "Machine did not collect future data long enough, tried to get data for time %d" % (endTime)
+	# or if we randomly get a sample close to the end
+	print "Tried to collect data for non-existent time %d" % (endTime)
 	raise ValueError('Invalid index')		
+
 
 def make_row(l):
 	return '\t'.join([str(x) for x in l]) + '\n'
@@ -140,7 +159,7 @@ if __name__ == '__main__':
 	
 #	collect_torque_changes()
 	collect_drive_changes()	
-#	collect_rand()
+	collect_rand(600)
 
 	print "Wrote to training-set.csv"
 	

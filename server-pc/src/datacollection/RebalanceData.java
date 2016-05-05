@@ -12,10 +12,10 @@ import java.util.Random;
 import neural.Normalization;
 
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 2;
-//	private static final int LOAD_SPEED_INDEX = 0;
-	private static final int POWER_INDEX = 0;
-	private static final int PREDICTED_SPEED_INDEX = 1;
+	private static final int NUM_COLUMNS = 3;
+	private static final int LOAD_SPEED_INDEX = 0;
+	private static final int POWER_INDEX = 1;
+	private static final int PREDICTED_SPEED_INDEX = 2;
 
 	private ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
 	
@@ -42,7 +42,7 @@ public class RebalanceData {
 			}
 		}
 		
-		for (int colIndex = 0; colIndex <NUM_COLUMNS; colIndex ++) {
+		for (int colIndex = 0; colIndex < NUM_COLUMNS; colIndex ++) {
 			sums[colIndex ] /= count;
 		}
 		
@@ -59,7 +59,7 @@ public class RebalanceData {
 			}
 		}
 		
-		for (int k=0; k<NUM_COLUMNS; k++) {
+		for (int k = 0; k < NUM_COLUMNS; k++) {
 			vars[k] = Math.sqrt(vars[k] / count);
 		}
 	}
@@ -68,8 +68,8 @@ public class RebalanceData {
 		String[] fields = line.split("\\s+");
 		Row r = new Row();
 		
-		for (int colIndex=0; colIndex < NUM_COLUMNS; colIndex++) {
-			r.columns[colIndex] = (int)Math.round(Double.parseDouble(fields[colIndex]));
+		for (int colIndex = 0; colIndex < NUM_COLUMNS; colIndex++) {
+			r.columns[colIndex] = (int) Math.round(Double.parseDouble(fields[colIndex]));
 		}
 		
 		return r;
@@ -133,8 +133,9 @@ public class RebalanceData {
 				for (int k = 0; k < NUM_COLUMNS; k++) {
 					int normalizationIndex = k;
 
-					// if (normalizationIndex == PREDICTED_SPEED_INDEX)
-					// normalizationIndex = LOAD_SPEED_INDEX;
+					 if (normalizationIndex == LOAD_SPEED_INDEX) {
+						 normalizationIndex = PREDICTED_SPEED_INDEX;
+					 }
 
 					double val = row.columns[k], 
 						   mean = sums[normalizationIndex], 
@@ -186,7 +187,7 @@ public class RebalanceData {
 		System.out.println("Wrote normalization data to " + fname);
 		
 		pw.println(sums[PREDICTED_SPEED_INDEX] + "\t" + vars[PREDICTED_SPEED_INDEX]);
-		//pw.println(sums[1] + "\t" + vars[1]);
+		// angle is not a part of this
 		pw.println("-1\t-1");
 		pw.println(sums[POWER_INDEX] + "\t" + vars[POWER_INDEX]);
 		pw.close();
