@@ -159,10 +159,6 @@ int parse_floats(const char *line, float *f)
 }
 
 int power_search(float * inputs, ValueType *mem) {
-	//inputs[0] = normalizeSpeed(inputs[0]);
-	//inputs[1] = normalizeAngle(inputs[1]);
-	//inputs[2] = normalizePower(inputs[2]);
-	//inputs[1] = normalizePower(inputs[1]);
 
 	int bestPower = 0;
 	float minErr = 666;
@@ -216,7 +212,6 @@ void eval_socket(ValueType *mem) {
             int r = read_line(s, line);
 
             if (r < 0) break;
-			
 
             int n = parse_floats(line.c_str(), inputs);
 			
