@@ -174,11 +174,19 @@ int power_search(float * inputs, ValueType *mem) {
 		testIns[1] = normalizePower(i);
 		testIns[0] = inputs[0];
 
-		float predictedSpeed = forward_ann(testIns, mem)[0];
-		float err = std::abs(predictedSpeed > targetSpeed ? 
-						(predictedSpeed - targetSpeed) : 
-						(targetSpeed - predictedSpeed));
-			
+		float predictedSpeed1 = forward_ann(testIns, mem)[0];
+		float predictedSpeed2 = forward_ann(testIns, mem)[1];
+
+		float err1 = std::abs(predictedSpeed1 > targetSpeed ? 
+						(predictedSpeed1 - targetSpeed) : 
+						(targetSpeed - predictedSpeed1));
+
+		float err2 = std::abs(predictedSpeed2 > targetSpeed ? 
+						(predictedSpeed2 - targetSpeed) : 
+						(targetSpeed - predictedSpeed2));
+		
+		float err = err1 + (err2 / 2);
+
 		if (err < minErr) {
 //			cout << "New best power " << i << " predicts speed of " << denormalizeSpeed(predictedSpeed);
 //			cout << " compared to target speed of " << denormalizeSpeed(targetSpeed) << " with err " << err << std::endl;

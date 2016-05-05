@@ -72,15 +72,11 @@ def collect_drive_changes():
 			prevPower = power
 
 		if power != prevPower:
-			collect_index(index)
-			collect_index(get_future_time(index, 100))
-			collect_index(get_future_time(index, 200))
-			collect_index(get_future_time(index, 300))
-			collect_index(get_future_time(index, 400))
-			collect_index(get_future_time(index, 500))
-			collect_index(get_future_time(index, 600))
-			collect_index(get_future_time(index, 700))
-
+			try:
+				for offset in [0,1,2,3,4]:
+					collect_index(get_future_time(index, offset*100))
+			except ValueError as e:
+				pass
 			
 		prevPower = power
 
@@ -97,7 +93,7 @@ def collect_torque_changes():
 def collect_index(index):
 	try:
 		inputs = [df.LdSpd[index], df.CtrlPwr[index]]
-		outputs = get_future_speeds(index, [50]) 
+		outputs = get_future_speeds(index, [150, 300]) 
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
 		outFile.write(row)

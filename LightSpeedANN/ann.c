@@ -1,7 +1,7 @@
 // Layer 0: 2 nodes
 // Layer 1: 16 nodes, tanh activation
 // Layer 2: 16 nodes, tanh activation
-// Layer 3: 1 nodes, linear activation
+// Layer 3: 2 nodes, linear activation
 
 #ifndef ANN_HEADER
 
@@ -51,10 +51,11 @@
 #define L3_VAL (mem+452)
 #define L3_DEL (mem+456)
 #define L3_N0_WEIGHTS (mem+460)
-#define OUT_TMP (mem+480)
+#define L3_N1_WEIGHTS (mem+480)
+#define OUT_TMP (mem+500)
 
 float *allocate_ann() {
-    return (float *)_mm_malloc(484 * sizeof(float), 16);
+    return (float *)_mm_malloc(504 * sizeof(float), 16);
 }
 
 void free_ann(float *mem) {
@@ -100,6 +101,7 @@ __attribute__((noinline)) void randomize_ann(float *mem) {
         j += 20;
     }
     randomize_16(L3_N0_WEIGHTS);
+    randomize_16(L3_N1_WEIGHTS);
 }
 
 __attribute__((noinline)) static void tanh_16(float *in) {
@@ -221,17 +223,14 @@ __attribute__((noinline)) static void mul_tanh_prime_16(float *in, float *out) {
     _mm_store_ps(out+12, tgt);
 }
 
-static void subtract_1(float *a, float *b, float *c) {
+static void subtract_2(float *a, float *b, float *c) {
     c[0] = a[0] - b[0];
+    c[1] = a[1] - b[1];
 }
 
 static void memory_copy_2(float *dst, float *src) {
     dst[0] = src[0];
     dst[1] = src[1];
-}
-
-static void memory_copy_1(float *dst, float *src) {
-    dst[0] = src[0];
 }
 
 __attribute__((noinline)) static void memory_clear_16(float *dst) {
@@ -268,6 +267,7 @@ __attribute__((noinline)) float *forward_L2_ann(float *mem) {
 __attribute__((noinline)) float *forward_L3_ann(float *mem) {
     int i, k;
     *(L3_VAL+0) = dotprod_16(L3_N0_WEIGHTS, L2_VAL) + *(L3_N0_WEIGHTS+16);
+    *(L3_VAL+1) = dotprod_16(L3_N1_WEIGHTS, L2_VAL) + *(L3_N1_WEIGHTS+16);
     return L3_VAL;
 }
 
@@ -281,14 +281,15 @@ __attribute__((noinline)) float *forward_ann(float *in, float *mem) {
 __attribute__((noinline)) void backward_ann(float *desired, float *mem, float lr) {
     float odel;
     int i, j;
-    memory_copy_1(OUT_TMP, desired);
+    memory_copy_2(OUT_TMP, desired);
 
     /* Compute output deltas */
-    subtract_1(OUT_TMP, L3_VAL, L3_DEL);
+    subtract_2(OUT_TMP, L3_VAL, L3_DEL);
 
     /* Layer deltas 3 */
     memory_clear_16(L2_DEL);
     sum_scaled_16(L3_N0_WEIGHTS, L2_DEL, *(L3_DEL+0));
+    sum_scaled_16(L3_N1_WEIGHTS, L2_DEL, *(L3_DEL+1));
     mul_tanh_prime_16(L2_VAL, L2_DEL);
 
     /* Layer deltas 2 */
@@ -316,6 +317,7 @@ __attribute__((noinline)) void backward_ann(float *desired, float *mem, float lr
 
     /* Adjust weights */
     odel = *(L3_DEL+0) * lr;    *(L3_N0_WEIGHTS+16) += odel;    sum_scaled_16(L2_VAL, L3_N0_WEIGHTS, odel);
+    odel = *(L3_DEL+1) * lr;    *(L3_N1_WEIGHTS+16) += odel;    sum_scaled_16(L2_VAL, L3_N1_WEIGHTS, odel);
 }
 
 int layer_values_ann[4] = {0, 4, 100, 452};
@@ -324,7 +326,7 @@ int layer_values_ann[4] = {0, 4, 100, 452};
 
 float *allocate_ann();
 void free_ann(float *mem);
-#define MEM_SIZE_ann ( 484 * sizeof(float) )
+#define MEM_SIZE_ann ( 504 * sizeof(float) )
 float *forward_L1_ann(float *mem);
 float *forward_L2_ann(float *mem);
 float *forward_L3_ann(float *mem);
