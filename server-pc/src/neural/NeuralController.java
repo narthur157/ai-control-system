@@ -8,9 +8,10 @@ import communication.BrickComm;
 import communication.BrickListener;
 import communication.Command;
 import framework.BrickState;
+import framework.MotorController;
 import neural.AnnClient;
 
-public class NeuralController implements BrickListener {
+public class NeuralController implements BrickListener, MotorController {
 	private BrickState bs;
 	private final static int MIN_POWER = -100, 
 							 MAX_POWER = 100, 
@@ -52,10 +53,10 @@ public class NeuralController implements BrickListener {
 		}
 	}
 	
-	public void setSpeed(int targetSpeed) throws IOException {
+	public void setSpeed(double targetSpeed) {
 		// wait for a new brick update before setting the speed
 		speedSet = false;
-		this.targetSpeed = targetSpeed;
+		this.targetSpeed = (int)targetSpeed;
 	}
 	
 	public int findPower(int targetSpeed) throws IOException {
@@ -143,4 +144,5 @@ public class NeuralController implements BrickListener {
 			}
 		}
 	}
+
 }

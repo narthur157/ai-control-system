@@ -39,6 +39,11 @@ case $key in
     TESTS="$2"
     shift # past argument
     ;;
+    -p|--pid)
+	TEST=pid
+    TESTS="$2"
+    shift # past argument
+    ;;
     -d|--datacollect)
 	TEST=data
     TESTS="$2"
