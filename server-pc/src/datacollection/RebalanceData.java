@@ -12,10 +12,11 @@ import java.util.Random;
 import neural.Normalization;
 
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 3;
+	private static final int NUM_COLUMNS = 4;
 	private static final int LOAD_SPEED_INDEX = 0;
-	private static final int POWER_INDEX = 1;
-	private static final int PREDICTED_SPEED_INDEX = 2;
+	private static final int ANGLE_INDEX = 1;
+	private static final int POWER_INDEX = 2;
+	private static final int PREDICTED_SPEED_INDEX = 3;
 
 	private ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
 	
@@ -188,7 +189,7 @@ public class RebalanceData {
 		
 		pw.println(sums[PREDICTED_SPEED_INDEX] + "\t" + vars[PREDICTED_SPEED_INDEX]);
 		// angle is not a part of this
-		pw.println("-1\t-1");
+		pw.println(sums[ANGLE_INDEX] + "\t" + vars[ANGLE_INDEX]);
 		pw.println(sums[POWER_INDEX] + "\t" + vars[POWER_INDEX]);
 		pw.close();
 	}

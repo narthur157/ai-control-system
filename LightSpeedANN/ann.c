@@ -1,6 +1,6 @@
-// Layer 0: 2 nodes
-// Layer 1: 16 nodes, tanh activation
-// Layer 2: 16 nodes, tanh activation
+// Layer 0: 3 nodes
+// Layer 1: 32 nodes, tanh activation
+// Layer 2: 32 nodes, tanh activation
 // Layer 3: 2 nodes, linear activation
 
 #ifndef ANN_HEADER
@@ -13,75 +13,107 @@
 
 #define IN_TMP (mem+0)
 #define L1_VAL (mem+4)
-#define L1_DEL (mem+20)
-#define L1_N0_WEIGHTS (mem+36)
-#define L1_N1_WEIGHTS (mem+40)
-#define L1_N2_WEIGHTS (mem+44)
-#define L1_N3_WEIGHTS (mem+48)
-#define L1_N4_WEIGHTS (mem+52)
-#define L1_N5_WEIGHTS (mem+56)
-#define L1_N6_WEIGHTS (mem+60)
-#define L1_N7_WEIGHTS (mem+64)
-#define L1_N8_WEIGHTS (mem+68)
-#define L1_N9_WEIGHTS (mem+72)
-#define L1_N10_WEIGHTS (mem+76)
-#define L1_N11_WEIGHTS (mem+80)
-#define L1_N12_WEIGHTS (mem+84)
-#define L1_N13_WEIGHTS (mem+88)
-#define L1_N14_WEIGHTS (mem+92)
-#define L1_N15_WEIGHTS (mem+96)
-#define L2_VAL (mem+100)
-#define L2_DEL (mem+116)
-#define L2_N0_WEIGHTS (mem+132)
-#define L2_N1_WEIGHTS (mem+152)
-#define L2_N2_WEIGHTS (mem+172)
-#define L2_N3_WEIGHTS (mem+192)
-#define L2_N4_WEIGHTS (mem+212)
-#define L2_N5_WEIGHTS (mem+232)
-#define L2_N6_WEIGHTS (mem+252)
-#define L2_N7_WEIGHTS (mem+272)
-#define L2_N8_WEIGHTS (mem+292)
-#define L2_N9_WEIGHTS (mem+312)
-#define L2_N10_WEIGHTS (mem+332)
-#define L2_N11_WEIGHTS (mem+352)
-#define L2_N12_WEIGHTS (mem+372)
-#define L2_N13_WEIGHTS (mem+392)
-#define L2_N14_WEIGHTS (mem+412)
-#define L2_N15_WEIGHTS (mem+432)
-#define L3_VAL (mem+452)
-#define L3_DEL (mem+456)
-#define L3_N0_WEIGHTS (mem+460)
-#define L3_N1_WEIGHTS (mem+480)
-#define OUT_TMP (mem+500)
+#define L1_DEL (mem+36)
+#define L1_N0_WEIGHTS (mem+68)
+#define L1_N1_WEIGHTS (mem+72)
+#define L1_N2_WEIGHTS (mem+76)
+#define L1_N3_WEIGHTS (mem+80)
+#define L1_N4_WEIGHTS (mem+84)
+#define L1_N5_WEIGHTS (mem+88)
+#define L1_N6_WEIGHTS (mem+92)
+#define L1_N7_WEIGHTS (mem+96)
+#define L1_N8_WEIGHTS (mem+100)
+#define L1_N9_WEIGHTS (mem+104)
+#define L1_N10_WEIGHTS (mem+108)
+#define L1_N11_WEIGHTS (mem+112)
+#define L1_N12_WEIGHTS (mem+116)
+#define L1_N13_WEIGHTS (mem+120)
+#define L1_N14_WEIGHTS (mem+124)
+#define L1_N15_WEIGHTS (mem+128)
+#define L1_N16_WEIGHTS (mem+132)
+#define L1_N17_WEIGHTS (mem+136)
+#define L1_N18_WEIGHTS (mem+140)
+#define L1_N19_WEIGHTS (mem+144)
+#define L1_N20_WEIGHTS (mem+148)
+#define L1_N21_WEIGHTS (mem+152)
+#define L1_N22_WEIGHTS (mem+156)
+#define L1_N23_WEIGHTS (mem+160)
+#define L1_N24_WEIGHTS (mem+164)
+#define L1_N25_WEIGHTS (mem+168)
+#define L1_N26_WEIGHTS (mem+172)
+#define L1_N27_WEIGHTS (mem+176)
+#define L1_N28_WEIGHTS (mem+180)
+#define L1_N29_WEIGHTS (mem+184)
+#define L1_N30_WEIGHTS (mem+188)
+#define L1_N31_WEIGHTS (mem+192)
+#define L2_VAL (mem+196)
+#define L2_DEL (mem+228)
+#define L2_N0_WEIGHTS (mem+260)
+#define L2_N1_WEIGHTS (mem+296)
+#define L2_N2_WEIGHTS (mem+332)
+#define L2_N3_WEIGHTS (mem+368)
+#define L2_N4_WEIGHTS (mem+404)
+#define L2_N5_WEIGHTS (mem+440)
+#define L2_N6_WEIGHTS (mem+476)
+#define L2_N7_WEIGHTS (mem+512)
+#define L2_N8_WEIGHTS (mem+548)
+#define L2_N9_WEIGHTS (mem+584)
+#define L2_N10_WEIGHTS (mem+620)
+#define L2_N11_WEIGHTS (mem+656)
+#define L2_N12_WEIGHTS (mem+692)
+#define L2_N13_WEIGHTS (mem+728)
+#define L2_N14_WEIGHTS (mem+764)
+#define L2_N15_WEIGHTS (mem+800)
+#define L2_N16_WEIGHTS (mem+836)
+#define L2_N17_WEIGHTS (mem+872)
+#define L2_N18_WEIGHTS (mem+908)
+#define L2_N19_WEIGHTS (mem+944)
+#define L2_N20_WEIGHTS (mem+980)
+#define L2_N21_WEIGHTS (mem+1016)
+#define L2_N22_WEIGHTS (mem+1052)
+#define L2_N23_WEIGHTS (mem+1088)
+#define L2_N24_WEIGHTS (mem+1124)
+#define L2_N25_WEIGHTS (mem+1160)
+#define L2_N26_WEIGHTS (mem+1196)
+#define L2_N27_WEIGHTS (mem+1232)
+#define L2_N28_WEIGHTS (mem+1268)
+#define L2_N29_WEIGHTS (mem+1304)
+#define L2_N30_WEIGHTS (mem+1340)
+#define L2_N31_WEIGHTS (mem+1376)
+#define L3_VAL (mem+1412)
+#define L3_DEL (mem+1416)
+#define L3_N0_WEIGHTS (mem+1420)
+#define L3_N1_WEIGHTS (mem+1456)
+#define OUT_TMP (mem+1492)
 
 float *allocate_ann() {
-    return (float *)_mm_malloc(504 * sizeof(float), 16);
+    return (float *)_mm_malloc(1496 * sizeof(float), 16);
 }
 
 void free_ann(float *mem) {
     _mm_free(mem);
 }
 
-static void randomize_2(float *mem) {
+static void randomize_3(float *mem) {
     const double RMI = 1.0 / RAND_MAX;
-    const double b2 = pow((double)2, -0.5) * sqrt(12.0);
+    const double b2 = pow((double)3, -0.5) * sqrt(12.0);
     const double b = b2*0.5;
     const double b3 = b2*RMI;
     int i;
-    for (i=0; i<=2; i++) {
+    for (i=0; i<=3; i++) {
         do {
             mem[i] = random() * b3 - b;
         } while (mem[i] == 0);
     }
 }
 
-__attribute__((noinline)) static void randomize_16(float *mem) {
+__attribute__((noinline)) static void randomize_32(float *mem) {
     const double RMI = 1.0 / RAND_MAX;
-    const double b2 = pow((double)16, -0.5) * sqrt(12.0);
+    const double b2 = pow((double)32, -0.5) * sqrt(12.0);
     const double b = b2*0.5;
     const double b3 = b2*RMI;
     int i;
-    for (i=0; i<=16; i++) {
+    for (i=0; i<=32; i++) {
         do {
             mem[i] = random() * b3 - b;
         } while (mem[i] == 0);
@@ -91,20 +123,20 @@ __attribute__((noinline)) static void randomize_16(float *mem) {
 __attribute__((noinline)) void randomize_ann(float *mem) {
     int i, j;
     j = 0;
-    for (i=0; i<16; i++) {
-        randomize_2(L1_N0_WEIGHTS + j);
+    for (i=0; i<32; i++) {
+        randomize_3(L1_N0_WEIGHTS + j);
         j += 4;
     }
     j = 0;
-    for (i=0; i<16; i++) {
-        randomize_16(L2_N0_WEIGHTS + j);
-        j += 20;
+    for (i=0; i<32; i++) {
+        randomize_32(L2_N0_WEIGHTS + j);
+        j += 36;
     }
-    randomize_16(L3_N0_WEIGHTS);
-    randomize_16(L3_N1_WEIGHTS);
+    randomize_32(L3_N0_WEIGHTS);
+    randomize_32(L3_N1_WEIGHTS);
 }
 
-__attribute__((noinline)) static void tanh_16(float *in) {
+__attribute__((noinline)) static void tanh_32(float *in) {
     const float Dscale = 16777216.0 / log(2.0);
     __m128 Fscale = _mm_set1_ps(Dscale);
     __m128 Foffset = _mm_set1_ps(1065353216.0);
@@ -114,7 +146,7 @@ __attribute__((noinline)) static void tanh_16(float *in) {
     __m128 max = _mm_set1_ps(32.0);
     __m128 x, u, v, a, b, g;
     int i;
-    for (i=0; i<4; i++) {
+    for (i=0; i<8; i++) {
         x = _mm_load_ps(in);
         x = _mm_min_ps(x, max);
         x = _mm_max_ps(x, min);
@@ -131,14 +163,15 @@ __attribute__((noinline)) static void tanh_16(float *in) {
     }
 }
 
-static float dotprod_2(float *weights, float *values) {
+static float dotprod_3(float *weights, float *values) {
     float sum0, sum1, sum2, sum3;
     sum0 = values[0] * weights[0];
     sum1 = values[1] * weights[1];
-    return sum0 + sum1;
+    sum2 = values[2] * weights[2];
+    return (sum0 + sum1) + sum2;
 }
 
-__attribute__((noinline)) static float dotprod_16(float *weights, float *values) {
+__attribute__((noinline)) static float dotprod_32(float *weights, float *values) {
     float sum0, sum1, sum2, sum3;
     __m128 wei, inp, prod, total0, total1, total2, total3;
     float *v, *w;  int i;
@@ -154,6 +187,22 @@ __attribute__((noinline)) static float dotprod_16(float *weights, float *values)
     inp   = _mm_load_ps(values+12);
     wei   = _mm_load_ps(weights+12);
     total3 = _mm_mul_ps(inp, wei);
+    inp   = _mm_load_ps(values+16);
+    wei   = _mm_load_ps(weights+16);
+    prod  = _mm_mul_ps(inp, wei);
+    total0 = _mm_add_ps(prod, total0);
+    inp   = _mm_load_ps(values+20);
+    wei   = _mm_load_ps(weights+20);
+    prod  = _mm_mul_ps(inp, wei);
+    total1 = _mm_add_ps(prod, total1);
+    inp   = _mm_load_ps(values+24);
+    wei   = _mm_load_ps(weights+24);
+    prod  = _mm_mul_ps(inp, wei);
+    total2 = _mm_add_ps(prod, total2);
+    inp   = _mm_load_ps(values+28);
+    wei   = _mm_load_ps(weights+28);
+    prod  = _mm_mul_ps(inp, wei);
+    total3 = _mm_add_ps(prod, total3);
     total0 = _mm_add_ps(total0, total1);
     total2 = _mm_add_ps(total2, total3);
     total0 = _mm_add_ps(total0, total2);
@@ -163,7 +212,7 @@ __attribute__((noinline)) static float dotprod_16(float *weights, float *values)
     return sum0;
 }
 
-__attribute__((noinline)) static void sum_scaled_16(float *in, float *out, float scale) {
+__attribute__((noinline)) static void sum_scaled_32(float *in, float *out, float scale) {
     __m128 tgt, inp, sca;
     sca = _mm_set1_ps(scale);
     inp = _mm_load_ps(in+0);
@@ -186,14 +235,35 @@ __attribute__((noinline)) static void sum_scaled_16(float *in, float *out, float
     inp = _mm_mul_ps(sca, inp);
     tgt = _mm_add_ps(inp, tgt);
     _mm_store_ps(out+12, tgt);
+    inp = _mm_load_ps(in+16);
+    tgt = _mm_load_ps(out+16);
+    inp = _mm_mul_ps(sca, inp);
+    tgt = _mm_add_ps(inp, tgt);
+    _mm_store_ps(out+16, tgt);
+    inp = _mm_load_ps(in+20);
+    tgt = _mm_load_ps(out+20);
+    inp = _mm_mul_ps(sca, inp);
+    tgt = _mm_add_ps(inp, tgt);
+    _mm_store_ps(out+20, tgt);
+    inp = _mm_load_ps(in+24);
+    tgt = _mm_load_ps(out+24);
+    inp = _mm_mul_ps(sca, inp);
+    tgt = _mm_add_ps(inp, tgt);
+    _mm_store_ps(out+24, tgt);
+    inp = _mm_load_ps(in+28);
+    tgt = _mm_load_ps(out+28);
+    inp = _mm_mul_ps(sca, inp);
+    tgt = _mm_add_ps(inp, tgt);
+    _mm_store_ps(out+28, tgt);
 }
 
-static void sum_scaled_2(float *in, float *out, float scale) {
+static void sum_scaled_3(float *in, float *out, float scale) {
     out[0] += scale * in[0];
     out[1] += scale * in[1];
+    out[2] += scale * in[2];
 }
 
-__attribute__((noinline)) static void mul_tanh_prime_16(float *in, float *out) {
+__attribute__((noinline)) static void mul_tanh_prime_32(float *in, float *out) {
     float i;
     __m128 tgt, inp, one;
     one = _mm_set1_ps(1.0f);
@@ -221,6 +291,30 @@ __attribute__((noinline)) static void mul_tanh_prime_16(float *in, float *out) {
     inp = _mm_sub_ps(one, inp);
     tgt = _mm_mul_ps(inp, tgt);
     _mm_store_ps(out+12, tgt);
+    inp = _mm_load_ps(in+16);
+    tgt = _mm_load_ps(out+16);
+    inp = _mm_mul_ps(inp, inp);
+    inp = _mm_sub_ps(one, inp);
+    tgt = _mm_mul_ps(inp, tgt);
+    _mm_store_ps(out+16, tgt);
+    inp = _mm_load_ps(in+20);
+    tgt = _mm_load_ps(out+20);
+    inp = _mm_mul_ps(inp, inp);
+    inp = _mm_sub_ps(one, inp);
+    tgt = _mm_mul_ps(inp, tgt);
+    _mm_store_ps(out+20, tgt);
+    inp = _mm_load_ps(in+24);
+    tgt = _mm_load_ps(out+24);
+    inp = _mm_mul_ps(inp, inp);
+    inp = _mm_sub_ps(one, inp);
+    tgt = _mm_mul_ps(inp, tgt);
+    _mm_store_ps(out+24, tgt);
+    inp = _mm_load_ps(in+28);
+    tgt = _mm_load_ps(out+28);
+    inp = _mm_mul_ps(inp, inp);
+    inp = _mm_sub_ps(one, inp);
+    tgt = _mm_mul_ps(inp, tgt);
+    _mm_store_ps(out+28, tgt);
 }
 
 static void subtract_2(float *a, float *b, float *c) {
@@ -228,51 +322,61 @@ static void subtract_2(float *a, float *b, float *c) {
     c[1] = a[1] - b[1];
 }
 
+static void memory_copy_3(float *dst, float *src) {
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+}
+
 static void memory_copy_2(float *dst, float *src) {
     dst[0] = src[0];
     dst[1] = src[1];
 }
 
-__attribute__((noinline)) static void memory_clear_16(float *dst) {
+__attribute__((noinline)) static void memory_clear_32(float *dst) {
     __m128 zero;
     zero = _mm_setzero_ps();
     _mm_store_ps((float *)dst + 0, zero);
     _mm_store_ps((float *)dst + 4, zero);
     _mm_store_ps((float *)dst + 8, zero);
     _mm_store_ps((float *)dst + 12, zero);
+    _mm_store_ps((float *)dst + 16, zero);
+    _mm_store_ps((float *)dst + 20, zero);
+    _mm_store_ps((float *)dst + 24, zero);
+    _mm_store_ps((float *)dst + 28, zero);
 }
 
 __attribute__((noinline)) float *forward_L1_ann(float *mem) {
     int i, k;
     k = 0;
-    for (i=0; i<16; i++) {
-        *(L1_VAL+0+i) = dotprod_2(L1_N0_WEIGHTS + k, IN_TMP) + *(L1_N0_WEIGHTS+k+2);
+    for (i=0; i<32; i++) {
+        *(L1_VAL+0+i) = dotprod_3(L1_N0_WEIGHTS + k, IN_TMP) + *(L1_N0_WEIGHTS+k+3);
         k += 4;
     }
-    tanh_16(L1_VAL);
+    tanh_32(L1_VAL);
     return L1_VAL;
 }
 
 __attribute__((noinline)) float *forward_L2_ann(float *mem) {
     int i, k;
     k = 0;
-    for (i=0; i<16; i++) {
-        *(L2_VAL+0+i) = dotprod_16(L2_N0_WEIGHTS + k, L1_VAL) + *(L2_N0_WEIGHTS+k+16);
-        k += 20;
+    for (i=0; i<32; i++) {
+        *(L2_VAL+0+i) = dotprod_32(L2_N0_WEIGHTS + k, L1_VAL) + *(L2_N0_WEIGHTS+k+32);
+        k += 36;
     }
-    tanh_16(L2_VAL);
+    tanh_32(L2_VAL);
     return L2_VAL;
 }
 
 __attribute__((noinline)) float *forward_L3_ann(float *mem) {
     int i, k;
-    *(L3_VAL+0) = dotprod_16(L3_N0_WEIGHTS, L2_VAL) + *(L3_N0_WEIGHTS+16);
-    *(L3_VAL+1) = dotprod_16(L3_N1_WEIGHTS, L2_VAL) + *(L3_N1_WEIGHTS+16);
+    *(L3_VAL+0) = dotprod_32(L3_N0_WEIGHTS, L2_VAL) + *(L3_N0_WEIGHTS+32);
+    *(L3_VAL+1) = dotprod_32(L3_N1_WEIGHTS, L2_VAL) + *(L3_N1_WEIGHTS+32);
     return L3_VAL;
 }
 
 __attribute__((noinline)) float *forward_ann(float *in, float *mem) {
-    memory_copy_2(IN_TMP, in);
+    memory_copy_3(IN_TMP, in);
     forward_L1_ann(mem);
     forward_L2_ann(mem);
     return forward_L3_ann(mem);
@@ -287,46 +391,46 @@ __attribute__((noinline)) void backward_ann(float *desired, float *mem, float lr
     subtract_2(OUT_TMP, L3_VAL, L3_DEL);
 
     /* Layer deltas 3 */
-    memory_clear_16(L2_DEL);
-    sum_scaled_16(L3_N0_WEIGHTS, L2_DEL, *(L3_DEL+0));
-    sum_scaled_16(L3_N1_WEIGHTS, L2_DEL, *(L3_DEL+1));
-    mul_tanh_prime_16(L2_VAL, L2_DEL);
+    memory_clear_32(L2_DEL);
+    sum_scaled_32(L3_N0_WEIGHTS, L2_DEL, *(L3_DEL+0));
+    sum_scaled_32(L3_N1_WEIGHTS, L2_DEL, *(L3_DEL+1));
+    mul_tanh_prime_32(L2_VAL, L2_DEL);
 
     /* Layer deltas 2 */
-    memory_clear_16(L1_DEL);
+    memory_clear_32(L1_DEL);
     j = 0;
-    for (i=0; i<16; i++) {
-        sum_scaled_16(L2_N0_WEIGHTS + j, L1_DEL, *(L2_DEL+0+i));
-        j += 20;
+    for (i=0; i<32; i++) {
+        sum_scaled_32(L2_N0_WEIGHTS + j, L1_DEL, *(L2_DEL+0+i));
+        j += 36;
     }
-    mul_tanh_prime_16(L1_VAL, L1_DEL);
+    mul_tanh_prime_32(L1_VAL, L1_DEL);
 
     /* Adjust weights */
     j = 0;
-    for (i=0; i<16; i++) {
-        odel = *(L1_DEL+0+i) * lr;    *(L1_N0_WEIGHTS+j+2) += odel;    sum_scaled_2(IN_TMP, L1_N0_WEIGHTS+j, odel);
+    for (i=0; i<32; i++) {
+        odel = *(L1_DEL+0+i) * lr;    *(L1_N0_WEIGHTS+j+3) += odel;    sum_scaled_3(IN_TMP, L1_N0_WEIGHTS+j, odel);
         j += 4;
     }
 
     /* Adjust weights */
     j = 0;
-    for (i=0; i<16; i++) {
-        odel = *(L2_DEL+0+i) * lr;    *(L2_N0_WEIGHTS+j+16) += odel;    sum_scaled_16(L1_VAL, L2_N0_WEIGHTS+j, odel);
-        j += 20;
+    for (i=0; i<32; i++) {
+        odel = *(L2_DEL+0+i) * lr;    *(L2_N0_WEIGHTS+j+32) += odel;    sum_scaled_32(L1_VAL, L2_N0_WEIGHTS+j, odel);
+        j += 36;
     }
 
     /* Adjust weights */
-    odel = *(L3_DEL+0) * lr;    *(L3_N0_WEIGHTS+16) += odel;    sum_scaled_16(L2_VAL, L3_N0_WEIGHTS, odel);
-    odel = *(L3_DEL+1) * lr;    *(L3_N1_WEIGHTS+16) += odel;    sum_scaled_16(L2_VAL, L3_N1_WEIGHTS, odel);
+    odel = *(L3_DEL+0) * lr;    *(L3_N0_WEIGHTS+32) += odel;    sum_scaled_32(L2_VAL, L3_N0_WEIGHTS, odel);
+    odel = *(L3_DEL+1) * lr;    *(L3_N1_WEIGHTS+32) += odel;    sum_scaled_32(L2_VAL, L3_N1_WEIGHTS, odel);
 }
 
-int layer_values_ann[4] = {0, 4, 100, 452};
+int layer_values_ann[4] = {0, 4, 196, 1412};
 
 #else /* HEADER FOLLOWS */
 
 float *allocate_ann();
 void free_ann(float *mem);
-#define MEM_SIZE_ann ( 504 * sizeof(float) )
+#define MEM_SIZE_ann ( 1496 * sizeof(float) )
 float *forward_L1_ann(float *mem);
 float *forward_L2_ann(float *mem);
 float *forward_L3_ann(float *mem);

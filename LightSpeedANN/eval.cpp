@@ -171,8 +171,9 @@ int power_search(float * inputs, ValueType *mem) {
 		
 	for (int i = 0; i <= 100; i++) {
 		//inputs[2] = normalizePower(i);
-		testIns[1] = normalizePower(i);
 		testIns[0] = inputs[0];
+		testIns[1] = inputs[1];
+		testIns[2] = normalizePower(i);
 
 		float predictedSpeed1 = forward_ann(testIns, mem)[0];
 		float predictedSpeed2 = forward_ann(testIns, mem)[1];
@@ -220,8 +221,8 @@ void eval_socket(ValueType *mem) {
             int n = parse_floats(line.c_str(), inputs);
 			
 			inputs[0] = normalizeSpeed(inputs[0]);
-			inputs[1] = normalizePower(inputs[1]);
-			inputs[2] = 0;
+			inputs[1] = normalizeAngle(inputs[1]);
+			inputs[2] = normalizePower(inputs[2]);
 			inputs[3] = normalizeSpeed(inputs[3]);
 			inputs[4] = 0;
             
@@ -241,6 +242,7 @@ void eval_socket(ValueType *mem) {
     } while (1);
 }
 
+/*
 void make_tables(ValueType *mem) {
 	// make a csv file full of various inputs/outputs to the ann
 	// for simplicity, fix all numbers at their means and change only 1 at once
@@ -270,6 +272,7 @@ void make_tables(ValueType *mem) {
 	evalTable << evalTableStr.rdbuf();
 	evalTable.close();
 }
+*/
 
 int main(int argc, char* argv[])
 {
@@ -292,9 +295,11 @@ int main(int argc, char* argv[])
 		eval_socket(mem);    
 	}
 	
+	/*
 	if (argc == 2 && argv[1]) {
 		make_tables(mem);	
 	}
+	*/
 
 	return 0;
 }

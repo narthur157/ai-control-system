@@ -256,8 +256,8 @@ int main(int argc, char* argv[])
 	}
 	
     DataSet<ValueType> trainData(2, 1), testData(2, 1);
-    trainData.loadFile("iio", trainFile);
-    testData.loadFile("iio", testFile);
+    trainData.loadFile("iiioo", trainFile);
+    testData.loadFile("iioo", testFile);
 	
     
     ValueType sse, max;
