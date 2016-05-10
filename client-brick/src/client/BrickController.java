@@ -31,10 +31,10 @@ public class BrickController {
 				
 				if (c.motor == Command.CONTROL_WHEEL) {
 					// motor faces opposite direction of disturb wheel
-					c.power = (byte) (-1 * c.power);
 					motor = controlWheel;
 				}
 				else if (c.motor == Command.DISTURB_WHEEL) {
+					c.power = (byte) (-1*c.power);
 					motor = disturbWheel;
 				}
 				else if (c.motor == Command.TORQUE_ARM) {

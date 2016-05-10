@@ -51,7 +51,7 @@ public class WheelTimer extends Thread {
 	// synchronized for thread safety
 	synchronized int getSpeed() {
 		LCD.drawString("speed: " + speed, 0, 6);
-		return (int) speed;
+		return -1*(int)speed;
 	}
 	
 	public void stopThread() {
