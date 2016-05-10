@@ -23,10 +23,11 @@ public class ControllerDisturbanceTest extends Test {
 
 	@Override
 	protected void test() {
-		int disturbance = rand.nextInt(20);
+		int disturbance = rand.nextInt(30);
 		nc.setDisturbance(disturbance);
+		
 		int speed = count * 100;
-		System.out.println("Trying to set speed: " + speed + " disturbance: " + disturbance);
+		
 		nc.setSpeed(speed);
 		
 		count = (count+1) % 10;
