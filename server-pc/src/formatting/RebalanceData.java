@@ -1,4 +1,4 @@
-package datacollection;
+package formatting;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

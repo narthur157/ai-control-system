@@ -2,6 +2,14 @@ package pid;
 
 import framework.MotorController;
 
+/**
+ * Implementation of PID using this framework
+ * PID constants are specified internally
+ * 
+ * @see framework.MotorController
+ * @author Nicholas Arthur
+ *
+ */
 public class PIDController extends MotorController {
 	// constants
 	final private double P = 1.83, 	// proportional 
@@ -12,7 +20,13 @@ public class PIDController extends MotorController {
 	private double 	prevError = 0.0,   		// used to compute derivative component
 					totalError = 0.0; 		// used to compute integral component
 	
-	// modifies totalError and prevError
+	/**
+	 * A single control loop of PID
+	 * 
+	 * @param currentSpeed Current speed of disturb wheel
+	 * @param desiredSpeed The target speed
+	 * @return Power to be set to achieve speed
+	 */
 	private int pidCalc(double currentSpeed, double desiredSpeed) {
 		double error = desiredSpeed - currentSpeed;
 		
@@ -30,6 +44,9 @@ public class PIDController extends MotorController {
 		return (int) clamp(result, MIN_OUTPUT, MAX_OUTPUT);
 	}
 
+	/**
+	 * MotorController abstract base class method, calls pidCalc
+	 */
 	@Override
 	protected int findPower() throws Exception {
 		double currentSpeed = bs.disturbSpeed;

@@ -13,11 +13,11 @@ import testing.Test;
 
 import communication.BrickComm;
 
-
-//for use with Receive.java
-
 /**
  * The driver for the server side code
+ * Runs tests based on command line argument, as specified in the run script
+ * 
+ * @see communication.BrickComm
  * @author Nick Arthur
  */
 public class Send {	

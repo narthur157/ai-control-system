@@ -89,7 +89,7 @@ public abstract class Test implements BrickListener {
 	final public void updateBrick(BrickState bsIn) {	
 		prevBs = bs;
 		bs = bsIn;
-		collectData();
+		logData();
 
 		long curTime = System.currentTimeMillis();
 		if (curTime - prevTime > testLength || prevTime == -1) {
@@ -114,8 +114,18 @@ public abstract class Test implements BrickListener {
 		}
 	}
 	
-	final private void collectData() {
+	final private void logData() {
+		logger.logln(collectData());
+	}
+	
+	/**
+	 * This method can be decorated by subclasses
+	 * by overriding and doing `return super.collectData + "decoration"` 
+	 * in subclass
+	 * @return
+	 */
+	protected String collectData() {
 		// logger is paramterized in constructor, can write to file
-		logger.logln(bs.toString() + "\t" + changeFlag);
+		return bs.toString();
 	}	
 }
