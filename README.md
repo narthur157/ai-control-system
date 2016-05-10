@@ -7,10 +7,12 @@ GENERAL PROCESSES
 
 There a few sets of actions you do with this project, they are
 
+- Change parameters
 - Collect and formatting data
 - Train a neural net using data
 - Using a neural net, run a controller
 - Run a non-neural net controller
+- Update Javadocs
 
 Some of these are dependent on each other. 
 
@@ -23,6 +25,18 @@ its own weights file, its own motor controller, etc. There should eventually be 
 input to 3 inputs (all 1 output). We will in the end mostly care about only 1 of these networks, and the other branches
 can then be safely forgotten or deleted. The purpose of keeping the branches is to have working versions, and is essentially
 the same idea as creating releases. Releases are good, but we're doing this instead because I prefer it.
+
+CHANGING PARAMETERS
+-------
+
+There are a number of parameters you may wish to change in this project. They are:
+
+- `server-pc/src/pid/PIDController.java` PID constants
+- `server-pc/src/frameworkMotorController` control delay/loop frequency
+- `client-brick/src/client/WheelTimer` queue size and collection frequency
+- `./dataparser.py` `get_future_speeds` time offset and number of speeds. Note that changing the number of speeds is a change in the neural net, which will require running `LightSpeedNN/runTrain` with a neural net structure as input (ie 3 16t 2l for 3 input, 16 tanh hidden node, 2 output linear activation), as well as deleting the `LightSpeedANN/weights.net` file and collecting new training data and then running training on it. Additionally, each entry in the data logging also logs rows of future times. The number of future times may be adjusted.
+
+Some of these could be made configurable from a properties file, however this has not been implemented.
 
 COLLECTING DATA
 -------
@@ -45,9 +59,9 @@ TRAINING AN ANN
 
 Go to `LightSpeedANN`. You will need to have the `train-set.csv` and `test-set.csv` files up to date from the previous process.
 
-If new training data, a new ANN, or `train` changed, you will want to delete the `weights.net` file.
+If new training data, a new ANN, or `train` changed, you will need to delete the `weights.net` file.
 
-Use `runTrain` to do training. This will compile `train` and then run tests with learning rates of `0.1` to `0.000000001` decreasing by factors of `10`, each for `1000` runs. A learning rate may be interrupted early by using Ctrl-c, which will save the weights file before quitting. `train` always saves its best results to `weights.net` as it gets them, and loads them when it starts. 
+Use `runTrain` (no arguments) to do training. This will compile `train` and then run tests with learning rates of `0.1` to `0.000000001` decreasing by factors of `10`, each for `1000` runs. A learning rate may be interrupted early by using Ctrl-c, which will save the weights file before quitting. `train` always saves its best results to `weights.net` as it gets them, and loads them when it starts. 
 
 
 USING A NEURAL NET
@@ -59,6 +73,11 @@ NON-NEURAL NET CONTROLLER
 -------
 
 Not yet implemented
+
+UPDATE JAVADOCS
+-------
+
+In Eclipse, use `Project->Generate Javadocs`. Set storage location in the `narthur157.github.io` git repository/directory, then click next twice and set overview file (at the top) to `overview.html` from this directory. Then change directory to `narthur157.github.io` and do `git add . && git commit -m "Updated Javadocs" && git push`.
 
 --------
 
