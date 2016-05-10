@@ -2,14 +2,17 @@ package server;
 
 import java.io.IOException;
 
-import neural.NeuralTest;
+import pid.PIDController;
 
-import pid.PIDTest;
+import neural.NeuralController;
+
+
+import testing.DataGeneration;
+import testing.ControllerDisturbanceTest;
+import testing.Test;
 
 import communication.BrickComm;
 
-import datacollection.DisturbanceTest;
-import framework.Test;
 
 //for use with Receive.java
 
@@ -41,15 +44,15 @@ public class Send {
 	}
 	
 	private static void runNeuralTest(int numRuns) throws IOException {
-		runTest(new NeuralTest(), numRuns);
+		runTest(new ControllerDisturbanceTest(new NeuralController()), numRuns);
 	}
 	
 	private static void runDataTest(int numRuns) throws IOException {
-		runTest(new DisturbanceTest(), numRuns);
+		runTest(new DataGeneration(), numRuns);
 	}
 	
 	private static void runPIDTest(int numRuns) throws IOException {
-		runTest(new PIDTest(), numRuns);
+		runTest(new ControllerDisturbanceTest(new PIDController()), numRuns);
 	}
 	
 	private static void runTest(Test tester, int numRuns) {

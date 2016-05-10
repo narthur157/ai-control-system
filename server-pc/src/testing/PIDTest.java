@@ -1,9 +1,11 @@
-package pid;
+package testing;
 
 import java.io.IOException;
 
+import pid.PIDController;
+
+
 import framework.MotorController;
-import framework.Test;
 
 public class PIDTest extends Test {
 	private MotorController controller = new PIDController();

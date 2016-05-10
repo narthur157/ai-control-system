@@ -1,21 +1,21 @@
-package datacollection;
+package testing;
 
 import java.io.IOException;
 import java.util.Random;
 
+
 import communication.BrickComm;
 import communication.Command;
 
-import framework.Test;
 
 //Select this in server/Send.java
-public class DisturbanceTest extends Test {
+public class DataGeneration extends Test {
     private Random rand = new Random();
     private int count = 0;
     private int prevCtrlPwr = 50;
     private int prevDisturbPwr = 50;
      
-    public DisturbanceTest() throws IOException {
+    public DataGeneration() throws IOException {
         super();
     }
  

@@ -1,9 +1,12 @@
-package framework;
+package testing;
 
 import java.io.IOException;
 
 import communication.BrickComm;
 import communication.BrickListener;
+import framework.BrickState;
+import framework.FileLogger;
+import framework.Logger;
 
 
 /**
@@ -114,5 +117,5 @@ public abstract class Test implements BrickListener {
 	final private void collectData() {
 		// logger is paramterized in constructor, can write to file
 		logger.logln(bs.toString() + "\t" + changeFlag);
-	}
+	}	
 }

@@ -51,7 +51,8 @@ public abstract class MotorController implements BrickListener {
 					BrickComm.sendCommand(Command.CONTROL_WHEEL, power);
 					BrickComm.sendCommand(Command.DISTURB_WHEEL, power - disturbance);
 
-					System.out.println("desiredSpeed=" + targetSpeed + " currentSpeed=" + bs.disturbSpeed + " power=" + power);
+					System.out.println("desiredSpeed\t" + targetSpeed + " currentSpeed\t" + 
+										bs.disturbSpeed + " power\t" + power + " disturbance\t" + disturbance);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
