@@ -21,7 +21,7 @@ public class NeuralTest extends Test {
 		System.out.println("Trying to set speed: " + speed);
 		nc.setSpeed(speed);
 		
-		count = 6;//(count+1) % 10;
+		count = (count+1) % 10;
 	}
 
 }

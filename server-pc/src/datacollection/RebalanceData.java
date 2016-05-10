@@ -12,11 +12,12 @@ import java.util.Random;
 import neural.Normalization;
 
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 4;
+	private static final int NUM_COLUMNS = 5;
 	private static final int LOAD_SPEED_INDEX = 0;
 	private static final int ANGLE_INDEX = 1;
 	private static final int POWER_INDEX = 2;
-	private static final int PREDICTED_SPEED_INDEX = 3;
+	private static final int PREDICTED_SPEED_INDEX1 = 3;
+	private static final int PREDICTED_SPEED_INDEX2 = 4;
 
 	private ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
 	
@@ -85,7 +86,7 @@ public class RebalanceData {
 	    
 	    while ((line = br.readLine()) != null) {
 	       Row r = parseRow(line);
-	       int ldSpd = r.columns[PREDICTED_SPEED_INDEX];
+	       int ldSpd = r.columns[PREDICTED_SPEED_INDEX1];
 	       
 	       if (ldSpd < 0) continue;
 	       
@@ -134,8 +135,8 @@ public class RebalanceData {
 				for (int k = 0; k < NUM_COLUMNS; k++) {
 					int normalizationIndex = k;
 
-					 if (normalizationIndex == LOAD_SPEED_INDEX) {
-						 normalizationIndex = PREDICTED_SPEED_INDEX;
+					 if (normalizationIndex == LOAD_SPEED_INDEX || normalizationIndex == PREDICTED_SPEED_INDEX2) {
+						 normalizationIndex = PREDICTED_SPEED_INDEX1;
 					 }
 
 					double val = row.columns[k], 
@@ -187,7 +188,7 @@ public class RebalanceData {
 		PrintWriter pw = new PrintWriter(new FileWriter(fname));
 		System.out.println("Wrote normalization data to " + fname);
 		
-		pw.println(sums[PREDICTED_SPEED_INDEX] + "\t" + vars[PREDICTED_SPEED_INDEX]);
+		pw.println(sums[PREDICTED_SPEED_INDEX1] + "\t" + vars[PREDICTED_SPEED_INDEX1]);
 		// angle is not a part of this
 		pw.println(sums[ANGLE_INDEX] + "\t" + vars[ANGLE_INDEX]);
 		pw.println(sums[POWER_INDEX] + "\t" + vars[POWER_INDEX]);

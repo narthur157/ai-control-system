@@ -10,7 +10,6 @@ public class PIDTest extends Test {
 	
 	public PIDTest() throws IOException {
 		super();
-		System.out.println("Creating PIDTest");
 	}
 
 	int count = 6;

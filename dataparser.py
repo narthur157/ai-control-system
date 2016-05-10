@@ -66,6 +66,19 @@ def collect_rand(randChance):
 
 def collect_drive_changes():
 	prevPower = 0
+	
+	for index, power in enumerate(df.LdPwr):
+		if index == 0:
+			prevPower = power
+
+		if power != prevPower:
+			try:
+				for offset in [0,1,2,3,4]:
+					collect_index(get_future_time(index, offset*100))
+			except ValueError as e:
+				pass
+			
+		prevPower = power
 
 	for index, power in enumerate(df.CtrlPwr):
 		if index == 0:
@@ -87,7 +100,11 @@ def collect_torque_changes():
 		if index == 0:
 			prevAng = ang
 		if ang != prevAng:
-			collect_index(index)
+			try:
+				for offset in [0,1,2,3,4]:
+					collect_index(get_future_time(index, offset*100))
+			except ValueError as e:
+				pass
 		prevAng = ang
 
 def collect_index(index):
@@ -153,7 +170,7 @@ if __name__ == '__main__':
 
 #	normalize_input()
 	
-#	collect_torque_changes()
+	collect_torque_changes()
 	collect_drive_changes()	
 	collect_rand(600)
 
