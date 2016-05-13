@@ -270,6 +270,14 @@ public class RebalanceData {
 		pw.close();
 	}
 	
+	/**
+	 * Formats data, originally for balancing dataset, now just for 
+	 * normalization. Should be run after dataparser.py. Uses 
+	 * training-set.csv. Writes normalizationData, and train-set.csv,
+	 * test-set.csv in LightSpeedANN
+	 * @param args Unused
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		RebalanceData rd = new RebalanceData();
 		

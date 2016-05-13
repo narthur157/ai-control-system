@@ -1,6 +1,12 @@
 package framework;
 
-// might not be very useful as an interface, all implementations similar thus far
+/**
+ * Class for logging data output from brick.
+ * 
+ * @see FileLogger
+ * @author Nicholas Arthur
+ *
+ */
 public interface Logger {
 	public void logln(String s);
 	public void close();

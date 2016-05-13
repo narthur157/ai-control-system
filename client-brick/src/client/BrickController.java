@@ -64,7 +64,7 @@ public class BrickController {
 		
 		disturbTimer.stopThread();
 	}
-	
+		
 	private void printState() {
 		//print readings to screen
 		LCD.clear();

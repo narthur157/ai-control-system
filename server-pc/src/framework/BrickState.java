@@ -2,6 +2,11 @@ package framework;
 
 import communication.Command;
 
+/**
+ * This class should be the same as the one in client-brick. 
+ * @author Nicholas Arthur
+ *
+ */
 public class BrickState {
 	public int time, controlPower, disturbSpeed, disturbPower, angle, torquePower;
 	
@@ -15,6 +20,12 @@ public class BrickState {
 		this.angle = angle; 				// angle of the arm
 	}
 	
+	/**
+	 * Convenience method
+	 * @param motor Motor constant as in Command
+	 * @see Command
+	 * @return Power of given motor
+	 */
 	public int getMotorPower(byte motor) {
 		if (motor == Command.CONTROL_WHEEL) return controlPower;
 		else if (motor == Command.DISTURB_WHEEL) return disturbPower;
