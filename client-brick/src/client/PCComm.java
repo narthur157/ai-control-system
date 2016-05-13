@@ -61,7 +61,7 @@ public class PCComm {
 		dOut.writeInt(bs.time);
 		dOut.writeInt((int) bs.disturbSpeed);
 		dOut.writeInt(bs.disturbPower);
-		dOut.writeInt(bs.controlPower);
+		dOut.writeInt(-1*bs.controlPower);
 		dOut.writeInt(bs.torquePower);
 		dOut.writeInt(bs.angle);
 		dOut.flush();
