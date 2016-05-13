@@ -34,7 +34,7 @@ public class AnnClient {
     }
     
     private static void sendLine(int targetSpeed, BrickState bs) {
-    	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, bs.controlPower, targetSpeed });
+    	sendNumbers(new double[]{ bs.disturbSpeed, bs.angle, bs.controlPower, bs.controlPower, targetSpeed });
     }
     
     private static void sendLine(String s) {
@@ -47,7 +47,7 @@ public class AnnClient {
      * @param inputs - must be length 4 in order LdSpd, Angle, CtrlPwr, TargetSpeed
      */
     private static void sendNumbers(double[] inputs) {
-    	if (inputs.length != 4) {
+    	if (inputs.length != 5) {
     		System.err.println("Invalid input size to neural net");
     	}
     	

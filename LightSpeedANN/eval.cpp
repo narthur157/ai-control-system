@@ -162,7 +162,7 @@ int power_search(float * inputs, ValueType *mem) {
 
 	int bestPower = 0;
 	float minErr = 666;
-	float targetSpeed = inputs[3];
+	float targetSpeed = inputs[4];
 	float testIns[10];
 		
 	for (int i = 0; i <= 100; i++) {
@@ -170,6 +170,7 @@ int power_search(float * inputs, ValueType *mem) {
 		testIns[0] = inputs[0];
 		testIns[1] = inputs[1];
 		testIns[2] = normalizePower(i);
+		testIns[3] = inputs[3];
 
 		float predictedSpeed1 = forward_ann(testIns, mem)[0];
 		float predictedSpeed2 = forward_ann(testIns, mem)[1];
@@ -218,8 +219,8 @@ void eval_socket(ValueType *mem) {
 			inputs[0] = normalizeSpeed(inputs[0]);
 			inputs[1] = normalizeAngle(inputs[1]);
 			inputs[2] = normalizePower(inputs[2]);
-			inputs[3] = normalizeSpeed(inputs[3]);
-			inputs[4] = 0;
+			inputs[3] = normalizePower(inputs[3]);
+			inputs[4] = normalizeSpeed(inputs[4]);
             
 			stringstream ss;
             ss << std::setprecision(40);

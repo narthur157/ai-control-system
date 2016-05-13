@@ -8,12 +8,11 @@ import communication.BrickComm;
 import communication.Command;
 
 
-//Select this in server/Send.java
 public class DataGeneration extends Test {
     private Random rand = new Random();
     private int count = 0;
-    private int prevCtrlPwr = 50;
-    private int prevDisturbPwr = 50;
+    private int stablePower = 0;
+    private int powerOffset = 0;
      
     public DataGeneration() throws IOException {
         super();
@@ -21,26 +20,33 @@ public class DataGeneration extends Test {
  
     @Override
     public void test() {
-        changeFlag = 0;
-        int power;
         if (count == 0) {
-            power = prevDisturbPwr + 5;
-            if (power > 100) power = 0;
-            BrickComm.sendCommand(Command.DISTURB_WHEEL, getNextPower(power)); 
-            prevDisturbPwr = power;
+            changeFlag = 0;
+        	int disturbPower = generateNextPower(stablePower);
+        	stablePower = generateNextPower(disturbPower);
+        	
+            BrickComm.sendCommand(Command.DISTURB_WHEEL, disturbPower); 
+            BrickComm.sendCommand(Command.CONTROL_WHEEL, stablePower);
+            
+            powerOffset = stablePower - disturbPower;
+            
         } else {        
-            power = getNextPower(prevDisturbPwr);
-            BrickComm.sendCommand(Command.CONTROL_WHEEL, getNextPower(prevDisturbPwr));
-            prevCtrlPwr = power;
+            changeFlag = 1;
+        	// this simulates changing power in reaction
+        	// both wheels must change the same way the motor controller works
+        	int reactionPower = generateNextPower(stablePower);
+        	
+            BrickComm.sendCommand(Command.CONTROL_WHEEL, reactionPower);
+            BrickComm.sendCommand(Command.DISTURB_WHEEL, reactionPower - powerOffset);
         }
          
         count = (count+1) % 2;
     }
      
-    private int getNextPower(int prevPower) {
+    private int generateNextPower(int prevPower) {
         int randPower = prevPower+rand.nextInt(81)-40; 
          
-        if (randPower < 0) {
+        if (randPower < 10) {
             randPower = rand.nextInt(40);
         }
         if (randPower > 100) {
@@ -48,4 +54,13 @@ public class DataGeneration extends Test {
         }
         return randPower;
     }
+    
+    /**
+     * Decorator pattern, this string is logged to file
+     * @see Test.collectData
+     */
+    protected String collectData() {
+    	System.out.println("Just making sure: " + super.collectData() + "\t" + stablePower);
+		return super.collectData() + "\t" + stablePower + "\t" + changeFlag;
+	}
 }

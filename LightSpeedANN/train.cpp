@@ -255,9 +255,9 @@ int main(int argc, char* argv[])
 		lr = stof(argv[1]);
 	}
 	
-    DataSet<ValueType> trainData(3, 2), testData(3, 2);
-    trainData.loadFile("iiioo", trainFile);
-    testData.loadFile("iiioo", testFile);
+    DataSet<ValueType> trainData(4, 2), testData(4, 2);
+    trainData.loadFile("iiiioo", trainFile);
+    testData.loadFile("iiiioo", testFile);
 	
     
     ValueType sse, max;

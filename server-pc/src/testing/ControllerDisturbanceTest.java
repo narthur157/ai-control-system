@@ -32,5 +32,4 @@ public class ControllerDisturbanceTest extends Test {
 		
 		count = (count+1) % 10;
 	}
-
 }

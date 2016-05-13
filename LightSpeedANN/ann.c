@@ -1,4 +1,4 @@
-// Layer 0: 3 nodes
+// Layer 0: 4 nodes
 // Layer 1: 32 nodes, tanh activation
 // Layer 2: 32 nodes, tanh activation
 // Layer 3: 2 nodes, linear activation
@@ -15,92 +15,92 @@
 #define L1_VAL (mem+4)
 #define L1_DEL (mem+36)
 #define L1_N0_WEIGHTS (mem+68)
-#define L1_N1_WEIGHTS (mem+72)
-#define L1_N2_WEIGHTS (mem+76)
-#define L1_N3_WEIGHTS (mem+80)
-#define L1_N4_WEIGHTS (mem+84)
-#define L1_N5_WEIGHTS (mem+88)
-#define L1_N6_WEIGHTS (mem+92)
-#define L1_N7_WEIGHTS (mem+96)
-#define L1_N8_WEIGHTS (mem+100)
-#define L1_N9_WEIGHTS (mem+104)
-#define L1_N10_WEIGHTS (mem+108)
-#define L1_N11_WEIGHTS (mem+112)
-#define L1_N12_WEIGHTS (mem+116)
-#define L1_N13_WEIGHTS (mem+120)
-#define L1_N14_WEIGHTS (mem+124)
-#define L1_N15_WEIGHTS (mem+128)
-#define L1_N16_WEIGHTS (mem+132)
-#define L1_N17_WEIGHTS (mem+136)
-#define L1_N18_WEIGHTS (mem+140)
-#define L1_N19_WEIGHTS (mem+144)
-#define L1_N20_WEIGHTS (mem+148)
-#define L1_N21_WEIGHTS (mem+152)
-#define L1_N22_WEIGHTS (mem+156)
-#define L1_N23_WEIGHTS (mem+160)
-#define L1_N24_WEIGHTS (mem+164)
-#define L1_N25_WEIGHTS (mem+168)
-#define L1_N26_WEIGHTS (mem+172)
-#define L1_N27_WEIGHTS (mem+176)
-#define L1_N28_WEIGHTS (mem+180)
-#define L1_N29_WEIGHTS (mem+184)
-#define L1_N30_WEIGHTS (mem+188)
-#define L1_N31_WEIGHTS (mem+192)
-#define L2_VAL (mem+196)
-#define L2_DEL (mem+228)
-#define L2_N0_WEIGHTS (mem+260)
-#define L2_N1_WEIGHTS (mem+296)
-#define L2_N2_WEIGHTS (mem+332)
-#define L2_N3_WEIGHTS (mem+368)
-#define L2_N4_WEIGHTS (mem+404)
-#define L2_N5_WEIGHTS (mem+440)
-#define L2_N6_WEIGHTS (mem+476)
-#define L2_N7_WEIGHTS (mem+512)
-#define L2_N8_WEIGHTS (mem+548)
-#define L2_N9_WEIGHTS (mem+584)
-#define L2_N10_WEIGHTS (mem+620)
-#define L2_N11_WEIGHTS (mem+656)
-#define L2_N12_WEIGHTS (mem+692)
-#define L2_N13_WEIGHTS (mem+728)
-#define L2_N14_WEIGHTS (mem+764)
-#define L2_N15_WEIGHTS (mem+800)
-#define L2_N16_WEIGHTS (mem+836)
-#define L2_N17_WEIGHTS (mem+872)
-#define L2_N18_WEIGHTS (mem+908)
-#define L2_N19_WEIGHTS (mem+944)
-#define L2_N20_WEIGHTS (mem+980)
-#define L2_N21_WEIGHTS (mem+1016)
-#define L2_N22_WEIGHTS (mem+1052)
-#define L2_N23_WEIGHTS (mem+1088)
-#define L2_N24_WEIGHTS (mem+1124)
-#define L2_N25_WEIGHTS (mem+1160)
-#define L2_N26_WEIGHTS (mem+1196)
-#define L2_N27_WEIGHTS (mem+1232)
-#define L2_N28_WEIGHTS (mem+1268)
-#define L2_N29_WEIGHTS (mem+1304)
-#define L2_N30_WEIGHTS (mem+1340)
-#define L2_N31_WEIGHTS (mem+1376)
-#define L3_VAL (mem+1412)
-#define L3_DEL (mem+1416)
-#define L3_N0_WEIGHTS (mem+1420)
-#define L3_N1_WEIGHTS (mem+1456)
-#define OUT_TMP (mem+1492)
+#define L1_N1_WEIGHTS (mem+76)
+#define L1_N2_WEIGHTS (mem+84)
+#define L1_N3_WEIGHTS (mem+92)
+#define L1_N4_WEIGHTS (mem+100)
+#define L1_N5_WEIGHTS (mem+108)
+#define L1_N6_WEIGHTS (mem+116)
+#define L1_N7_WEIGHTS (mem+124)
+#define L1_N8_WEIGHTS (mem+132)
+#define L1_N9_WEIGHTS (mem+140)
+#define L1_N10_WEIGHTS (mem+148)
+#define L1_N11_WEIGHTS (mem+156)
+#define L1_N12_WEIGHTS (mem+164)
+#define L1_N13_WEIGHTS (mem+172)
+#define L1_N14_WEIGHTS (mem+180)
+#define L1_N15_WEIGHTS (mem+188)
+#define L1_N16_WEIGHTS (mem+196)
+#define L1_N17_WEIGHTS (mem+204)
+#define L1_N18_WEIGHTS (mem+212)
+#define L1_N19_WEIGHTS (mem+220)
+#define L1_N20_WEIGHTS (mem+228)
+#define L1_N21_WEIGHTS (mem+236)
+#define L1_N22_WEIGHTS (mem+244)
+#define L1_N23_WEIGHTS (mem+252)
+#define L1_N24_WEIGHTS (mem+260)
+#define L1_N25_WEIGHTS (mem+268)
+#define L1_N26_WEIGHTS (mem+276)
+#define L1_N27_WEIGHTS (mem+284)
+#define L1_N28_WEIGHTS (mem+292)
+#define L1_N29_WEIGHTS (mem+300)
+#define L1_N30_WEIGHTS (mem+308)
+#define L1_N31_WEIGHTS (mem+316)
+#define L2_VAL (mem+324)
+#define L2_DEL (mem+356)
+#define L2_N0_WEIGHTS (mem+388)
+#define L2_N1_WEIGHTS (mem+424)
+#define L2_N2_WEIGHTS (mem+460)
+#define L2_N3_WEIGHTS (mem+496)
+#define L2_N4_WEIGHTS (mem+532)
+#define L2_N5_WEIGHTS (mem+568)
+#define L2_N6_WEIGHTS (mem+604)
+#define L2_N7_WEIGHTS (mem+640)
+#define L2_N8_WEIGHTS (mem+676)
+#define L2_N9_WEIGHTS (mem+712)
+#define L2_N10_WEIGHTS (mem+748)
+#define L2_N11_WEIGHTS (mem+784)
+#define L2_N12_WEIGHTS (mem+820)
+#define L2_N13_WEIGHTS (mem+856)
+#define L2_N14_WEIGHTS (mem+892)
+#define L2_N15_WEIGHTS (mem+928)
+#define L2_N16_WEIGHTS (mem+964)
+#define L2_N17_WEIGHTS (mem+1000)
+#define L2_N18_WEIGHTS (mem+1036)
+#define L2_N19_WEIGHTS (mem+1072)
+#define L2_N20_WEIGHTS (mem+1108)
+#define L2_N21_WEIGHTS (mem+1144)
+#define L2_N22_WEIGHTS (mem+1180)
+#define L2_N23_WEIGHTS (mem+1216)
+#define L2_N24_WEIGHTS (mem+1252)
+#define L2_N25_WEIGHTS (mem+1288)
+#define L2_N26_WEIGHTS (mem+1324)
+#define L2_N27_WEIGHTS (mem+1360)
+#define L2_N28_WEIGHTS (mem+1396)
+#define L2_N29_WEIGHTS (mem+1432)
+#define L2_N30_WEIGHTS (mem+1468)
+#define L2_N31_WEIGHTS (mem+1504)
+#define L3_VAL (mem+1540)
+#define L3_DEL (mem+1544)
+#define L3_N0_WEIGHTS (mem+1548)
+#define L3_N1_WEIGHTS (mem+1584)
+#define OUT_TMP (mem+1620)
 
 float *allocate_ann() {
-    return (float *)_mm_malloc(1496 * sizeof(float), 16);
+    return (float *)_mm_malloc(1624 * sizeof(float), 16);
 }
 
 void free_ann(float *mem) {
     _mm_free(mem);
 }
 
-static void randomize_3(float *mem) {
+static void randomize_4(float *mem) {
     const double RMI = 1.0 / RAND_MAX;
-    const double b2 = pow((double)3, -0.5) * sqrt(12.0);
+    const double b2 = pow((double)4, -0.5) * sqrt(12.0);
     const double b = b2*0.5;
     const double b3 = b2*RMI;
     int i;
-    for (i=0; i<=3; i++) {
+    for (i=0; i<=4; i++) {
         do {
             mem[i] = random() * b3 - b;
         } while (mem[i] == 0);
@@ -124,8 +124,8 @@ __attribute__((noinline)) void randomize_ann(float *mem) {
     int i, j;
     j = 0;
     for (i=0; i<32; i++) {
-        randomize_3(L1_N0_WEIGHTS + j);
-        j += 4;
+        randomize_4(L1_N0_WEIGHTS + j);
+        j += 8;
     }
     j = 0;
     for (i=0; i<32; i++) {
@@ -163,12 +163,17 @@ __attribute__((noinline)) static void tanh_32(float *in) {
     }
 }
 
-static float dotprod_3(float *weights, float *values) {
+static float dotprod_4(float *weights, float *values) {
     float sum0, sum1, sum2, sum3;
-    sum0 = values[0] * weights[0];
-    sum1 = values[1] * weights[1];
-    sum2 = values[2] * weights[2];
-    return (sum0 + sum1) + sum2;
+    __m128 wei, inp, prod, total0, total1, total2, total3;
+    float *v, *w;  int i;
+    inp    = _mm_load_ps(values+0);
+    wei    = _mm_load_ps(weights+0);
+    total0 = _mm_mul_ps(inp, wei);
+    total0 = _mm_hadd_ps(total0, total0);
+    total0 = _mm_hadd_ps(total0, total0);
+    _mm_store_ss(&sum0, total0);
+    return sum0;
 }
 
 __attribute__((noinline)) static float dotprod_32(float *weights, float *values) {
@@ -257,10 +262,14 @@ __attribute__((noinline)) static void sum_scaled_32(float *in, float *out, float
     _mm_store_ps(out+28, tgt);
 }
 
-static void sum_scaled_3(float *in, float *out, float scale) {
-    out[0] += scale * in[0];
-    out[1] += scale * in[1];
-    out[2] += scale * in[2];
+static void sum_scaled_4(float *in, float *out, float scale) {
+    __m128 tgt, inp, sca;
+    sca = _mm_set1_ps(scale);
+    inp = _mm_load_ps(in+0);
+    tgt = _mm_load_ps(out+0);
+    inp = _mm_mul_ps(sca, inp);
+    tgt = _mm_add_ps(inp, tgt);
+    _mm_store_ps(out+0, tgt);
 }
 
 __attribute__((noinline)) static void mul_tanh_prime_32(float *in, float *out) {
@@ -322,10 +331,11 @@ static void subtract_2(float *a, float *b, float *c) {
     c[1] = a[1] - b[1];
 }
 
-static void memory_copy_3(float *dst, float *src) {
+static void memory_copy_4(float *dst, float *src) {
     dst[0] = src[0];
     dst[1] = src[1];
     dst[2] = src[2];
+    dst[3] = src[3];
 }
 
 static void memory_copy_2(float *dst, float *src) {
@@ -350,8 +360,8 @@ __attribute__((noinline)) float *forward_L1_ann(float *mem) {
     int i, k;
     k = 0;
     for (i=0; i<32; i++) {
-        *(L1_VAL+0+i) = dotprod_3(L1_N0_WEIGHTS + k, IN_TMP) + *(L1_N0_WEIGHTS+k+3);
-        k += 4;
+        *(L1_VAL+0+i) = dotprod_4(L1_N0_WEIGHTS + k, IN_TMP) + *(L1_N0_WEIGHTS+k+4);
+        k += 8;
     }
     tanh_32(L1_VAL);
     return L1_VAL;
@@ -376,7 +386,7 @@ __attribute__((noinline)) float *forward_L3_ann(float *mem) {
 }
 
 __attribute__((noinline)) float *forward_ann(float *in, float *mem) {
-    memory_copy_3(IN_TMP, in);
+    memory_copy_4(IN_TMP, in);
     forward_L1_ann(mem);
     forward_L2_ann(mem);
     return forward_L3_ann(mem);
@@ -408,8 +418,8 @@ __attribute__((noinline)) void backward_ann(float *desired, float *mem, float lr
     /* Adjust weights */
     j = 0;
     for (i=0; i<32; i++) {
-        odel = *(L1_DEL+0+i) * lr;    *(L1_N0_WEIGHTS+j+3) += odel;    sum_scaled_3(IN_TMP, L1_N0_WEIGHTS+j, odel);
-        j += 4;
+        odel = *(L1_DEL+0+i) * lr;    *(L1_N0_WEIGHTS+j+4) += odel;    sum_scaled_4(IN_TMP, L1_N0_WEIGHTS+j, odel);
+        j += 8;
     }
 
     /* Adjust weights */
@@ -424,13 +434,13 @@ __attribute__((noinline)) void backward_ann(float *desired, float *mem, float lr
     odel = *(L3_DEL+1) * lr;    *(L3_N1_WEIGHTS+32) += odel;    sum_scaled_32(L2_VAL, L3_N1_WEIGHTS, odel);
 }
 
-int layer_values_ann[4] = {0, 4, 196, 1412};
+int layer_values_ann[4] = {0, 4, 324, 1540};
 
 #else /* HEADER FOLLOWS */
 
 float *allocate_ann();
 void free_ann(float *mem);
-#define MEM_SIZE_ann ( 1496 * sizeof(float) )
+#define MEM_SIZE_ann ( 1624 * sizeof(float) )
 float *forward_L1_ann(float *mem);
 float *forward_L2_ann(float *mem);
 float *forward_L3_ann(float *mem);

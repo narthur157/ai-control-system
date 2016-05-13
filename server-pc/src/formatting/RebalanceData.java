@@ -11,13 +11,84 @@ import java.util.Random;
 
 import neural.Normalization;
 
+/**
+ * Here be dragons
+ * 
+ * Any change to neural net structure will require unspecified changes to this file
+ * At minimum, NUM_COLUMNS must be changed, and the associated indices representing each
+ * column
+ * 
+ * Currently dataset balancing is not used, though it is was implemented in the past.
+ * Uncommenting rd.rebalanceDataset may or may not have the effect of balancing the dataset.
+ 
+                                              ,....,. 
+                                          ..''   .' 
+                                       .'"       | 
+                                    .''          \ 
+                                 .''              \. 
+                               .'                  ."., 
+                             ,:'             ..,'"'   '...,..::/""..... 
+                           /'"          .,'"'  .,',:,'""'         .,'' 
+                         ,'.'      .,'"' ..,''' ""         .'   ."' 
+                       ,'  \, ..,''  .,''. ..,'""        ./   ." 
+                     ."     .,"  .,'".,"'./           ..''   / 
+                    ,'    .'  ./'.,"'  .'  "'     ." '.     / 
+                  .'   ./' ./"."\,..,''     '" ../,     ,  | 
+                 ,   ./' .'./'|/     ............        ',| 
+                /   /' ,'.".,'""\..... '""""""""'  .::/'.., | 
+               /  ." ,' ':\ """  |  ,      ''          '""   \ 
+              /  /'.''. |:::::::""' ,' ' ''. ".,.,  """'    ."" 
+             | ." /.,":. ""..,   "\'.."'..  ;"'  '\.'"""  ." 
+             | \.:\.    '""./\ \  | ' '" .,"".           / 
+             / \'   '"..     ", \  \,',     "'..  .,     ' 
+            /.'",''..,  '\,   '\ ". '\'.,     , "'. "'.,| 
+           .,'        '". ',    \ '.".. ''../'      "" __\ 
+           '             \,',    \  '.'\..,  ","'  .'" 
+                         |  |    '| ,\""'\/.  |  ." 
+            ."          .|  .    / / ./'. '.".' /' 
+            /'        ..|':"""\././  /   "  '/\.' 
+           //  ./  .'"    /' ./'.' .'  | ..,  ':| 
+         ./:  ,/   |",   ' ."'  :  '   |    .../:, 
+        .'.'.\/   /.'           ''  .,   ..\' 
+      .,\.\".'   /"    ,"' \...,      "\.\| ", 
+     /    ./""""'   ..:    ',|  "".,     '\  ', 
+  .,' "'   \|     "".'".    '/  .| '\.     ", '\ 
+ /          \.    ../,   "./ '\ |'  \/"" '".'\  \ 
+/   '\\:.   \,"\::'  ./""'    ./|  .'     .'"/| '| 
+' ,"\:"/"""  /'  ."\'  .., |:| .| |'    .'' .\|  ', 
+|/  / /'    .'| /  |. \,    /'"/. |  |:\..," .||  \ 
+'' /.'      //\|'  '\/\:.   :,/"'::.  ,   ..::'|  | 
+            ||'/,    '\\/"\ '/|    '\ '"::::"| || . 
+            || \\       "".   ...,  '.  \\...| |' | 
+            ||  "\,         .".\, ". ', | \  '||  | 
+             '              |\|'|\/.''\ | |\  ||  | 
+                            ||\/"/| '\, ., / / /  , 
+                             ' \  "   '"  / / .' / 
+                                '      .'".' .' / 
+       -hrr-                      ..'"'.." ." ." 
+                              .,"":.'""..'" ." 
+                         .,:'"'"'  .'"  ..'" 
+                       ." ."'..'""...,"' 
+                    .." "    , ""' 
+                   /  . :/"' 
+                 .'  :/' 
+                /  /' 
+               / .' 
+              / ' 
+             /.' 
+             ' 
+
+ * @author Tim Miller
+ *
+ */
 public class RebalanceData {
-	private static final int NUM_COLUMNS = 5;
+	private static final int NUM_COLUMNS = 6;
 	private static final int LOAD_SPEED_INDEX = 0;
 	private static final int ANGLE_INDEX = 1;
 	private static final int POWER_INDEX = 2;
-	private static final int PREDICTED_SPEED_INDEX1 = 3;
-	private static final int PREDICTED_SPEED_INDEX2 = 4;
+	private static final int STABLE_POWER_INDEX = 3;
+	private static final int PREDICTED_SPEED_INDEX1 = 4;
+	private static final int PREDICTED_SPEED_INDEX2 = 5;
 
 	private ArrayList<ArrayList<Row>> dataset = new ArrayList<ArrayList<Row>>();
 	
@@ -137,6 +208,10 @@ public class RebalanceData {
 
 					 if (normalizationIndex == LOAD_SPEED_INDEX || normalizationIndex == PREDICTED_SPEED_INDEX2) {
 						 normalizationIndex = PREDICTED_SPEED_INDEX1;
+					 }
+					 
+					 if (normalizationIndex == STABLE_POWER_INDEX) {
+						 normalizationIndex = POWER_INDEX;
 					 }
 
 					double val = row.columns[k], 

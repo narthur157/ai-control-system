@@ -67,31 +67,32 @@ def collect_rand(randChance):
 def collect_drive_changes():
 	prevPower = 0
 	
-	for index, power in enumerate(df.LdPwr):
-		if index == 0:
-			prevPower = power
-
-		if power != prevPower:
-			try:
-				for offset in [0,1,2,3,4]:
-					collect_index(get_future_time(index, offset*100))
-			except ValueError as e:
-				pass
-			
-		prevPower = power
+#	for index, power in enumerate(df.LdPwr):
+#		if index == 0:
+#			prevPower = power
+#
+#		if power != prevPower:
+#			try:
+#				for offset in [0,1,2,3,4]:
+#					collect_index(get_future_time(index, offset*100))
+#			except ValueError as e:
+#				pass
+#			
+#		prevPower = power
 
 	for index, power in enumerate(df.CtrlPwr):
 		if index == 0:
 			prevPower = power
+			prevFlag = df.Flag[index]
 
-		if power != prevPower:
+		if prevFlag != df.Flag[index] and prevFlag == 0:
 			try:
 				for offset in [0,1,2,3,4]:
 					collect_index(get_future_time(index, offset*100))
 			except ValueError as e:
 				pass
-			
-		prevPower = power
+		
+		prevFlag = df.Flag[index]
 
 def collect_torque_changes():
 	prevAng = 0
@@ -109,7 +110,7 @@ def collect_torque_changes():
 
 def collect_index(index):
 	try:
-		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index]]
+		inputs = [df.LdSpd[index], df.Angle[index], df.CtrlPwr[index], df.StablePwr[index]]
 		outputs = get_future_speeds(index, [150, 300]) 
 		# join on tab, convert everything to string, add newline
 		row = make_row(inputs + outputs)
@@ -170,9 +171,9 @@ if __name__ == '__main__':
 
 #	normalize_input()
 	
-	collect_torque_changes()
+#	collect_torque_changes()
 	collect_drive_changes()	
-	collect_rand(600)
+#	collect_rand(600)
 
 	print "Wrote to training-set.csv"
 	
