@@ -82,8 +82,8 @@ nxj -r client.Receive -cp client-brick/bin/
 
 if [[ $? -ne 0 ]]
 	then
-		echo "USB connection failed, retrying in 5 seconds..."
-		sleep 5
+		echo "USB connection failed, retrying in 7 seconds..."
+		sleep 7
 		nxj -r client.Receive -cp client-brick/bin/ 
 		if [[ $? -ne 0 ]]
 			then
