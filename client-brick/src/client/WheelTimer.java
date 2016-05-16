@@ -44,14 +44,14 @@ public class WheelTimer extends Thread {
 			
 			speedTimer.reset();
 			
-			Delay.msDelay(10);
+			Delay.msDelay(20);
 		}
 	}
 	
 	// synchronized for thread safety
 	synchronized int getSpeed() {
 		LCD.drawString("speed: " + speed, 0, 6);
-		return (int) speed;
+		return -1*(int)speed;
 	}
 	
 	public void stopThread() {

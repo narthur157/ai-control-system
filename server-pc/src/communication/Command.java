@@ -1,6 +1,8 @@
 package communication;
 
 /**
+ * This class exists to prevent passing around magic numbers to select motors
+ * Not actually a command pattern
  * Ensure tht this class matches the one in client-brick 
  * @author Nicholas Arthur
  *

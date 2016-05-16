@@ -11,7 +11,7 @@ function format {
 	# parse the most recent test, the one we just made
 	# these two files should probably be combined
 	python dataparser.py testRuns/`ls -t testRuns/ | head -1` &&
-	java -cp server-pc/bin/ datacollection/RebalanceData &&
+	java -cp server-pc/bin/ formatting/RebalanceData &&
 	echo "Files ready for training, use runTrain in $ANN_FOLDER after deleting the weights file"
 }
 
@@ -36,6 +36,11 @@ case $key in
     ;;
     -n|--neural)
 	TEST=neural
+    TESTS="$2"
+    shift # past argument
+    ;;
+    -p|--pid)
+	TEST=pid
     TESTS="$2"
     shift # past argument
     ;;
@@ -90,10 +95,19 @@ if [[ $? -ne 0 ]]
 		fi
 fi
 
-if [[ $? -eq 0 ]]
-	then
-		# run our server program
-		nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+if [[ $? -eq 0 ]]; then	
+	if [[ $TEST == "neural" ]]; then
+		cd LightSpeedANN
+		./eval &
+		PID=$!
+		cd ..
+	fi
+	# run our server program
+	nxjpc -cp server-pc/bin/ server.Send $TEST $TESTS
+	
+	if [[ -n $PID ]]; then
+		kill $PID
+	fi
 fi
 
 # $? is the exit code from last script

@@ -8,7 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+ * Creates file with name as date string, logs data from brick
+ * @author Nicholas Arthur
+ *
+ */
 public class FileLogger implements Logger {
 	private PrintWriter out;
 	
@@ -35,7 +39,7 @@ public class FileLogger implements Logger {
 	public FileLogger() throws IOException {
 		// set auto flush to true
 		out = new PrintWriter(new FileWriter("testRuns/" + timestampFile()), true);
-		logln("Time\tLdSpd\tLdPwr\tCtrlPwr\tTrqPwr\tAngle\tInput");
+		logln("Time\tLdSpd\tLdPwr\tCtrlPwr\tTrqPwr\tAngle\tStablePwr\tFlag");
 	}
 	
 	public void logln(String s) {

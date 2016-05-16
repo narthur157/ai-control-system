@@ -2,19 +2,22 @@ package server;
 
 import java.io.IOException;
 
-import neural.NeuralTest;
+import pid.PIDController;
 
-import pid.PIDTest;
+import neural.NeuralController;
+
+
+import testing.DataGeneration;
+import testing.ControllerDisturbanceTest;
+import testing.Test;
 
 import communication.BrickComm;
 
-import datacollection.DataCollector;
-import framework.Test;
-
-//for use with Receive.java
-
 /**
  * The driver for the server side code
+ * Runs tests based on command line argument, as specified in the run script
+ * 
+ * @see communication.BrickComm
  * @author Nick Arthur
  */
 public class Send {	
@@ -24,11 +27,16 @@ public class Send {
 			System.exit(1);
 		}
 		
+		System.out.println("Doing test " + args[0]);
+		
 		if (args[0].equals("neural")) {
 			runNeuralTest(Integer.parseInt(args[1]));
 		}
 		if (args[0].equals("data")) {
 			runDataTest(Integer.parseInt(args[1]));
+		}
+		if (args[0].equals("pid")) {
+			runPIDTest(Integer.parseInt(args[1]));
 		}
 		//runPidTest();
 		//runNeuralTest(5);
@@ -36,11 +44,15 @@ public class Send {
 	}
 	
 	private static void runNeuralTest(int numRuns) throws IOException {
-		runTest(new NeuralTest(), numRuns);
+		runTest(new ControllerDisturbanceTest(new NeuralController()), numRuns);
 	}
 	
 	private static void runDataTest(int numRuns) throws IOException {
-		runTest(new DataCollector(), numRuns);
+		runTest(new DataGeneration(), numRuns);
+	}
+	
+	private static void runPIDTest(int numRuns) throws IOException {
+		runTest(new ControllerDisturbanceTest(new PIDController()), numRuns);
 	}
 	
 	private static void runTest(Test tester, int numRuns) {

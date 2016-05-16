@@ -5,12 +5,12 @@ public class BrickState {
 	public int time, controlPower, disturbPower, torquePower, angle;
 	public double disturbSpeed;
 	
-	public BrickState(int time, int currentSpeed, int currentPower, 
-					  int disturbPower, int torquePower, int angle) {
+	public BrickState(int time, int currentSpeed, int disturbPower, 
+					  int currentPower,int torquePower, int angle) {
 		this.time = time; 					//total elapsed time
 		this.disturbSpeed = currentSpeed;
-		this.controlPower = currentPower; 	//power of the measured wheel
 		this.disturbPower = disturbPower;
+		this.controlPower = currentPower; 	//power of the measured wheel
 		this.torquePower = torquePower;
 		this.angle = angle; 				//angle of the arm
 	}

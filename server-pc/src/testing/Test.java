@@ -1,15 +1,18 @@
-package framework;
+package testing;
 
 import java.io.IOException;
 
 import communication.BrickComm;
 import communication.BrickListener;
+import framework.BrickState;
+import framework.FileLogger;
+import framework.Logger;
 
 
 /**
  * This abstract class requires the extension of the 'test' method
  * which gets called when the system has stabilized for the amount of
- * brick updates indicated by STABLE_COUNT. Brick updates come about
+ * time specified by testLength (milliseconds). Brick updates come about
  * every 10ms with some variation. 
  * 
  * runTest is the only method users of the class should use, as updateBrick
@@ -28,7 +31,9 @@ public abstract class Test implements BrickListener {
 	
 	private long prevTime = -1;
 	
-	private int testCount = 0, numLoops = 0, stableCount = 0;
+	protected int testCount = 0;
+	private int numLoops = 0;
+	private int stableCount = 0;
 	
 	public Test() throws IOException {
 		logger = new FileLogger();
@@ -45,7 +50,7 @@ public abstract class Test implements BrickListener {
 	
 	/**
 	 * Do anything that should change between tests
-	 * Gets called once the system has stabilized
+	 * Gets called every testLength milliseconds
 	 * @throws IOException
 	 */
 	abstract protected void test();
@@ -61,7 +66,7 @@ public abstract class Test implements BrickListener {
 		try {
 			BrickComm.addListener(this);
 			
-			while(testCount < numLoops) {
+			while(testCount <= numLoops) {
 				// I don't think this needs to be synchronized because
 				// we know this will only be notified when the comparison fails
 				synchronized(this) {
@@ -81,41 +86,27 @@ public abstract class Test implements BrickListener {
 	 * Implement BrickListener - receive a state update
 	 * from a brick
 	 */
-	final public void updateBrick(BrickState bsIn) {
+	final public void updateBrick(BrickState bsIn) {	
 		prevBs = bs;
 		bs = bsIn;
-		collectData();
-//
-//		// only run updates once stabilized
-//		if (!bs.equals(prevBs)) {
-//			//System.out.println("Resetting stable count. Count was " + stableCount);
-//			//if (bs != null && prevBs != null)
-//				//System.out.println("bs: " + bs.toString() + " prevBs: " + prevBs.toString());
-//			stableCount = 0;
-//		}
-//		else {
-			long curTime = System.currentTimeMillis();
-			if (curTime - prevTime > testLength || prevTime == -1) {
-				System.out.println("???");
-				prevTime = curTime;
-				test();
-				testCount++;
-				
-				if (testCount >= numLoops) {
-					finishTest();
-				}
+		logData();
+
+		long curTime = System.currentTimeMillis();
+		if (curTime - prevTime > testLength || prevTime == -1) {
+			testCount++;
+			
+			if (testCount > numLoops) {
+				finishTest();
 			}
-//			stableCount++;
-//			if (stableCount > STABLE_COUNT) {
-//				stableCount = 0;
-//				
-//				
-//			}
-//		}
+			
+			prevTime = curTime;
+			System.out.print("Test " + testCount + " out of " + numLoops + "\r");
+			test();
+		}
 	}
 	
 	final private void finishTest() {
-		System.out.println("Completed " + testCount + " tests");
+		System.out.println("Completed " + (testCount-1) + " tests");
 		
 		synchronized(this) {
 			// wake up the thread in runTest
@@ -123,9 +114,19 @@ public abstract class Test implements BrickListener {
 		}
 	}
 	
-	final private void collectData() {
-		//System.out.println(bs.toString());
-		// logger is paramterized in constructor, can write to file
-		logger.logln(bs.toString() + "\t" + changeFlag);
+	final private void logData() {
+		logger.logln(collectData());
 	}
+	
+	/**
+	 * This method can be decorated by subclasses
+	 * by overriding and doing `return super.collectData + "decoration"` 
+	 * in subclass
+	 * @see ControllerDisturbanceTest
+	 * @return
+	 */
+	protected String collectData() {
+		// logger is paramterized in constructor, can write to file
+		return bs.toString();
+	}	
 }

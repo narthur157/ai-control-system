@@ -60,7 +60,7 @@ public class PCComm {
 	public void sendBrick(BrickState bs) throws IOException {
 		dOut.writeInt(bs.time);
 		dOut.writeInt((int) bs.disturbSpeed);
-		dOut.writeInt(bs.disturbPower);
+		dOut.writeInt(-1*bs.disturbPower);
 		dOut.writeInt(bs.controlPower);
 		dOut.writeInt(bs.torquePower);
 		dOut.writeInt(bs.angle);

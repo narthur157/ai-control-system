@@ -162,16 +162,32 @@ int power_search(float * inputs, ValueType *mem) {
 
 	int bestPower = 0;
 	float minErr = 666;
-	float targetSpeed = inputs[3];
-	targetSpeed = normalizeSpeed(targetSpeed);
+	float targetSpeed = inputs[4];
+	float testIns[10];
 		
-	for (int i = -100; i <= 100; i++) {
-		inputs[2] = normalizePower(i);
+	for (int i = 0; i <= 100; i++) {
+		//inputs[2] = normalizePower(i);
+		testIns[0] = inputs[0];
+		testIns[1] = inputs[1];
+		testIns[2] = normalizePower(i);
+		testIns[3] = inputs[3];
 
-		float predictedSpeed = forward_ann(inputs, mem)[0];
-		float err = std::abs(std::abs(predictedSpeed) - std::abs(targetSpeed));
+		float predictedSpeed1 = forward_ann(testIns, mem)[0];
+		float predictedSpeed2 = forward_ann(testIns, mem)[1];
+
+		float err1 = std::abs(predictedSpeed1 > targetSpeed ? 
+						(predictedSpeed1 - targetSpeed) : 
+						(targetSpeed - predictedSpeed1));
+
+		float err2 = std::abs(predictedSpeed2 > targetSpeed ? 
+						(predictedSpeed2 - targetSpeed) : 
+						(targetSpeed - predictedSpeed2));
 		
+		float err = err1 + (err2 / 2);
+
 		if (err < minErr) {
+//			cout << "New best power " << i << " predicts speed of " << denormalizeSpeed(predictedSpeed);
+//			cout << " compared to target speed of " << denormalizeSpeed(targetSpeed) << " with err " << err << std::endl;
 			minErr = err;
 			bestPower = i;
 		}
@@ -197,31 +213,32 @@ void eval_socket(ValueType *mem) {
             int r = read_line(s, line);
 
             if (r < 0) break;
-            
-            int n = parse_floats(line.c_str(), inputs);
 
+            int n = parse_floats(line.c_str(), inputs);
+			
 			inputs[0] = normalizeSpeed(inputs[0]);
 			inputs[1] = normalizeAngle(inputs[1]);
 			inputs[2] = normalizePower(inputs[2]);
-			
-
-            stringstream ss;
+			inputs[3] = normalizePower(inputs[3]);
+			inputs[4] = normalizeSpeed(inputs[4]);
+            
+			stringstream ss;
             ss << std::setprecision(40);
 
-            //ss << power_search(inputs, mem);
-			float result = forward_ann(inputs, mem)[0];
-			ss << denormalizeSpeed(result);
-            
-			ss << "\n";
+            ss << power_search(inputs, mem);
+//			ss << denormalizeSpeed(forward_ann(inputs, mem)[0]);
+//			ss << "\tPredicted power for speed: " << power_search(inputs, mem);
+            ss << "\n";
 
             const string& st(ss.str());
             size_t bytes_written = write(s, st.c_str(), st.size());
             
-            cout << line << endl;
+//            cout << line << endl;
         } while (1);
     } while (1);
 }
 
+/*
 void make_tables(ValueType *mem) {
 	// make a csv file full of various inputs/outputs to the ann
 	// for simplicity, fix all numbers at their means and change only 1 at once
@@ -233,28 +250,25 @@ void make_tables(ValueType *mem) {
 
 	// 18*18*15 = 4860 loops
 	//for(float targetSpeed = 0; targetSpeed <= 900; targetSpeed+=50) {
-	for(int testPower = -100; testPower <= 100; testPower++) {
-		for (float angle = 0; angle <= 15; angle++) {
-			for (float loadSpeed = 0; loadSpeed <= 900; loadSpeed+=50) {
-				inputs[0] = loadSpeed;
-				inputs[1] = angle;
-				inputs[2] = testPower;
-				
-			//	int result = power_search(inputs, mem);
-				float result = forward_ann(inputs, mem)[0];
+	for(int testPower = 0; testPower <= 100; testPower++) {
+		inputs[0] = normalizePower(testPower);
+		inputs[1] = 0;
+		inputs[2] = 0;
+		
+	//	int result = power_search(inputs, mem);
+		float result = forward_ann(inputs, mem)[0];
 
-				evalTableStr << loadSpeed << "," << angle << "," << testPower << "," << result << std::endl;
-			}
-		}
+		evalTableStr << testPower << "," << denormalizeSpeed(result) << std::endl;
 	}
 	
 	ofstream evalTable;
 	evalTable.open ("evalTable.csv");
 	// column headers
-	evalTable << "LoadSpeed,Angle,TestPower,PredictedSpeed" << std::endl;
+	evalTable << "TestPower,PredictedSpeed" << std::endl;
 	evalTable << evalTableStr.rdbuf();
 	evalTable.close();
 }
+*/
 
 int main(int argc, char* argv[])
 {
@@ -263,20 +277,25 @@ int main(int argc, char* argv[])
     // READ WEIGHTS
     FILE *out = fopen("weights.net", "rb");
     
-	if (!out) bail("opening weights");
+	if (!out) {
+		out = fopen("LightSpeedANN/weights.net", "rb");
+	}
    
 	size_t bytes_read = fread(mem, 1, MEM_SIZE_ann, out);
     
 	fclose(out);
 
 	setNormalizationData();
+
 	if (argc == 1) {
 		eval_socket(mem);    
 	}
 	
+	/*
 	if (argc == 2 && argv[1]) {
 		make_tables(mem);	
 	}
+	*/
 
 	return 0;
 }

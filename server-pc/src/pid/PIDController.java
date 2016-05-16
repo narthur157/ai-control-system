@@ -1,90 +1,64 @@
 package pid;
 
-import communication.BrickComm;
-import communication.Command;
-
-import framework.BrickState;
 import framework.MotorController;
 
-// this currently is quite broken/requires almost total re-write
-public class PIDController implements MotorController {
-	private BrickComm comm;
-	
+/**
+ * Implementation of PID using this framework
+ * PID constants are specified internally
+ * 
+ * @see framework.MotorController
+ * @author Nicholas Arthur
+ *
+ */
+public class PIDController extends MotorController {
 	// constants
-	final private double P = 0.83, 	// proportional 
-						 I = 0.28, 	// integral
-						 D = 0.00,	// derivative	
-						 MAX_OUTPUT = 8.0,
-						 // limits to changes made in one cycle
-						 MIN_OUTPUT = MAX_OUTPUT * -1,  
-						 // acceptable range of speed = desiredSpeed +/- tolerance
-						 ERR_TOLERANCE = 4.0;			
+	final private double P = 1.83, 	// proportional 
+						 I = 0.48, 	// integral
+						 D = 0.20,	// derivative	
+						 SCALING = 0.05;			
 	
 	private double 	prevError = 0.0,   		// used to compute derivative component
-					totalError = 0.0, 		// used to compute integral component
-					desiredSpeed = 0.0;
-	
-//	private int cyclesStable = 0,			// keep track of how long speed stays in acceptable range
-//				testStable = 10;			// number of loops speed must remain in range to move on
-
-	//private BrickState bs = new BrickState(0, 0.0, 0, 0, 0);
-	
-	public PIDController(BrickComm commInit) {
-		comm = commInit;
-	}
+					totalError = 0.0; 		// used to compute integral component
 	
 	/**
-	 * Do a PID cycle, assumes desiredSpeed has been set already
+	 * A single control loop of PID
+	 * 
+	 * @param currentSpeed Current speed of disturb wheel
+	 * @param desiredSpeed The target speed
+	 * @return Power to be set to achieve speed
 	 */
-	public void moveTowardsSpeed(BrickState bs) {
-		double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
-		
-		comm.sendCommand(Command.DISTURB_WHEEL, (int) result);
-		
-		System.out.println("clamped PID output: " + result);
-	}
-	
-//	// get to a target speed - the main point of a motor controller
-//	public void setSpeed(double desiredSpeedVal) {
-//		desiredSpeed = desiredSpeedVal;
-//		//PID control loop
-//		boolean stable = false;
-//		while(!stable){
-//			double result = clamp(pidCalc(bs.disturbSpeed, desiredSpeed), MIN_OUTPUT, MAX_OUTPUT);
-//
-//			if (isStable(bs.disturbSpeed, desiredSpeed)) { cyclesStable++; }
-//			else { cyclesStable = 0; }
-//
-//			// must stay stable for testStable cycles
-//			if (cyclesStable >= testStable) {
-//				stable = true;
-//				cyclesStable = 0;
-//			}
-//			
-//			comm.sendCommand(Command.DISTURB_WHEEL, (int) result);
-//	//TODO:	comm.sendInt((int) result);
-//
-//			logger.logln(bs.toString());
-//			System.out.println("clamped PID output: " + result);
-//		}
-//	}
-	
-	private boolean isStable(double currentSpeed, double desiredSpeed) {
-		double desiredMin = desiredSpeed - ERR_TOLERANCE;
-		double desiredMax = desiredSpeed + ERR_TOLERANCE;
-		
-		return inRange(currentSpeed, desiredMin, desiredMax);
-	}
-	
-	// modifies totalError and prevError
-	private double pidCalc(double currentSpeed, double desiredSpeed) {
+	private int pidCalc(double currentSpeed, double desiredSpeed) {
 		double error = desiredSpeed - currentSpeed;
 		
+		error *= SCALING;
+		
 		totalError += error;
+		
+		// does no good to have an integral response outside power range
+		if (I*totalError > MAX_OUTPUT) totalError = I/MAX_OUTPUT;
+		if (I*totalError < MIN_OUTPUT) totalError = I/MIN_OUTPUT;
+		
 		double result = P * error + I * totalError + D * (error - prevError);
 		prevError = error;
 		
-		return result;
+		return (int) clamp(result, MIN_OUTPUT, MAX_OUTPUT);
+	}
+
+	/**
+	 * MotorController abstract base class method, calls pidCalc
+	 */
+	@Override
+	protected int findPower() throws Exception {
+		double currentSpeed = bs.disturbSpeed;
+		
+		double power = pidCalc(currentSpeed, targetSpeed);
+		
+		return (int) power;
+	}
+	
+	@Override
+	public String toString() {
+		return "" + targetSpeed + '\t' + P + '\t' + I + '\t' + D;
 	}
 	
 	// return val between min and max
@@ -93,18 +67,5 @@ public class PIDController implements MotorController {
 		return val >= max ? max :
 					val <= min ? min :
 						val;			
-	}
-	
-	private boolean inRange(double val, double min, double max) {
-		return val >= min && val <= max;
-	}
-	
-	public String toString() {
-		return "" + desiredSpeed + '\t' + P + '\t' + I + '\t' + D;
-	}
-
-	public void setSpeed(double s) {
-		// TODO Auto-generated method stub
-		
 	}
 }

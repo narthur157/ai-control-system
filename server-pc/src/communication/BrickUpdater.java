@@ -8,6 +8,7 @@ import framework.BrickState;
 
 /**
  * Observer pattern to send async brick updates to listeners
+ * @see BrickComm
  * @author Nicholas Arthur
  *
  */
@@ -22,6 +23,9 @@ public class BrickUpdater extends Thread {
 		inDat = inDatInit;
 	}
 	
+	/**
+	 * Start receiving updates, this is the thread method.
+	 */
 	public void run() {
 		while (!finished) {
 			try {
@@ -38,6 +42,11 @@ public class BrickUpdater extends Thread {
 		}
 	}
 	
+	/**
+	 * Get brick over USB using serial format.
+	 * @return
+	 * @throws IOException
+	 */
 	BrickState readBrick() throws IOException {
 		//read values back from brick
 		try {
