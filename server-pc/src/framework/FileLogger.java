@@ -1,5 +1,6 @@
 package framework;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,14 +17,21 @@ import java.util.Date;
 public class FileLogger implements Logger {
 	private PrintWriter out;
 	
+	/**
+	 * Column headers, separated by a tab
+	 */
+	protected String columns = "";
+	
+	/**
+	 * Directory without a slash at the end of where to put output
+	 */
+	protected String directory = "";
+	
 	// creates a string for a most-likely unique file
 	// easily sortable in filesystem by alphanumeric ordering
 	// this way you can do many test runs without deleting old tests
 	// and easily know which tests are which
-	// though, I suppose you could also sort by date created
-	// but a totally random file name would be odd as well
-	// and just over engineering in general
-	private String timestampFile() {
+	private static String timestampFile() {
 		// credit: http://stackoverflow.com/questions/5683728/convert-java-util-date-to-string
 		// Create an instance of SimpleDateFormat used for formatting 
 		// the string representation of date (month/day/year)
@@ -37,15 +45,33 @@ public class FileLogger implements Logger {
 	}
 	
 	public FileLogger() throws IOException {
-		// set auto flush to true
-		out = new PrintWriter(new FileWriter("testRuns/" + timestampFile()), true);
-		logln("Time\tLdSpd\tLdPwr\tCtrlPwr\tTrqPwr\tAngle\tStablePwr\tFlag");
+		this("testRuns", "Time\tLdSpd\tLdPwr\tCtrlPwr\tTrqPwr\tAngle\tStablePwr\tFlag", timestampFile());
 	}
 	
+	public FileLogger(String directory, String columns, String fileName) throws IOException {
+		this.directory = directory;
+		this.columns = columns;
+		
+		File f = new File(directory + "/" + fileName);
+		
+		if (f.exists()) {
+			// May want to check with the user here
+			f.delete();
+		}
+		
+		out = new PrintWriter(new FileWriter(f));
+		logln(columns);
+	}
+	
+	/**
+	 * Writes string to file exactly as given
+	 */
 	public void logln(String s) {
 		out.println(s);
 	}
-	public void close() {
+	
+	// final methods cannot be overriden
+	final public void close() {
 		out.close();
 	}
 }

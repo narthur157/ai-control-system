@@ -31,9 +31,8 @@ public abstract class Test implements BrickListener {
 	
 	private long prevTime = -1;
 	
-	protected int testCount = 0;
-	private int numLoops = 0;
-	private int stableCount = 0;
+	protected int curTestCount = 0;
+	protected int numTests = 0;
 	
 	public Test() throws IOException {
 		logger = new FileLogger();
@@ -61,12 +60,12 @@ public abstract class Test implements BrickListener {
 	 * @throws IOException
 	 */
 	final public void runTest(int numLoopsIn) throws IOException {
-		numLoops = numLoopsIn;
+		numTests = numLoopsIn;
 		
 		try {
 			BrickComm.addListener(this);
 			
-			while(testCount <= numLoops) {
+			while(curTestCount <= numTests) {
 				// I don't think this needs to be synchronized because
 				// we know this will only be notified when the comparison fails
 				synchronized(this) {
@@ -89,24 +88,26 @@ public abstract class Test implements BrickListener {
 	final public void updateBrick(BrickState bsIn) {	
 		prevBs = bs;
 		bs = bsIn;
+		
 		logData();
 
 		long curTime = System.currentTimeMillis();
+		
 		if (curTime - prevTime > testLength || prevTime == -1) {
-			testCount++;
+			curTestCount++;
 			
-			if (testCount > numLoops) {
+			if (curTestCount > numTests) {
 				finishTest();
 			}
 			
 			prevTime = curTime;
-			System.out.print("Test " + testCount + " out of " + numLoops + "\r");
+			System.out.print("Test " + curTestCount + " out of " + numTests + "\r");
 			test();
 		}
 	}
 	
-	final private void finishTest() {
-		System.out.println("Completed " + (testCount-1) + " tests");
+	final protected void finishTest() {
+		System.out.println("Completed " + (curTestCount-1) + " tests");
 		
 		synchronized(this) {
 			// wake up the thread in runTest
@@ -115,7 +116,11 @@ public abstract class Test implements BrickListener {
 	}
 	
 	final private void logData() {
-		logger.logln(collectData());
+		String s = collectData();
+		
+		if (!s.equals("")) {
+			logger.logln(collectData());
+		}
 	}
 	
 	/**

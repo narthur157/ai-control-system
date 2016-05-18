@@ -44,6 +44,11 @@ case $key in
     TESTS="$2"
     shift # past argument
     ;;
+    -b|--benchmark)
+	TEST=benchmark
+    TESTS="$2"
+    shift # past argument
+    ;;
     -d|--datacollect)
 	TEST=data
     TESTS="$2"
@@ -96,7 +101,7 @@ if [[ $? -ne 0 ]]
 fi
 
 if [[ $? -eq 0 ]]; then	
-	if [[ $TEST == "neural" ]]; then
+	if [[ $TEST == "neural" ]] || [[ $TEST = "benchmark" ]]; then
 		cd LightSpeedANN
 		./eval &
 		PID=$!
@@ -114,4 +119,11 @@ fi
 if [[ $? -eq 0 && $FORMAT ]]; then
 	format
 fi
+
+if [[ $? -eq 0 && $TEST == "benchmark" ]]; then
+	cd benchmarks
+	gnuplot plot > image.png
+	echo "In benchmarks: plotted graph to image.png using gnuplot plot, from neural.csv and pid.csv"
+fi
+
 

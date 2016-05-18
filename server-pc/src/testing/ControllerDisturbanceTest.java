@@ -3,8 +3,6 @@ package testing;
 import java.io.IOException;
 import java.util.Random;
 
-import neural.NeuralController;
-
 
 import framework.MotorController;
 

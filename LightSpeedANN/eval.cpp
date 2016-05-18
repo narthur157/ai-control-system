@@ -203,7 +203,7 @@ void eval_socket(ValueType *mem) {
     
     do {
         cout << "Listening\n";
-		cout << "Format: CurSpd Angle CtrlPwr TargetSpd" << std::endl;
+		cout << "Format: CurSpd Angle CtrlPwr StablePwr TargetSpd" << std::endl;
         
 		int s = listen_wait();
 

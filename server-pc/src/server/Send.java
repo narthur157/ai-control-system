@@ -2,13 +2,11 @@ package server;
 
 import java.io.IOException;
 
-import pid.PIDController;
-
 import neural.NeuralController;
-
-
-import testing.DataGeneration;
+import pid.PIDController;
+import testing.ComparisonTest;
 import testing.ControllerDisturbanceTest;
+import testing.DataGeneration;
 import testing.Test;
 
 import communication.BrickComm;
@@ -38,11 +36,18 @@ public class Send {
 		if (args[0].equals("pid")) {
 			runPIDTest(Integer.parseInt(args[1]));
 		}
+		if (args[0].equals("benchmark")) {
+			runBenchmarkTest(Integer.parseInt(args[1]));
+		}
 		//runPidTest();
 		//runNeuralTest(5);
 		//runDataTest(5);
 	}
 	
+	private static void runBenchmarkTest(int numRuns) throws IOException {
+		runTest(new ComparisonTest(), numRuns*2);
+	}
+
 	private static void runNeuralTest(int numRuns) throws IOException {
 		runTest(new ControllerDisturbanceTest(new NeuralController()), numRuns);
 	}

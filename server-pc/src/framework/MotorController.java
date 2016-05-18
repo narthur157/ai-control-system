@@ -55,6 +55,13 @@ public abstract class MotorController implements BrickListener {
 	}
 	
 	/**
+	 * Stop this controller from setting speeds and receiving updates
+	 */
+	public final void stop() {
+		BrickComm.rmListener(this);
+	}
+	
+	/**
 	 * This method represents the implementation of a control loop
 	 * 
 	 * @return int - The power this controller will set to achieve targetSpeed

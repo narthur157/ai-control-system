@@ -7,6 +7,7 @@ GENERAL PROCESSES
 
 There a few sets of actions you do with this project, they are
 
+- Run a benchmark
 - Change parameters
 - Collect and formatting data
 - Train a neural net using data
@@ -25,6 +26,12 @@ its own weights file, its own motor controller, etc. There should eventually be 
 input to 3 inputs (all 1 output). We will in the end mostly care about only 1 of these networks, and the other branches
 can then be safely forgotten or deleted. The purpose of keeping the branches is to have working versions, and is essentially
 the same idea as creating releases. Releases are good, but we're doing this instead because I prefer it.
+
+RUN A BENCHMARK
+-------
+
+Benchmarks are run using `run -b num_tests`. See `ComparisonTest.java`. This test compares the `NeuralController` and `PIDController`. 
+This test could be easily re-worked to run any other motor controller. Data is output to `benchmarks/` and then plotted via `gnuplot`.
 
 CHANGING PARAMETERS
 -------
@@ -49,10 +56,8 @@ will re-use the most recent file from `testRuns` which stores the raw test data.
 
 To inspect raw data, there is a convenience script `getLastTest` which opens the most recent test in `testRuns` in vim. 
 
-Note that each branch has its own way of collecting data, and requires a different number of tests. As a rule of thumb I expect that
-the number of tests required grows by powers of 10 for each input in the system. 1 in 1 out requires 101 tests to cover each possible
-power setting (101 because 0 and 100 are both included). Thus you might 2 in 1 out to require 1000 tests and 3 in 1 out to require 10000
-for full coverage.
+`run -f` will only work for data collected from `run -d`. This could be fixed by setting the stable power and change flag appropriately in `collectData`.
+
 
 TRAINING AN ANN
 -------
